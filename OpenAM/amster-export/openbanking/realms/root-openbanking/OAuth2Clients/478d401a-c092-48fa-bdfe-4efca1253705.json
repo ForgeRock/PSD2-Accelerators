@@ -1,0 +1,57 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.0",
+    "entityType" : "OAuth2Clients",
+    "entityId" : "478d401a-c092-48fa-bdfe-4efca1253705",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "478d401a-c092-48fa-bdfe-4efca1253705",
+    "signEncOAuth2ClientConfig" : {
+      "idTokenEncryptionMethod" : "A128CBC_HS256",
+      "idTokenEncryptionAlgorithm" : "RSA1_5",
+      "userinfoResponseFormat" : "JSON",
+      "userinfoSignedResponseAlg" : null,
+      "requestParameterEncryptedAlg" : "RSA-OAEP-256",
+      "tokenEndpointAuthSigningAlgorithm" : "RS256",
+      "requestParameterEncryptedEncryptionAlgorithm" : "A128CBC_HS256",
+      "idTokenSignedResponseAlg" : "RS256",
+      "idTokenEncryptionEnabled" : false,
+      "userinfoEncryptedResponseEncryptionAlgorithm" : "A128CBC_HS256",
+      "publicKeyLocation" : "x509",
+      "userinfoEncryptedResponseAlg" : null,
+      "requestParameterSignedAlg" : "RS256"
+    },
+    "advancedOAuth2ClientConfig" : {
+      "grantTypes" : [ "refresh_token", "client_credentials", "authorization_code" ],
+      "updateAccessToken" : "wNaDVf6iHgM4HWxoQET84kU1J5M",
+      "responseTypes" : [ "code id_token" ],
+      "subjectType" : "public",
+      "tokenEndpointAuthMethod" : "client_secret_post"
+    },
+    "coreOAuth2ClientConfig" : {
+      "clientType" : "Confidential",
+      "userpassword" : null,
+      "userpassword-encrypted" : "AAAAA0FFUwIQa05bQS7wmwUO1BKwWTY7fY6gB+tOrqnR7rElTuQpuuSjEZ2ZQNp4iKgBDIq55g0OBeOqRF+PhjnboeLD5v0E4yE8Qb2b/ozb4tLo8cgcMkeEcKrt5AeQBEmboPZeKAUa66/EHUMtvRfk6Q2yv+me4g==",
+      "scopes" : [ "openid", "payments", "accounts" ],
+      "authorizationCodeLifetime" : 0,
+      "accessTokenLifetime" : 0,
+      "refreshTokenLifetime" : 0,
+      "defaultScopes" : [ ],
+      "redirectionUris" : [ "https://www.google.com", "https://login.psd2accelerators.fridam.aeet-forgerock.com/openam" ],
+      "status" : "Active"
+    },
+    "coreOpenIDClientConfig" : {
+      "jwtTokenLifetime" : 0,
+      "defaultAcrValues" : [ ],
+      "defaultMaxAgeEnabled" : false,
+      "defaultMaxAge" : 1
+    },
+    "_type" : {
+      "_id" : "OAuth2Client",
+      "name" : "OAuth2 Clients",
+      "collection" : true
+    }
+  }
+}

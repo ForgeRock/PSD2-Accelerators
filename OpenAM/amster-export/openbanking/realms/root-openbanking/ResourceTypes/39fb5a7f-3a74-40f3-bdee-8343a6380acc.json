@@ -1,0 +1,27 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.0",
+    "entityType" : "ResourceTypes",
+    "entityId" : "39fb5a7f-3a74-40f3-bdee-8343a6380acc",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "39fb5a7f-3a74-40f3-bdee-8343a6380acc",
+    "uuid" : "39fb5a7f-3a74-40f3-bdee-8343a6380acc",
+    "name" : "OBIE PISP Resource",
+    "description" : "",
+    "patterns" : [ "pis-*" ],
+    "actions" : {
+      "getPaymentOrderStatus" : true,
+      "getPaymentConsentStatus" : true,
+      "createPaymentOrder" : true,
+      "createPaymentConsent" : true,
+      "getPaymentConsentFundsConfirmation" : true
+    },
+    "createdBy" : "id=amAdmin,ou=user,ou=am-config",
+    "creationDate" : 1549842674322,
+    "lastModifiedBy" : "id=amAdmin,ou=user,ou=am-config",
+    "lastModifiedDate" : 1549842674322
+  }
+}
