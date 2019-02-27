@@ -1,1 +1,0 @@
-#Openbanking OpenAM realm
