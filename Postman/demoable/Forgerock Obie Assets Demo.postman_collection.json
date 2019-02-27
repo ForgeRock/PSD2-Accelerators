@@ -1,0 +1,3812 @@
+{
+	"info": {
+		"_postman_id": "4097a80c-1c49-4c5e-a1ed-d3622afa5e5c",
+		"name": "Forgerock Obie Assets Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Demoable",
+			"item": [
+				{
+					"name": "Onboarding",
+					"item": [
+						{
+							"name": "[IG] Dynamic Registration IG",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "64730813-7ae3-4b7e-a82d-c3d7faef9222",
+										"exec": [
+											"postman.setEnvironmentVariable('exp',(new Date().getTime() / 1000) + 60*5);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "32064150-688f-4520-863a-f76558f4ee5b",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											"pm.environment.set(\"CLIENT_ID\", data.client_id);",
+											"pm.environment.set(\"CLIENT_SECRET\", data.client_secret);",
+											"pm.environment.set(\"CLIENT_REDIRECT_URI\", data.redirect_uris);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/jwt"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{dynamic_registration_request}}"
+								},
+								"url": {
+									"raw": "{{OPENIG_CLOUD}}/openam/oauth2/realms/root/realms/openbanking/register",
+									"host": [
+										"{{OPENIG_CLOUD}}"
+									],
+									"path": [
+										"openam",
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"register"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Dynamic Registration",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/jwt"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{{dynamic_registration_request}}"
+										},
+										"url": {
+											"raw": "{{ASPSP_REGISTRATION_ENDPOINT}}",
+											"host": [
+												"{{ASPSP_REGISTRATION_ENDPOINT}}"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json;charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:36:15 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Expires",
+											"value": "0",
+											"name": "Expires",
+											"description": "Gives the date/time after which the response is considered stale"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000 ; includeSubDomains",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block",
+											"name": "X-XSS-Protection",
+											"description": "Cross-site scripting (XSS) filter"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "92d8d979-726c-4f62-8070-fc6b5b44db39",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": true,
+											"domain": "rs.aspsp.ob.forgerock.financial",
+											"path": "/v1.1",
+											"secure": true,
+											"value": "34F0FF6ADBE51B4332018415EB8726BF",
+											"key": "JSESSIONID"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": true,
+											"domain": "rs.aspsp.ob.forgerock.financial",
+											"path": "/",
+											"secure": true,
+											"value": "B165242A9E44929BEB0404056A48E34D",
+											"key": "JSESSIONID"
+										}
+									],
+									"body": "{\"scopes\":[\"openid\",\"payments\",\"accounts\"],\"scope\":\"openid payments accounts\",\"redirect_uris\":[\"https://www.google.co.uk/\"],\"response_types\":[\"code id_token\"],\"application_type\":\"web\",\"client_name\":\"Postman\",\"jwks_uri\":\"https://service.directory.ob.forgerock.financial/api/software-statement/5b7c5b03b093460b5c268d90/application/jwk_uri\",\"subject_type\":\"public\",\"id_token_signed_response_alg\":\"RS256\",\"id_token_encrypted_response_alg\":\"RSA1_5\",\"id_token_encrypted_response_enc\":\"A128CBC_HS256\",\"userinfo_signed_response_alg\":\"\",\"userinfo_encrypted_response_alg\":\"\",\"request_object_signing_alg\":\"RS256\",\"request_object_encryption_alg\":\"RSA-OAEP-256\",\"request_object_encryption_enc\":\"A128CBC-HS256\",\"token_endpoint_auth_method\":\"private_key_jwt\",\"token_endpoint_auth_signing_alg\":\"RS256\",\"default_max_age\":\"1\",\"software_statement\":\"eyJraWQiOiI0ZjgxOTJhMi1hZTc0LTQ2ZWMtYTU5MC0zMjAwODNhNDA3ZmYiLCJhbGciOiJSUzI1NiJ9.eyJvcmdfandrc19lbmRwb2ludCI6IlRPRE8iLCJzb2Z0d2FyZV9tb2RlIjoiVEVTVCIsInNvZnR3YXJlX3JlZGlyZWN0X3VyaXMiOltdLCJvcmdfc3RhdHVzIjoiQWN0aXZlIiwic29mdHdhcmVfY2xpZW50X25hbWUiOiJQb3N0bWFuIiwic29mdHdhcmVfY2xpZW50X2lkIjoiNWI3YzViMDNiMDkzNDYwYjVjMjY4ZDkwIiwiaXNzIjoiRm9yZ2VSb2NrIiwic29mdHdhcmVfandrc19lbmRwb2ludCI6Imh0dHBzOlwvXC9zZXJ2aWNlLmRpcmVjdG9yeS5vYi5mb3JnZXJvY2suZmluYW5jaWFsXC9hcGlcL3NvZnR3YXJlLXN0YXRlbWVudFwvNWI3YzViMDNiMDkzNDYwYjVjMjY4ZDkwXC9hcHBsaWNhdGlvblwvandrX3VyaSIsInNvZnR3YXJlX2lkIjoiNWI3YzViMDNiMDkzNDYwYjVjMjY4ZDkwIiwib3JnX2NvbnRhY3RzIjpbXSwib2JfcmVnaXN0cnlfdG9zIjoiaHR0cHM6XC9cL2RpcmVjdG9yeS5vYi5mb3JnZXJvY2suZmluYW5jaWFsXC90b3NcLyIsIm9yZ19pZCI6IjViMDU5YTgxYjA5MzQ2NWYwZWU4NTcxNCIsInNvZnR3YXJlX2p3a3NfcmV2b2tlZF9lbmRwb2ludCI6IlRPRE8iLCJzb2Z0d2FyZV9yb2xlcyI6WyJQSVNQIiwiQUlTUCJdLCJleHAiOjE1MzYzNjMzNjcsIm9yZ19uYW1lIjoiUXVlbnRpbiIsIm9yZ19qd2tzX3Jldm9rZWRfZW5kcG9pbnQiOiJUT0RPIiwiaWF0IjoxNTM1NzU4NTY3LCJqdGkiOiJmZDMzZjhkYS03MjA2LTQ0MzctYjI5Mi0zNjE2N2RlMGFmOGYifQ.ohoGb9laTDChrCjaj39TVtxI1ziMQomtbZ6_7FFX1P18E5wonZzIO-SgHysu6NXaDAwZJ8YzCEBW4BELYMt8CKgKfHm9opJIzhXOY4xhzudFPvXfRzMqwJb1AfJ4XP_hQlXlFZTswBaAPwBZsu9qG3jo7k-eqSC9OlHJaYyoVHtZnbkiwsC0ZgwYcQUNa97fy2gpbF0NvfDxULx9IUlaYqapNA43rV_Nzo9us_vfIE_qurCYf4SHaVZmV76fS1nFtUxMoYCet9d_AFFwvM_OR1cMNILetx6mhuc17G5hOuSm0PNT4XtZldPIgrcBdZy6FWUOyTmhyDuzLsZTXtkEjA\",\"client_id\":\"91c3c517-9db6-417e-8b05-8b1188f7a2d6\",\"client_secret\":\"9f9169e8-9df7-4f95-9c5c-8d760afb0d97\",\"registration_access_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiI5MWMzYzUxNy05ZGI2LTQxN2UtOGIwNS04YjExODhmN2EyZDYiLCJhdWRpdFRyYWNraW5nSWQiOiI3YzFjM2NhNi1iMDM5LTRiZDMtOGZiMi01NTU0YzE0M2E2OTIiLCJpc3MiOiJudWxsOi8vbnVsbC9vYXV0aDIvb3BlbmJhbmtpbmciLCJ0b2tlbk5hbWUiOiJhY2Nlc3NfdG9rZW4iLCJ0b2tlbl90eXBlIjoiQmVhcmVyIiwiYXV0aEdyYW50SWQiOiIzMTI5YTBhMi1iOTM5LTRjNjMtOGE4NS03YjRjZjRmYmQxNzciLCJhdWQiOiI5MWMzYzUxNy05ZGI2LTQxN2UtOGIwNS04YjExODhmN2EyZDYiLCJuYmYiOjE1MzU3NTg1NzUsInNjb3BlIjpbXSwiYXV0aF90aW1lIjoxNTM1NzU4NTc1LCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTUzNTg0NDk3NSwiaWF0IjoxNTM1NzU4NTc1LCJleHBpcmVzX2luIjo4NjQwMCwianRpIjoiMGE4YmZjZDYtYzkyYy00MzU4LTk5ODktYTA2ZmY5NTc0OGY1In0.M-64aXen_Fdrq155dzEpfBY5HqFp3064-ZgLue7baCCgiQoQBLPjZeU8SAT0ctKi6KeM-vGPv3Em1Im9l65MOA\",\"registration_client_uri\":\"https://as.aspsp.ob.forgerock.financial/oauth2/register?client_id=91c3c517-9db6-417e-8b05-8b1188f7a2d6\",\"client_secret_expires_at\":\"0\"}"
+								}
+							]
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Payment flow",
+					"item": [
+						{
+							"name": "OpenAM-OAuth2-ClientCredentials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b21bee1d-c687-40db-817b-8632571ee746",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"access_token\", data.access_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "code",
+											"value": "7qoFkzzM6sSwftHNVYT8Cl5h12c",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "client_credentials",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{CLIENT_ID}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{CLIENT_SECRET}}",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "payments",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "{{CLIENT_REDIRECT_URI}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/access_token",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"access_token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Payment Intent",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3423a6c3-5a7c-4248-bd09-dcf37781dc63",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"IntentId\", data.result);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Data\": {\n    \"Initiation\": {\n      \"InstructionIdentification\": \"ACME412\",\n      \"EndToEndIdentification\": \"FRESCO.21302.GFX.20\",\n      \"InstructedAmount\": {\n        \"Amount\": \"165.88\",\n        \"Currency\": \"GBP\"\n      },\n      \"CreditorAccount\": {\n        \"SchemeName\": \"SortCodeAccountNumber\",\n        \"Identification\": \"08080021325698\",\n        \"Name\": \"ACME Inc\",\n        \"SecondaryIdentification\": \"0002\"\n      },\n      \"RemittanceInformation\": {\n        \"Reference\": \"FRESCO-101\",\n        \"Unstructured\": \"Internal ops code 5120101\"\n      }\n    }\n  },\n  \"Risk\": {\n    \"PaymentContextCode\": \"EcommerceGoods\",\n    \"MerchantCategoryCode\": \"5967\",\n    \"MerchantCustomerIdentification\": \"053598653254\",\n    \"DeliveryAddress\": {\n      \"AddressLine\": [\n        \"Flat 7\",\n        \"Acacia Lodge\"\n      ],\n      \"StreetName\": \"Acacia Avenue\",\n      \"BuildingNumber\": \"27\",\n      \"PostCode\": \"GU31 2ZZ\",\n      \"TownName\": \"Sparsholt\",\n      \"CountySubDivision\": [\n        \"Wessex\"\n      ],\n      \"Country\": \"UK\"\n    }\n  }\n}"
+								},
+								"url": {
+									"raw": "{{OPENIG_CLOUD}}/openbanking/v3.1/domestic-payment-consents",
+									"host": [
+										"{{OPENIG_CLOUD}}"
+									],
+									"path": [
+										"openbanking",
+										"v3.1",
+										"domestic-payment-consents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hybrid flow",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "6a4df261-3931-49c0-9b1d-8749a69a0602",
+										"exec": [
+											"postman.setEnvironmentVariable('exp',(new Date().getTime() / 1000) + 60*5);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "jwkUri",
+										"value": "{{AS_JWK_URI}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/authorize?client_id={{CLIENT_ID}}&response_type=code%20id_token&redirect_uri={{CLIENT_REDIRECT_URI}}&scope=payments%20openid&state=state-1234&nonce=nonce-1234&claims=%7B%22userinfo%22:%7B%22openbanking_intent_id%22:%7B%22value%22:%22{{IntentId}}%22,%22essential%22:true%7D%7D,%22id_token%22:%7B%22openbanking_intent_id%22:%7B%22value%22:%22{{IntentId}}%22,%22essential%22:true%7D%7D%7D",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "{{CLIENT_ID}}"
+										},
+										{
+											"key": "response_type",
+											"value": "code%20id_token"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "{{CLIENT_REDIRECT_URI}}"
+										},
+										{
+											"key": "scope",
+											"value": "payments%20openid"
+										},
+										{
+											"key": "state",
+											"value": "state-1234"
+										},
+										{
+											"key": "nonce",
+											"value": "nonce-1234"
+										},
+										{
+											"key": "claims",
+											"value": "%7B%22userinfo%22:%7B%22openbanking_intent_id%22:%7B%22value%22:%22{{IntentId}}%22,%22essential%22:true%7D%7D,%22id_token%22:%7B%22openbanking_intent_id%22:%7B%22value%22:%22{{IntentId}}%22,%22essential%22:true%7D%7D%7D"
+										},
+										{
+											"key": "request",
+											"value": "{{request_parameter}}",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Exchange code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6f1fd8b3-aefd-4d61-944d-4efb95a0f89c",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"access_token_with_consent\", data.access_token);",
+											"postman.setEnvironmentVariable(\"id_token\", data.id_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "6f2sobui2Dp25m-S8P6Gl_PYQ6o",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "{{CLIENT_REDIRECT_URI}}",
+											"type": "text"
+										},
+										{
+											"key": "client_assertion_type",
+											"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "client_assertion",
+											"value": "{{client_credential_jwt}}",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "client_id",
+											"value": "{{CLIENT_ID}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{CLIENT_SECRET}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/access_token",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"access_token"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Exchange code",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "grant_type",
+													"value": "authorization_code",
+													"type": "text"
+												},
+												{
+													"key": "code",
+													"value": "d32dafd8-071d-41bd-bdda-afe6d45d8307",
+													"type": "text"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "{{CLIENT_REDIRECT_URI}}",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion_type",
+													"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion",
+													"value": "{{client_credential_jwt}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{AS_token_endpoint}}",
+											"host": [
+												"{{AS_token_endpoint}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Accept-Ranges",
+											"value": "bytes",
+											"name": "Accept-Ranges",
+											"description": "Content-Types that are acceptable"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-store",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:38:07 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Server",
+											"value": "Restlet-Framework/2.3.4",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubdomains; preload",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Charset, Accept-Encoding, Accept-Language, Accept",
+											"name": "Vary",
+											"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "077cbcb9-51a5-4b51-b960-9c420cb10138",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										}
+									],
+									"body": "{\"access_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNDYxYzhhYTgtZjY1Ni00NGQyLThjOTEtYThiOTRjNzUwZGZlIiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwibmJmIjoxNTM1NzU4Njg3LCJncmFudF90eXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwic2NvcGUiOlsib3BlbmlkIiwicGF5bWVudHMiLCJhY2NvdW50cyJdLCJhdXRoX3RpbWUiOjE1MzU3NTg2NjMwMDAsImNsYWltcyI6IntcImlkX3Rva2VuXCI6e1wiYWNyXCI6e1widmFsdWVcIjpcInVybjpvcGVuYmFua2luZzpwc2QyOnNjYVwiLFwiZXNzZW50aWFsXCI6dHJ1ZX0sXCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19LFwidXNlcmluZm9cIjp7XCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19fSIsInJlYWxtIjoiL29wZW5iYW5raW5nIiwiZXhwIjoxNTM1ODQ1MDg3LCJpYXQiOjE1MzU3NTg2ODcsImV4cGlyZXNfaW4iOjg2NDAwLCJqdGkiOiIyNmQ1OWZmNS0wYmU3LTQxN2MtOGJhOC01MzcxOGU5ZjE1YTkifQ.Oi4HzCmb1dT-xE1ewNAxrcy1PO85_gIFs7BKhuD7Qbn9K0kS6tDXawHa4K3vZzZUk5-CA3LJ7zqQ7Ex2vocNGQ\",\"refresh_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNGY0YzhlOTgtZjMyYS00NzliLWEyYzUtZTRjYzE3NWZiZDU3IiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoTW9kdWxlcyI6IkRhdGFTdG9yZSIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsImF1ZCI6IjkxYzNjNTE3LTlkYjYtNDE3ZS04YjA1LThiMTE4OGY3YTJkNiIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsIm5iZiI6MTUzNTc1ODY4Nywib3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiZ3JhbnRfdHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsInNjb3BlIjpbIm9wZW5pZCIsInBheW1lbnRzIiwiYWNjb3VudHMiXSwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJjbGFpbXMiOiJ7XCJpZF90b2tlblwiOntcImFjclwiOntcInZhbHVlXCI6XCJ1cm46b3BlbmJhbmtpbmc6cHNkMjpzY2FcIixcImVzc2VudGlhbFwiOnRydWV9LFwib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fSxcInVzZXJpbmZvXCI6e1wib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fX0iLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTU0MzUzNDY4NywiaWF0IjoxNTM1NzU4Njg3LCJleHBpcmVzX2luIjo3Nzc2MDAwLCJqdGkiOiJiMTk1Y2QzZi0wMjI5LTQ3YzYtOGNkMy03ODZhMDI1OWFhODMifQ.sjRPbbgxR5AXl-gtuSPKuz_9oM9MjocSfEDYJmJBJLyqSAHWimnMon5Pnxk_eEnvF2TNS3mFovtHq1RCXE4E-w\",\"scope\":\"openid payments accounts\",\"id_token\":\"eyJ0eXAiOiJKV1QiLCJraWQiOiJiL082T3ZWdjEreStXZ3JINVVpOVdUaW9MdDA9IiwiYWxnIjoiUlMyNTYifQ.eyJhdF9oYXNoIjoicm1EYUlJMjFGcmNadElNWnpSeFNGQSIsInN1YiI6ImRlbW8iLCJhdWRpdFRyYWNraW5nSWQiOiIwOTAxZWNhZi1hMDA4LTQ1NzItOGQ4NC0zMGJkZmM0NTRjMTYtMzE5ODU3MCIsImlzcyI6Imh0dHBzOi8vbWF0bHMuYXMuYXNwc3Aub2IuZm9yZ2Vyb2NrLmZpbmFuY2lhbC9vYXV0aDIvb3BlbmJhbmtpbmciLCJ0b2tlbk5hbWUiOiJpZF90b2tlbiIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYWNyIjoidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiY19oYXNoIjoiYldBUTJUVk1UVUVMTTJkLTUyRHpPQSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDgiLCJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiYXpwIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTUzNTg0NTA4NywidG9rZW5UeXBlIjoiSldUVG9rZW4iLCJpYXQiOjE1MzU3NTg2ODd9.kxRZg6qTIrZGn99SJaOhYvVQOPe5SnIYNfOVa1LDM4NheJ-ClETNtfdpK43aDe1Xf79bH1wX5KO4j807kbDcLZ7g36PepIeUESzB6nKGyCaDZeuNlBRy97WEkFRrXeYoqmi7oMy_m7NEQDw7VR983GBjpjgQACJeyY4P26DU1S6OmrSonateFaViatwP7gqXKYuMfy-lsN8B1QVGg59xigu1lg90QUgDwnMVHqwKrunoBBTUtIYHcIeV3w2RRCWyH5JRnbYDzcnhZ1gQYdHbkZQcoxVvjYwX1FxwQa0vnY1wfLlWp6R-VhSGgsaLPh81yRmp_aaUp5G5P0_03QtOVw\",\"token_type\":\"Bearer\",\"expires_in\":86399,\"nonce\":\"10d260bf-a7d9-444a-92d9-7b7a5f088208\"}"
+								}
+							]
+						},
+						{
+							"name": "Instrospect Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6f1fd8b3-aefd-4d61-944d-4efb95a0f89c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "token",
+											"value": "{{access_token_with_consent}}",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "{{CLIENT_REDIRECT_URI}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "ig_agent_oauth2",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "ig_agent_oauth2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/introspect",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"introspect"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Exchange code",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "grant_type",
+													"value": "authorization_code",
+													"type": "text"
+												},
+												{
+													"key": "code",
+													"value": "d32dafd8-071d-41bd-bdda-afe6d45d8307",
+													"type": "text"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "{{CLIENT_REDIRECT_URI}}",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion_type",
+													"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion",
+													"value": "{{client_credential_jwt}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{AS_token_endpoint}}",
+											"host": [
+												"{{AS_token_endpoint}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Accept-Ranges",
+											"value": "bytes",
+											"name": "Accept-Ranges",
+											"description": "Content-Types that are acceptable"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-store",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:38:07 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Server",
+											"value": "Restlet-Framework/2.3.4",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubdomains; preload",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Charset, Accept-Encoding, Accept-Language, Accept",
+											"name": "Vary",
+											"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "077cbcb9-51a5-4b51-b960-9c420cb10138",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										}
+									],
+									"body": "{\"access_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNDYxYzhhYTgtZjY1Ni00NGQyLThjOTEtYThiOTRjNzUwZGZlIiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwibmJmIjoxNTM1NzU4Njg3LCJncmFudF90eXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwic2NvcGUiOlsib3BlbmlkIiwicGF5bWVudHMiLCJhY2NvdW50cyJdLCJhdXRoX3RpbWUiOjE1MzU3NTg2NjMwMDAsImNsYWltcyI6IntcImlkX3Rva2VuXCI6e1wiYWNyXCI6e1widmFsdWVcIjpcInVybjpvcGVuYmFua2luZzpwc2QyOnNjYVwiLFwiZXNzZW50aWFsXCI6dHJ1ZX0sXCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19LFwidXNlcmluZm9cIjp7XCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19fSIsInJlYWxtIjoiL29wZW5iYW5raW5nIiwiZXhwIjoxNTM1ODQ1MDg3LCJpYXQiOjE1MzU3NTg2ODcsImV4cGlyZXNfaW4iOjg2NDAwLCJqdGkiOiIyNmQ1OWZmNS0wYmU3LTQxN2MtOGJhOC01MzcxOGU5ZjE1YTkifQ.Oi4HzCmb1dT-xE1ewNAxrcy1PO85_gIFs7BKhuD7Qbn9K0kS6tDXawHa4K3vZzZUk5-CA3LJ7zqQ7Ex2vocNGQ\",\"refresh_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNGY0YzhlOTgtZjMyYS00NzliLWEyYzUtZTRjYzE3NWZiZDU3IiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoTW9kdWxlcyI6IkRhdGFTdG9yZSIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsImF1ZCI6IjkxYzNjNTE3LTlkYjYtNDE3ZS04YjA1LThiMTE4OGY3YTJkNiIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsIm5iZiI6MTUzNTc1ODY4Nywib3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiZ3JhbnRfdHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsInNjb3BlIjpbIm9wZW5pZCIsInBheW1lbnRzIiwiYWNjb3VudHMiXSwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJjbGFpbXMiOiJ7XCJpZF90b2tlblwiOntcImFjclwiOntcInZhbHVlXCI6XCJ1cm46b3BlbmJhbmtpbmc6cHNkMjpzY2FcIixcImVzc2VudGlhbFwiOnRydWV9LFwib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fSxcInVzZXJpbmZvXCI6e1wib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fX0iLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTU0MzUzNDY4NywiaWF0IjoxNTM1NzU4Njg3LCJleHBpcmVzX2luIjo3Nzc2MDAwLCJqdGkiOiJiMTk1Y2QzZi0wMjI5LTQ3YzYtOGNkMy03ODZhMDI1OWFhODMifQ.sjRPbbgxR5AXl-gtuSPKuz_9oM9MjocSfEDYJmJBJLyqSAHWimnMon5Pnxk_eEnvF2TNS3mFovtHq1RCXE4E-w\",\"scope\":\"openid payments accounts\",\"id_token\":\"eyJ0eXAiOiJKV1QiLCJraWQiOiJiL082T3ZWdjEreStXZ3JINVVpOVdUaW9MdDA9IiwiYWxnIjoiUlMyNTYifQ.eyJhdF9oYXNoIjoicm1EYUlJMjFGcmNadElNWnpSeFNGQSIsInN1YiI6ImRlbW8iLCJhdWRpdFRyYWNraW5nSWQiOiIwOTAxZWNhZi1hMDA4LTQ1NzItOGQ4NC0zMGJkZmM0NTRjMTYtMzE5ODU3MCIsImlzcyI6Imh0dHBzOi8vbWF0bHMuYXMuYXNwc3Aub2IuZm9yZ2Vyb2NrLmZpbmFuY2lhbC9vYXV0aDIvb3BlbmJhbmtpbmciLCJ0b2tlbk5hbWUiOiJpZF90b2tlbiIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYWNyIjoidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiY19oYXNoIjoiYldBUTJUVk1UVUVMTTJkLTUyRHpPQSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDgiLCJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiYXpwIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTUzNTg0NTA4NywidG9rZW5UeXBlIjoiSldUVG9rZW4iLCJpYXQiOjE1MzU3NTg2ODd9.kxRZg6qTIrZGn99SJaOhYvVQOPe5SnIYNfOVa1LDM4NheJ-ClETNtfdpK43aDe1Xf79bH1wX5KO4j807kbDcLZ7g36PepIeUESzB6nKGyCaDZeuNlBRy97WEkFRrXeYoqmi7oMy_m7NEQDw7VR983GBjpjgQACJeyY4P26DU1S6OmrSonateFaViatwP7gqXKYuMfy-lsN8B1QVGg59xigu1lg90QUgDwnMVHqwKrunoBBTUtIYHcIeV3w2RRCWyH5JRnbYDzcnhZ1gQYdHbkZQcoxVvjYwX1FxwQa0vnY1wfLlWp6R-VhSGgsaLPh81yRmp_aaUp5G5P0_03QtOVw\",\"token_type\":\"Bearer\",\"expires_in\":86399,\"nonce\":\"10d260bf-a7d9-444a-92d9-7b7a5f088208\"}"
+								}
+							]
+						},
+						{
+							"name": "UserInfo",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6f1fd8b3-aefd-4d61-944d-4efb95a0f89c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_with_consent}}",
+										"type": "text"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/userinfo",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"userinfo"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Exchange code",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "grant_type",
+													"value": "authorization_code",
+													"type": "text"
+												},
+												{
+													"key": "code",
+													"value": "d32dafd8-071d-41bd-bdda-afe6d45d8307",
+													"type": "text"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "{{CLIENT_REDIRECT_URI}}",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion_type",
+													"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion",
+													"value": "{{client_credential_jwt}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{AS_token_endpoint}}",
+											"host": [
+												"{{AS_token_endpoint}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Accept-Ranges",
+											"value": "bytes",
+											"name": "Accept-Ranges",
+											"description": "Content-Types that are acceptable"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-store",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:38:07 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Server",
+											"value": "Restlet-Framework/2.3.4",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubdomains; preload",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Charset, Accept-Encoding, Accept-Language, Accept",
+											"name": "Vary",
+											"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "077cbcb9-51a5-4b51-b960-9c420cb10138",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										}
+									],
+									"body": "{\"access_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNDYxYzhhYTgtZjY1Ni00NGQyLThjOTEtYThiOTRjNzUwZGZlIiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwibmJmIjoxNTM1NzU4Njg3LCJncmFudF90eXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwic2NvcGUiOlsib3BlbmlkIiwicGF5bWVudHMiLCJhY2NvdW50cyJdLCJhdXRoX3RpbWUiOjE1MzU3NTg2NjMwMDAsImNsYWltcyI6IntcImlkX3Rva2VuXCI6e1wiYWNyXCI6e1widmFsdWVcIjpcInVybjpvcGVuYmFua2luZzpwc2QyOnNjYVwiLFwiZXNzZW50aWFsXCI6dHJ1ZX0sXCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19LFwidXNlcmluZm9cIjp7XCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19fSIsInJlYWxtIjoiL29wZW5iYW5raW5nIiwiZXhwIjoxNTM1ODQ1MDg3LCJpYXQiOjE1MzU3NTg2ODcsImV4cGlyZXNfaW4iOjg2NDAwLCJqdGkiOiIyNmQ1OWZmNS0wYmU3LTQxN2MtOGJhOC01MzcxOGU5ZjE1YTkifQ.Oi4HzCmb1dT-xE1ewNAxrcy1PO85_gIFs7BKhuD7Qbn9K0kS6tDXawHa4K3vZzZUk5-CA3LJ7zqQ7Ex2vocNGQ\",\"refresh_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNGY0YzhlOTgtZjMyYS00NzliLWEyYzUtZTRjYzE3NWZiZDU3IiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoTW9kdWxlcyI6IkRhdGFTdG9yZSIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsImF1ZCI6IjkxYzNjNTE3LTlkYjYtNDE3ZS04YjA1LThiMTE4OGY3YTJkNiIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsIm5iZiI6MTUzNTc1ODY4Nywib3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiZ3JhbnRfdHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsInNjb3BlIjpbIm9wZW5pZCIsInBheW1lbnRzIiwiYWNjb3VudHMiXSwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJjbGFpbXMiOiJ7XCJpZF90b2tlblwiOntcImFjclwiOntcInZhbHVlXCI6XCJ1cm46b3BlbmJhbmtpbmc6cHNkMjpzY2FcIixcImVzc2VudGlhbFwiOnRydWV9LFwib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fSxcInVzZXJpbmZvXCI6e1wib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fX0iLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTU0MzUzNDY4NywiaWF0IjoxNTM1NzU4Njg3LCJleHBpcmVzX2luIjo3Nzc2MDAwLCJqdGkiOiJiMTk1Y2QzZi0wMjI5LTQ3YzYtOGNkMy03ODZhMDI1OWFhODMifQ.sjRPbbgxR5AXl-gtuSPKuz_9oM9MjocSfEDYJmJBJLyqSAHWimnMon5Pnxk_eEnvF2TNS3mFovtHq1RCXE4E-w\",\"scope\":\"openid payments accounts\",\"id_token\":\"eyJ0eXAiOiJKV1QiLCJraWQiOiJiL082T3ZWdjEreStXZ3JINVVpOVdUaW9MdDA9IiwiYWxnIjoiUlMyNTYifQ.eyJhdF9oYXNoIjoicm1EYUlJMjFGcmNadElNWnpSeFNGQSIsInN1YiI6ImRlbW8iLCJhdWRpdFRyYWNraW5nSWQiOiIwOTAxZWNhZi1hMDA4LTQ1NzItOGQ4NC0zMGJkZmM0NTRjMTYtMzE5ODU3MCIsImlzcyI6Imh0dHBzOi8vbWF0bHMuYXMuYXNwc3Aub2IuZm9yZ2Vyb2NrLmZpbmFuY2lhbC9vYXV0aDIvb3BlbmJhbmtpbmciLCJ0b2tlbk5hbWUiOiJpZF90b2tlbiIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYWNyIjoidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiY19oYXNoIjoiYldBUTJUVk1UVUVMTTJkLTUyRHpPQSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDgiLCJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiYXpwIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTUzNTg0NTA4NywidG9rZW5UeXBlIjoiSldUVG9rZW4iLCJpYXQiOjE1MzU3NTg2ODd9.kxRZg6qTIrZGn99SJaOhYvVQOPe5SnIYNfOVa1LDM4NheJ-ClETNtfdpK43aDe1Xf79bH1wX5KO4j807kbDcLZ7g36PepIeUESzB6nKGyCaDZeuNlBRy97WEkFRrXeYoqmi7oMy_m7NEQDw7VR983GBjpjgQACJeyY4P26DU1S6OmrSonateFaViatwP7gqXKYuMfy-lsN8B1QVGg59xigu1lg90QUgDwnMVHqwKrunoBBTUtIYHcIeV3w2RRCWyH5JRnbYDzcnhZ1gQYdHbkZQcoxVvjYwX1FxwQa0vnY1wfLlWp6R-VhSGgsaLPh81yRmp_aaUp5G5P0_03QtOVw\",\"token_type\":\"Bearer\",\"expires_in\":86399,\"nonce\":\"10d260bf-a7d9-444a-92d9-7b7a5f088208\"}"
+								}
+							]
+						},
+						{
+							"name": "Payment submission",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "32bcd174-11b8-4b3f-b498-572e82126f98",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_with_consent}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-idempotency-key",
+										"value": "FRESCO.21302.GFX.20"
+									},
+									{
+										"key": "x-jws-signature",
+										"value": "TGlmZSdzIGEgam91cm5leSBub3QgYSBkZXN0aW5hdGlvbiA=..T2ggZ29vZCBldmVuaW5nIG1yIHR5bGVyIGdvaW5nIGRvd24gPw==",
+										"disabled": true
+									},
+									{
+										"key": "x-fapi-financial-id",
+										"value": "{{ASPSP_FINANCIAL_ID}}"
+									},
+									{
+										"key": "x-fapi-customer-last-logged-time",
+										"value": "Sun, 10 Sep 2017 19:43:31 UTC"
+									},
+									{
+										"key": "x-fapi-customer-ip-address",
+										"value": "104.25.212.99"
+									},
+									{
+										"key": "x-fapi-interaction-id",
+										"value": "93bac548-d2de-4546-b106-880a5018460d"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Data\": {\n    \"ConsentId\": \"{{IntentId}}\",\n    \"Initiation\": {\n      \"InstructionIdentification\": \"ACME412\",\n      \"EndToEndIdentification\": \"FRESCO.21302.GFX.20\",\n      \"InstructedAmount\": {\n        \"Amount\": \"165.88\",\n        \"Currency\": \"GBP\"\n      },\n      \"CreditorAccount\": {\n        \"SchemeName\": \"SortCodeAccountNumber\",\n        \"Identification\": \"08080021325698\",\n        \"Name\": \"ACME Inc\",\n        \"SecondaryIdentification\": \"0002\"\n      },\n      \"RemittanceInformation\": {\n        \"Reference\": \"FRESCO-101\",\n        \"Unstructured\": \"Internal ops code 5120101\"\n      }\n    }\n  },\n  \"Risk\": {\n    \"PaymentContextCode\": \"EcommerceGoods\",\n    \"MerchantCategoryCode\": \"5967\",\n    \"MerchantCustomerIdentification\": \"053598653254\",\n    \"DeliveryAddress\": {\n      \"AddressLine\": [\n        \"Flat 7\",\n        \"Acacia Lodge\"\n      ],\n      \"StreetName\": \"Acacia Avenue\",\n      \"BuildingNumber\": \"27\",\n      \"PostCode\": \"GU31 2ZZ\",\n      \"TownName\": \"Sparsholt\",\n      \"CountySubDivision\": [\n        \"Wessex\"\n      ],\n      \"Country\": \"UK\"\n    }\n  }\n}"
+								},
+								"url": {
+									"raw": "{{OPENIG_CLOUD}}/openbanking/v3.1/domestic-payments",
+									"host": [
+										"{{OPENIG_CLOUD}}"
+									],
+									"path": [
+										"openbanking",
+										"v3.1",
+										"domestic-payments"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Payment submission",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token_with_consent}}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "x-idempotency-key",
+												"value": "FRESCO.21302.GFX.20"
+											},
+											{
+												"key": "x-jws-signature",
+												"value": "TGlmZSdzIGEgam91cm5leSBub3QgYSBkZXN0aW5hdGlvbiA=..T2ggZ29vZCBldmVuaW5nIG1yIHR5bGVyIGdvaW5nIGRvd24gPw==",
+												"disabled": true
+											},
+											{
+												"key": "x-fapi-financial-id",
+												"value": "{{ASPSP_FINANCIAL_ID}}"
+											},
+											{
+												"key": "x-fapi-customer-last-logged-time",
+												"value": "Sun, 10 Sep 2017 19:43:31 UTC"
+											},
+											{
+												"key": "x-fapi-customer-ip-address",
+												"value": "104.25.212.99"
+											},
+											{
+												"key": "x-fapi-interaction-id",
+												"value": "93bac548-d2de-4546-b106-880a5018460d"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"Data\": {\n    \"PaymentId\": \"{{PaymentId}}\",\n    \"Initiation\": {\n      \"InstructionIdentification\": \"ACME412\",\n      \"EndToEndIdentification\": \"FRESCO.21302.GFX.20\",\n      \"InstructedAmount\": {\n        \"Amount\": \"165.88\",\n        \"Currency\": \"GBP\"\n      },\n      \"CreditorAccount\": {\n        \"SchemeName\": \"SortCodeAccountNumber\",\n        \"Identification\": \"08080021325698\",\n        \"Name\": \"ACME Inc\",\n        \"SecondaryIdentification\": \"0002\"\n      },\n      \"RemittanceInformation\": {\n        \"Reference\": \"FRESCO-101\",\n        \"Unstructured\": \"Internal ops code 5120101\"\n      }\n    }\n  },\n  \"Risk\": {\n    \"PaymentContextCode\": \"EcommerceGoods\",\n    \"MerchantCategoryCode\": \"5967\",\n    \"MerchantCustomerIdentification\": \"053598653254\",\n    \"DeliveryAddress\": {\n      \"AddressLine\": [\n        \"Flat 7\",\n        \"Acacia Lodge\"\n      ],\n      \"StreetName\": \"Acacia Avenue\",\n      \"BuildingNumber\": \"27\",\n      \"PostCode\": \"GU31 2ZZ\",\n      \"TownName\": \"Sparsholt\",\n      \"CountySubDivision\": [\n        \"Wessex\"\n      ],\n      \"Country\": \"UK\"\n    }\n  }\n}"
+										},
+										"url": {
+											"raw": "{{RS_CreatePaymentSubmission_v2.0}}",
+											"host": [
+												"{{RS_CreatePaymentSubmission_v2.0}}"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json;charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:38:12 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Expires",
+											"value": "0",
+											"name": "Expires",
+											"description": "Gives the date/time after which the response is considered stale"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000 ; includeSubDomains",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block",
+											"name": "X-XSS-Protection",
+											"description": "Cross-site scripting (XSS) filter"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "93bac548-d2de-4546-b106-880a5018460d",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": true,
+											"domain": "rs.aspsp.ob.forgerock.financial",
+											"path": "/v1.1",
+											"secure": true,
+											"value": "34F0FF6ADBE51B4332018415EB8726BF",
+											"key": "JSESSIONID"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": true,
+											"domain": "rs.aspsp.ob.forgerock.financial",
+											"path": "/",
+											"secure": true,
+											"value": "B165242A9E44929BEB0404056A48E34D",
+											"key": "JSESSIONID"
+										}
+									],
+									"body": "{\"Data\":{\"PaymentSubmissionId\":\"764b7ff1-3c92-466a-a3d7-34bbf408a141\",\"PaymentId\":\"Pfda39ef6-c81f-49b6-9100-068fb88bb8d8\",\"Status\":\"AcceptedSettlementInProcess\",\"CreationDateTime\":\"2018-08-31T23:38:12+00:00\"}}"
+								}
+							]
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Accounts Information",
+					"item": [
+						{
+							"name": "OpenAM-OAuth2-ClientCredentials",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b21bee1d-c687-40db-817b-8632571ee746",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"access_token\", data.access_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "code",
+											"value": "7qoFkzzM6sSwftHNVYT8Cl5h12c",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "client_credentials",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{CLIENT_ID}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{CLIENT_SECRET}}",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "accounts",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "{{CLIENT_REDIRECT_URI}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/access_token",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"access_token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Account Intent",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3423a6c3-5a7c-4248-bd09-dcf37781dc63",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"AccountIntentId\", data.result);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Data\": {\n    \"Permissions\": [\n      \"ReadAccountsDetail\",\n      \"ReadBalances\",\n      \"ReadBeneficiariesDetail\",\n      \"ReadDirectDebits\",\n      \"ReadProducts\",\n      \"ReadStandingOrdersDetail\",\n      \"ReadTransactionsCredits\",\n      \"ReadTransactionsDebits\",\n      \"ReadTransactionsDetail\",\n      \"ReadOffers\",\n      \"ReadPAN\",\n      \"ReadParty\",\n      \"ReadPartyPSU\",\n      \"ReadScheduledPaymentsDetail\",\n      \"ReadStatementsDetail\"\n    ],\n    \"TransactionFromDateTime\": \"2017-05-03T00:00:00+00:00\",\n    \"TransactionToDateTime\": \"2018-12-03T00:00:00+00:00\"\n  },\n  \"Risk\": {}\n}"
+								},
+								"url": {
+									"raw": "{{OPENIG_CLOUD}}/openbanking/v3.1/account-access-consents",
+									"host": [
+										"{{OPENIG_CLOUD}}"
+									],
+									"path": [
+										"openbanking",
+										"v3.1",
+										"account-access-consents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hybrid flow",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "6a4df261-3931-49c0-9b1d-8749a69a0602",
+										"exec": [
+											"postman.setEnvironmentVariable('exp',(new Date().getTime() / 1000) + 60*5);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "jwkUri",
+										"value": "{{AS_JWK_URI}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/authorize?client_id={{CLIENT_ID}}&response_type=code%20id_token&redirect_uri={{CLIENT_REDIRECT_URI}}&scope=accounts%20openid&state=state-1234&nonce=nonce-1234&claims=%7B%22userinfo%22:%7B%22openbanking_intent_id%22:%7B%22value%22:%22{{AccountIntentId}}%22,%22essential%22:true%7D%7D,%22id_token%22:%7B%22openbanking_intent_id%22:%7B%22value%22:%22{{AccountIntentId}}%22,%22essential%22:true%7D%7D%7D",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "{{CLIENT_ID}}"
+										},
+										{
+											"key": "response_type",
+											"value": "code%20id_token"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "{{CLIENT_REDIRECT_URI}}"
+										},
+										{
+											"key": "scope",
+											"value": "accounts%20openid"
+										},
+										{
+											"key": "state",
+											"value": "state-1234"
+										},
+										{
+											"key": "nonce",
+											"value": "nonce-1234"
+										},
+										{
+											"key": "claims",
+											"value": "%7B%22userinfo%22:%7B%22openbanking_intent_id%22:%7B%22value%22:%22{{AccountIntentId}}%22,%22essential%22:true%7D%7D,%22id_token%22:%7B%22openbanking_intent_id%22:%7B%22value%22:%22{{AccountIntentId}}%22,%22essential%22:true%7D%7D%7D"
+										},
+										{
+											"key": "request",
+											"value": "{{request_parameter}}",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Exchange code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6f1fd8b3-aefd-4d61-944d-4efb95a0f89c",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"access_token_with_consent\", data.access_token);",
+											"postman.setEnvironmentVariable(\"id_token\", data.id_token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "IBugmA0wa7PWz4OkfA6LuieXX5A",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "{{CLIENT_REDIRECT_URI}}",
+											"type": "text"
+										},
+										{
+											"key": "client_assertion_type",
+											"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "client_assertion",
+											"value": "{{client_credential_jwt}}",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "client_id",
+											"value": "{{CLIENT_ID}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{CLIENT_SECRET}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/access_token",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"access_token"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Exchange code",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "grant_type",
+													"value": "authorization_code",
+													"type": "text"
+												},
+												{
+													"key": "code",
+													"value": "d32dafd8-071d-41bd-bdda-afe6d45d8307",
+													"type": "text"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "{{CLIENT_REDIRECT_URI}}",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion_type",
+													"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion",
+													"value": "{{client_credential_jwt}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{AS_token_endpoint}}",
+											"host": [
+												"{{AS_token_endpoint}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Accept-Ranges",
+											"value": "bytes",
+											"name": "Accept-Ranges",
+											"description": "Content-Types that are acceptable"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-store",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:38:07 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Server",
+											"value": "Restlet-Framework/2.3.4",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubdomains; preload",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Charset, Accept-Encoding, Accept-Language, Accept",
+											"name": "Vary",
+											"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "077cbcb9-51a5-4b51-b960-9c420cb10138",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										}
+									],
+									"body": "{\"access_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNDYxYzhhYTgtZjY1Ni00NGQyLThjOTEtYThiOTRjNzUwZGZlIiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwibmJmIjoxNTM1NzU4Njg3LCJncmFudF90eXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwic2NvcGUiOlsib3BlbmlkIiwicGF5bWVudHMiLCJhY2NvdW50cyJdLCJhdXRoX3RpbWUiOjE1MzU3NTg2NjMwMDAsImNsYWltcyI6IntcImlkX3Rva2VuXCI6e1wiYWNyXCI6e1widmFsdWVcIjpcInVybjpvcGVuYmFua2luZzpwc2QyOnNjYVwiLFwiZXNzZW50aWFsXCI6dHJ1ZX0sXCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19LFwidXNlcmluZm9cIjp7XCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19fSIsInJlYWxtIjoiL29wZW5iYW5raW5nIiwiZXhwIjoxNTM1ODQ1MDg3LCJpYXQiOjE1MzU3NTg2ODcsImV4cGlyZXNfaW4iOjg2NDAwLCJqdGkiOiIyNmQ1OWZmNS0wYmU3LTQxN2MtOGJhOC01MzcxOGU5ZjE1YTkifQ.Oi4HzCmb1dT-xE1ewNAxrcy1PO85_gIFs7BKhuD7Qbn9K0kS6tDXawHa4K3vZzZUk5-CA3LJ7zqQ7Ex2vocNGQ\",\"refresh_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNGY0YzhlOTgtZjMyYS00NzliLWEyYzUtZTRjYzE3NWZiZDU3IiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoTW9kdWxlcyI6IkRhdGFTdG9yZSIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsImF1ZCI6IjkxYzNjNTE3LTlkYjYtNDE3ZS04YjA1LThiMTE4OGY3YTJkNiIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsIm5iZiI6MTUzNTc1ODY4Nywib3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiZ3JhbnRfdHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsInNjb3BlIjpbIm9wZW5pZCIsInBheW1lbnRzIiwiYWNjb3VudHMiXSwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJjbGFpbXMiOiJ7XCJpZF90b2tlblwiOntcImFjclwiOntcInZhbHVlXCI6XCJ1cm46b3BlbmJhbmtpbmc6cHNkMjpzY2FcIixcImVzc2VudGlhbFwiOnRydWV9LFwib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fSxcInVzZXJpbmZvXCI6e1wib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fX0iLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTU0MzUzNDY4NywiaWF0IjoxNTM1NzU4Njg3LCJleHBpcmVzX2luIjo3Nzc2MDAwLCJqdGkiOiJiMTk1Y2QzZi0wMjI5LTQ3YzYtOGNkMy03ODZhMDI1OWFhODMifQ.sjRPbbgxR5AXl-gtuSPKuz_9oM9MjocSfEDYJmJBJLyqSAHWimnMon5Pnxk_eEnvF2TNS3mFovtHq1RCXE4E-w\",\"scope\":\"openid payments accounts\",\"id_token\":\"eyJ0eXAiOiJKV1QiLCJraWQiOiJiL082T3ZWdjEreStXZ3JINVVpOVdUaW9MdDA9IiwiYWxnIjoiUlMyNTYifQ.eyJhdF9oYXNoIjoicm1EYUlJMjFGcmNadElNWnpSeFNGQSIsInN1YiI6ImRlbW8iLCJhdWRpdFRyYWNraW5nSWQiOiIwOTAxZWNhZi1hMDA4LTQ1NzItOGQ4NC0zMGJkZmM0NTRjMTYtMzE5ODU3MCIsImlzcyI6Imh0dHBzOi8vbWF0bHMuYXMuYXNwc3Aub2IuZm9yZ2Vyb2NrLmZpbmFuY2lhbC9vYXV0aDIvb3BlbmJhbmtpbmciLCJ0b2tlbk5hbWUiOiJpZF90b2tlbiIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYWNyIjoidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiY19oYXNoIjoiYldBUTJUVk1UVUVMTTJkLTUyRHpPQSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDgiLCJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiYXpwIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTUzNTg0NTA4NywidG9rZW5UeXBlIjoiSldUVG9rZW4iLCJpYXQiOjE1MzU3NTg2ODd9.kxRZg6qTIrZGn99SJaOhYvVQOPe5SnIYNfOVa1LDM4NheJ-ClETNtfdpK43aDe1Xf79bH1wX5KO4j807kbDcLZ7g36PepIeUESzB6nKGyCaDZeuNlBRy97WEkFRrXeYoqmi7oMy_m7NEQDw7VR983GBjpjgQACJeyY4P26DU1S6OmrSonateFaViatwP7gqXKYuMfy-lsN8B1QVGg59xigu1lg90QUgDwnMVHqwKrunoBBTUtIYHcIeV3w2RRCWyH5JRnbYDzcnhZ1gQYdHbkZQcoxVvjYwX1FxwQa0vnY1wfLlWp6R-VhSGgsaLPh81yRmp_aaUp5G5P0_03QtOVw\",\"token_type\":\"Bearer\",\"expires_in\":86399,\"nonce\":\"10d260bf-a7d9-444a-92d9-7b7a5f088208\"}"
+								}
+							]
+						},
+						{
+							"name": "Instrospect Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6f1fd8b3-aefd-4d61-944d-4efb95a0f89c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "token",
+											"value": "{{access_token_with_consent}}",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "{{CLIENT_REDIRECT_URI}}",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "ig_agent_oauth2",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "ig_agent_oauth2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/introspect",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"introspect"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Exchange code",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "grant_type",
+													"value": "authorization_code",
+													"type": "text"
+												},
+												{
+													"key": "code",
+													"value": "d32dafd8-071d-41bd-bdda-afe6d45d8307",
+													"type": "text"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "{{CLIENT_REDIRECT_URI}}",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion_type",
+													"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion",
+													"value": "{{client_credential_jwt}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{AS_token_endpoint}}",
+											"host": [
+												"{{AS_token_endpoint}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Accept-Ranges",
+											"value": "bytes",
+											"name": "Accept-Ranges",
+											"description": "Content-Types that are acceptable"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-store",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:38:07 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Server",
+											"value": "Restlet-Framework/2.3.4",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubdomains; preload",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Charset, Accept-Encoding, Accept-Language, Accept",
+											"name": "Vary",
+											"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "077cbcb9-51a5-4b51-b960-9c420cb10138",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										}
+									],
+									"body": "{\"access_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNDYxYzhhYTgtZjY1Ni00NGQyLThjOTEtYThiOTRjNzUwZGZlIiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwibmJmIjoxNTM1NzU4Njg3LCJncmFudF90eXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwic2NvcGUiOlsib3BlbmlkIiwicGF5bWVudHMiLCJhY2NvdW50cyJdLCJhdXRoX3RpbWUiOjE1MzU3NTg2NjMwMDAsImNsYWltcyI6IntcImlkX3Rva2VuXCI6e1wiYWNyXCI6e1widmFsdWVcIjpcInVybjpvcGVuYmFua2luZzpwc2QyOnNjYVwiLFwiZXNzZW50aWFsXCI6dHJ1ZX0sXCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19LFwidXNlcmluZm9cIjp7XCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19fSIsInJlYWxtIjoiL29wZW5iYW5raW5nIiwiZXhwIjoxNTM1ODQ1MDg3LCJpYXQiOjE1MzU3NTg2ODcsImV4cGlyZXNfaW4iOjg2NDAwLCJqdGkiOiIyNmQ1OWZmNS0wYmU3LTQxN2MtOGJhOC01MzcxOGU5ZjE1YTkifQ.Oi4HzCmb1dT-xE1ewNAxrcy1PO85_gIFs7BKhuD7Qbn9K0kS6tDXawHa4K3vZzZUk5-CA3LJ7zqQ7Ex2vocNGQ\",\"refresh_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNGY0YzhlOTgtZjMyYS00NzliLWEyYzUtZTRjYzE3NWZiZDU3IiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoTW9kdWxlcyI6IkRhdGFTdG9yZSIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsImF1ZCI6IjkxYzNjNTE3LTlkYjYtNDE3ZS04YjA1LThiMTE4OGY3YTJkNiIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsIm5iZiI6MTUzNTc1ODY4Nywib3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiZ3JhbnRfdHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsInNjb3BlIjpbIm9wZW5pZCIsInBheW1lbnRzIiwiYWNjb3VudHMiXSwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJjbGFpbXMiOiJ7XCJpZF90b2tlblwiOntcImFjclwiOntcInZhbHVlXCI6XCJ1cm46b3BlbmJhbmtpbmc6cHNkMjpzY2FcIixcImVzc2VudGlhbFwiOnRydWV9LFwib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fSxcInVzZXJpbmZvXCI6e1wib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fX0iLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTU0MzUzNDY4NywiaWF0IjoxNTM1NzU4Njg3LCJleHBpcmVzX2luIjo3Nzc2MDAwLCJqdGkiOiJiMTk1Y2QzZi0wMjI5LTQ3YzYtOGNkMy03ODZhMDI1OWFhODMifQ.sjRPbbgxR5AXl-gtuSPKuz_9oM9MjocSfEDYJmJBJLyqSAHWimnMon5Pnxk_eEnvF2TNS3mFovtHq1RCXE4E-w\",\"scope\":\"openid payments accounts\",\"id_token\":\"eyJ0eXAiOiJKV1QiLCJraWQiOiJiL082T3ZWdjEreStXZ3JINVVpOVdUaW9MdDA9IiwiYWxnIjoiUlMyNTYifQ.eyJhdF9oYXNoIjoicm1EYUlJMjFGcmNadElNWnpSeFNGQSIsInN1YiI6ImRlbW8iLCJhdWRpdFRyYWNraW5nSWQiOiIwOTAxZWNhZi1hMDA4LTQ1NzItOGQ4NC0zMGJkZmM0NTRjMTYtMzE5ODU3MCIsImlzcyI6Imh0dHBzOi8vbWF0bHMuYXMuYXNwc3Aub2IuZm9yZ2Vyb2NrLmZpbmFuY2lhbC9vYXV0aDIvb3BlbmJhbmtpbmciLCJ0b2tlbk5hbWUiOiJpZF90b2tlbiIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYWNyIjoidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiY19oYXNoIjoiYldBUTJUVk1UVUVMTTJkLTUyRHpPQSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDgiLCJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiYXpwIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTUzNTg0NTA4NywidG9rZW5UeXBlIjoiSldUVG9rZW4iLCJpYXQiOjE1MzU3NTg2ODd9.kxRZg6qTIrZGn99SJaOhYvVQOPe5SnIYNfOVa1LDM4NheJ-ClETNtfdpK43aDe1Xf79bH1wX5KO4j807kbDcLZ7g36PepIeUESzB6nKGyCaDZeuNlBRy97WEkFRrXeYoqmi7oMy_m7NEQDw7VR983GBjpjgQACJeyY4P26DU1S6OmrSonateFaViatwP7gqXKYuMfy-lsN8B1QVGg59xigu1lg90QUgDwnMVHqwKrunoBBTUtIYHcIeV3w2RRCWyH5JRnbYDzcnhZ1gQYdHbkZQcoxVvjYwX1FxwQa0vnY1wfLlWp6R-VhSGgsaLPh81yRmp_aaUp5G5P0_03QtOVw\",\"token_type\":\"Bearer\",\"expires_in\":86399,\"nonce\":\"10d260bf-a7d9-444a-92d9-7b7a5f088208\"}"
+								}
+							]
+						},
+						{
+							"name": "UserInfo",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6f1fd8b3-aefd-4d61-944d-4efb95a0f89c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_with_consent}}",
+										"type": "text"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/userinfo",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"userinfo"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Exchange code",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "grant_type",
+													"value": "authorization_code",
+													"type": "text"
+												},
+												{
+													"key": "code",
+													"value": "d32dafd8-071d-41bd-bdda-afe6d45d8307",
+													"type": "text"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "{{CLIENT_REDIRECT_URI}}",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion_type",
+													"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion",
+													"value": "{{client_credential_jwt}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{AS_token_endpoint}}",
+											"host": [
+												"{{AS_token_endpoint}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Accept-Ranges",
+											"value": "bytes",
+											"name": "Accept-Ranges",
+											"description": "Content-Types that are acceptable"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-store",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:38:07 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Server",
+											"value": "Restlet-Framework/2.3.4",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubdomains; preload",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Charset, Accept-Encoding, Accept-Language, Accept",
+											"name": "Vary",
+											"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "077cbcb9-51a5-4b51-b960-9c420cb10138",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										}
+									],
+									"body": "{\"access_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNDYxYzhhYTgtZjY1Ni00NGQyLThjOTEtYThiOTRjNzUwZGZlIiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwibmJmIjoxNTM1NzU4Njg3LCJncmFudF90eXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwic2NvcGUiOlsib3BlbmlkIiwicGF5bWVudHMiLCJhY2NvdW50cyJdLCJhdXRoX3RpbWUiOjE1MzU3NTg2NjMwMDAsImNsYWltcyI6IntcImlkX3Rva2VuXCI6e1wiYWNyXCI6e1widmFsdWVcIjpcInVybjpvcGVuYmFua2luZzpwc2QyOnNjYVwiLFwiZXNzZW50aWFsXCI6dHJ1ZX0sXCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19LFwidXNlcmluZm9cIjp7XCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19fSIsInJlYWxtIjoiL29wZW5iYW5raW5nIiwiZXhwIjoxNTM1ODQ1MDg3LCJpYXQiOjE1MzU3NTg2ODcsImV4cGlyZXNfaW4iOjg2NDAwLCJqdGkiOiIyNmQ1OWZmNS0wYmU3LTQxN2MtOGJhOC01MzcxOGU5ZjE1YTkifQ.Oi4HzCmb1dT-xE1ewNAxrcy1PO85_gIFs7BKhuD7Qbn9K0kS6tDXawHa4K3vZzZUk5-CA3LJ7zqQ7Ex2vocNGQ\",\"refresh_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNGY0YzhlOTgtZjMyYS00NzliLWEyYzUtZTRjYzE3NWZiZDU3IiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoTW9kdWxlcyI6IkRhdGFTdG9yZSIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsImF1ZCI6IjkxYzNjNTE3LTlkYjYtNDE3ZS04YjA1LThiMTE4OGY3YTJkNiIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsIm5iZiI6MTUzNTc1ODY4Nywib3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiZ3JhbnRfdHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsInNjb3BlIjpbIm9wZW5pZCIsInBheW1lbnRzIiwiYWNjb3VudHMiXSwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJjbGFpbXMiOiJ7XCJpZF90b2tlblwiOntcImFjclwiOntcInZhbHVlXCI6XCJ1cm46b3BlbmJhbmtpbmc6cHNkMjpzY2FcIixcImVzc2VudGlhbFwiOnRydWV9LFwib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fSxcInVzZXJpbmZvXCI6e1wib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fX0iLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTU0MzUzNDY4NywiaWF0IjoxNTM1NzU4Njg3LCJleHBpcmVzX2luIjo3Nzc2MDAwLCJqdGkiOiJiMTk1Y2QzZi0wMjI5LTQ3YzYtOGNkMy03ODZhMDI1OWFhODMifQ.sjRPbbgxR5AXl-gtuSPKuz_9oM9MjocSfEDYJmJBJLyqSAHWimnMon5Pnxk_eEnvF2TNS3mFovtHq1RCXE4E-w\",\"scope\":\"openid payments accounts\",\"id_token\":\"eyJ0eXAiOiJKV1QiLCJraWQiOiJiL082T3ZWdjEreStXZ3JINVVpOVdUaW9MdDA9IiwiYWxnIjoiUlMyNTYifQ.eyJhdF9oYXNoIjoicm1EYUlJMjFGcmNadElNWnpSeFNGQSIsInN1YiI6ImRlbW8iLCJhdWRpdFRyYWNraW5nSWQiOiIwOTAxZWNhZi1hMDA4LTQ1NzItOGQ4NC0zMGJkZmM0NTRjMTYtMzE5ODU3MCIsImlzcyI6Imh0dHBzOi8vbWF0bHMuYXMuYXNwc3Aub2IuZm9yZ2Vyb2NrLmZpbmFuY2lhbC9vYXV0aDIvb3BlbmJhbmtpbmciLCJ0b2tlbk5hbWUiOiJpZF90b2tlbiIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYWNyIjoidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiY19oYXNoIjoiYldBUTJUVk1UVUVMTTJkLTUyRHpPQSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDgiLCJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiYXpwIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTUzNTg0NTA4NywidG9rZW5UeXBlIjoiSldUVG9rZW4iLCJpYXQiOjE1MzU3NTg2ODd9.kxRZg6qTIrZGn99SJaOhYvVQOPe5SnIYNfOVa1LDM4NheJ-ClETNtfdpK43aDe1Xf79bH1wX5KO4j807kbDcLZ7g36PepIeUESzB6nKGyCaDZeuNlBRy97WEkFRrXeYoqmi7oMy_m7NEQDw7VR983GBjpjgQACJeyY4P26DU1S6OmrSonateFaViatwP7gqXKYuMfy-lsN8B1QVGg59xigu1lg90QUgDwnMVHqwKrunoBBTUtIYHcIeV3w2RRCWyH5JRnbYDzcnhZ1gQYdHbkZQcoxVvjYwX1FxwQa0vnY1wfLlWp6R-VhSGgsaLPh81yRmp_aaUp5G5P0_03QtOVw\",\"token_type\":\"Bearer\",\"expires_in\":86399,\"nonce\":\"10d260bf-a7d9-444a-92d9-7b7a5f088208\"}"
+								}
+							]
+						},
+						{
+							"name": "Accounts List",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "32bcd174-11b8-4b3f-b498-572e82126f98",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_with_consent}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-idempotency-key",
+										"value": "FRESCO.21302.GFX.20"
+									},
+									{
+										"key": "x-jws-signature",
+										"value": "TGlmZSdzIGEgam91cm5leSBub3QgYSBkZXN0aW5hdGlvbiA=..T2ggZ29vZCBldmVuaW5nIG1yIHR5bGVyIGdvaW5nIGRvd24gPw==",
+										"disabled": true
+									},
+									{
+										"key": "x-fapi-financial-id",
+										"value": "{{ASPSP_FINANCIAL_ID}}"
+									},
+									{
+										"key": "x-fapi-customer-last-logged-time",
+										"value": "Sun, 10 Sep 2017 19:43:31 UTC"
+									},
+									{
+										"key": "x-fapi-customer-ip-address",
+										"value": "104.25.212.99"
+									},
+									{
+										"key": "x-fapi-interaction-id",
+										"value": "93bac548-d2de-4546-b106-880a5018460d"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{OPENIG_CLOUD}}/openbanking/v3.1/accounts",
+									"host": [
+										"{{OPENIG_CLOUD}}"
+									],
+									"path": [
+										"openbanking",
+										"v3.1",
+										"accounts"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Payment submission",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token_with_consent}}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "x-idempotency-key",
+												"value": "FRESCO.21302.GFX.20"
+											},
+											{
+												"key": "x-jws-signature",
+												"value": "TGlmZSdzIGEgam91cm5leSBub3QgYSBkZXN0aW5hdGlvbiA=..T2ggZ29vZCBldmVuaW5nIG1yIHR5bGVyIGdvaW5nIGRvd24gPw==",
+												"disabled": true
+											},
+											{
+												"key": "x-fapi-financial-id",
+												"value": "{{ASPSP_FINANCIAL_ID}}"
+											},
+											{
+												"key": "x-fapi-customer-last-logged-time",
+												"value": "Sun, 10 Sep 2017 19:43:31 UTC"
+											},
+											{
+												"key": "x-fapi-customer-ip-address",
+												"value": "104.25.212.99"
+											},
+											{
+												"key": "x-fapi-interaction-id",
+												"value": "93bac548-d2de-4546-b106-880a5018460d"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"Data\": {\n    \"PaymentId\": \"{{PaymentId}}\",\n    \"Initiation\": {\n      \"InstructionIdentification\": \"ACME412\",\n      \"EndToEndIdentification\": \"FRESCO.21302.GFX.20\",\n      \"InstructedAmount\": {\n        \"Amount\": \"165.88\",\n        \"Currency\": \"GBP\"\n      },\n      \"CreditorAccount\": {\n        \"SchemeName\": \"SortCodeAccountNumber\",\n        \"Identification\": \"08080021325698\",\n        \"Name\": \"ACME Inc\",\n        \"SecondaryIdentification\": \"0002\"\n      },\n      \"RemittanceInformation\": {\n        \"Reference\": \"FRESCO-101\",\n        \"Unstructured\": \"Internal ops code 5120101\"\n      }\n    }\n  },\n  \"Risk\": {\n    \"PaymentContextCode\": \"EcommerceGoods\",\n    \"MerchantCategoryCode\": \"5967\",\n    \"MerchantCustomerIdentification\": \"053598653254\",\n    \"DeliveryAddress\": {\n      \"AddressLine\": [\n        \"Flat 7\",\n        \"Acacia Lodge\"\n      ],\n      \"StreetName\": \"Acacia Avenue\",\n      \"BuildingNumber\": \"27\",\n      \"PostCode\": \"GU31 2ZZ\",\n      \"TownName\": \"Sparsholt\",\n      \"CountySubDivision\": [\n        \"Wessex\"\n      ],\n      \"Country\": \"UK\"\n    }\n  }\n}"
+										},
+										"url": {
+											"raw": "{{RS_CreatePaymentSubmission_v2.0}}",
+											"host": [
+												"{{RS_CreatePaymentSubmission_v2.0}}"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json;charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:38:12 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Expires",
+											"value": "0",
+											"name": "Expires",
+											"description": "Gives the date/time after which the response is considered stale"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000 ; includeSubDomains",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block",
+											"name": "X-XSS-Protection",
+											"description": "Cross-site scripting (XSS) filter"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "93bac548-d2de-4546-b106-880a5018460d",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": true,
+											"domain": "rs.aspsp.ob.forgerock.financial",
+											"path": "/v1.1",
+											"secure": true,
+											"value": "34F0FF6ADBE51B4332018415EB8726BF",
+											"key": "JSESSIONID"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": true,
+											"domain": "rs.aspsp.ob.forgerock.financial",
+											"path": "/",
+											"secure": true,
+											"value": "B165242A9E44929BEB0404056A48E34D",
+											"key": "JSESSIONID"
+										}
+									],
+									"body": "{\"Data\":{\"PaymentSubmissionId\":\"764b7ff1-3c92-466a-a3d7-34bbf408a141\",\"PaymentId\":\"Pfda39ef6-c81f-49b6-9100-068fb88bb8d8\",\"Status\":\"AcceptedSettlementInProcess\",\"CreationDateTime\":\"2018-08-31T23:38:12+00:00\"}}"
+								}
+							]
+						},
+						{
+							"name": "Account Details Query",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "32bcd174-11b8-4b3f-b498-572e82126f98",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_with_consent}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "x-idempotency-key",
+										"value": "FRESCO.21302.GFX.20"
+									},
+									{
+										"key": "x-jws-signature",
+										"value": "TGlmZSdzIGEgam91cm5leSBub3QgYSBkZXN0aW5hdGlvbiA=..T2ggZ29vZCBldmVuaW5nIG1yIHR5bGVyIGdvaW5nIGRvd24gPw==",
+										"disabled": true
+									},
+									{
+										"key": "x-fapi-financial-id",
+										"value": "{{ASPSP_FINANCIAL_ID}}"
+									},
+									{
+										"key": "x-fapi-customer-last-logged-time",
+										"value": "Sun, 10 Sep 2017 19:43:31 UTC"
+									},
+									{
+										"key": "x-fapi-customer-ip-address",
+										"value": "104.25.212.99"
+									},
+									{
+										"key": "x-fapi-interaction-id",
+										"value": "93bac548-d2de-4546-b106-880a5018460d"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{OPENIG_CLOUD}}/openbanking/v3.1/accounts/{{AccountId}}",
+									"host": [
+										"{{OPENIG_CLOUD}}"
+									],
+									"path": [
+										"openbanking",
+										"v3.1",
+										"accounts",
+										"{{AccountId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Payment submission",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{access_token_with_consent}}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "x-idempotency-key",
+												"value": "FRESCO.21302.GFX.20"
+											},
+											{
+												"key": "x-jws-signature",
+												"value": "TGlmZSdzIGEgam91cm5leSBub3QgYSBkZXN0aW5hdGlvbiA=..T2ggZ29vZCBldmVuaW5nIG1yIHR5bGVyIGdvaW5nIGRvd24gPw==",
+												"disabled": true
+											},
+											{
+												"key": "x-fapi-financial-id",
+												"value": "{{ASPSP_FINANCIAL_ID}}"
+											},
+											{
+												"key": "x-fapi-customer-last-logged-time",
+												"value": "Sun, 10 Sep 2017 19:43:31 UTC"
+											},
+											{
+												"key": "x-fapi-customer-ip-address",
+												"value": "104.25.212.99"
+											},
+											{
+												"key": "x-fapi-interaction-id",
+												"value": "93bac548-d2de-4546-b106-880a5018460d"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"Data\": {\n    \"PaymentId\": \"{{PaymentId}}\",\n    \"Initiation\": {\n      \"InstructionIdentification\": \"ACME412\",\n      \"EndToEndIdentification\": \"FRESCO.21302.GFX.20\",\n      \"InstructedAmount\": {\n        \"Amount\": \"165.88\",\n        \"Currency\": \"GBP\"\n      },\n      \"CreditorAccount\": {\n        \"SchemeName\": \"SortCodeAccountNumber\",\n        \"Identification\": \"08080021325698\",\n        \"Name\": \"ACME Inc\",\n        \"SecondaryIdentification\": \"0002\"\n      },\n      \"RemittanceInformation\": {\n        \"Reference\": \"FRESCO-101\",\n        \"Unstructured\": \"Internal ops code 5120101\"\n      }\n    }\n  },\n  \"Risk\": {\n    \"PaymentContextCode\": \"EcommerceGoods\",\n    \"MerchantCategoryCode\": \"5967\",\n    \"MerchantCustomerIdentification\": \"053598653254\",\n    \"DeliveryAddress\": {\n      \"AddressLine\": [\n        \"Flat 7\",\n        \"Acacia Lodge\"\n      ],\n      \"StreetName\": \"Acacia Avenue\",\n      \"BuildingNumber\": \"27\",\n      \"PostCode\": \"GU31 2ZZ\",\n      \"TownName\": \"Sparsholt\",\n      \"CountySubDivision\": [\n        \"Wessex\"\n      ],\n      \"Country\": \"UK\"\n    }\n  }\n}"
+										},
+										"url": {
+											"raw": "{{RS_CreatePaymentSubmission_v2.0}}",
+											"host": [
+												"{{RS_CreatePaymentSubmission_v2.0}}"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate",
+											"name": "Cache-Control",
+											"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json;charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 23:38:12 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Expires",
+											"value": "0",
+											"name": "Expires",
+											"description": "Gives the date/time after which the response is considered stale"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache",
+											"name": "Pragma",
+											"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000 ; includeSubDomains",
+											"name": "Strict-Transport-Security",
+											"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff",
+											"name": "X-Content-Type-Options",
+											"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY",
+											"name": "X-Frame-Options",
+											"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block",
+											"name": "X-XSS-Protection",
+											"description": "Cross-site scripting (XSS) filter"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked",
+											"name": "transfer-encoding",
+											"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+										},
+										{
+											"key": "x-fapi-interaction-id",
+											"value": "93bac548-d2de-4546-b106-880a5018460d",
+											"name": "x-fapi-interaction-id",
+											"description": "Custom header"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "01",
+											"key": "amlbcookie"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": false,
+											"domain": "ob.forgerock.financial",
+											"path": "/",
+											"secure": false,
+											"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+											"key": "iPlanetDirectoryPro"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": true,
+											"domain": "rs.aspsp.ob.forgerock.financial",
+											"path": "/v1.1",
+											"secure": true,
+											"value": "34F0FF6ADBE51B4332018415EB8726BF",
+											"key": "JSESSIONID"
+										},
+										{
+											"expires": "Invalid Date",
+											"httpOnly": true,
+											"domain": "rs.aspsp.ob.forgerock.financial",
+											"path": "/",
+											"secure": true,
+											"value": "B165242A9E44929BEB0404056A48E34D",
+											"key": "JSESSIONID"
+										}
+									],
+									"body": "{\"Data\":{\"PaymentSubmissionId\":\"764b7ff1-3c92-466a-a3d7-34bbf408a141\",\"PaymentId\":\"Pfda39ef6-c81f-49b6-9100-068fb88bb8d8\",\"Status\":\"AcceptedSettlementInProcess\",\"CreationDateTime\":\"2018-08-31T23:38:12+00:00\"}}"
+								}
+							]
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "ASSETS-Cloud",
+			"item": [
+				{
+					"name": "AM",
+					"item": [
+						{
+							"name": "Get Oauth Config",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/.well-known/openid-configuration",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										".well-known",
+										"openid-configuration"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AuthorizeWithRCS",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/openbanking/authorize?client_id=iss-client&response_type=code%20id_token&redirect_uri=http://jenkins.itsmartsystems.eu:8081/apollo-shop&scope=payments%20accounts%20openid&state=state-1234&nonce=nonce-1234",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"openbanking",
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "iss-client"
+										},
+										{
+											"key": "response_type",
+											"value": "code%20id_token"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "http://jenkins.itsmartsystems.eu:8081/apollo-shop"
+										},
+										{
+											"key": "scope",
+											"value": "payments%20accounts%20openid"
+										},
+										{
+											"key": "state",
+											"value": "state-1234"
+										},
+										{
+											"key": "nonce",
+											"value": "nonce-1234"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OpenAM-Login",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-OpenAM-Username",
+										"value": "amAdmin"
+									},
+									{
+										"key": "X-OpenAM-Password",
+										"value": "password"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept-API-Version",
+										"value": "resource=2.0, protocol=1.0",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/json/realms/root/authenticate",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"json",
+										"realms",
+										"root",
+										"authenticate"
+									]
+								},
+								"description": "Login to OpenAM"
+							},
+							"response": []
+						},
+						{
+							"name": "OpenAM-Login-Localhost",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-OpenAM-Username",
+										"value": "amAdmin"
+									},
+									{
+										"key": "X-OpenAM-Password",
+										"value": "Passw0rd"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept-API-Version",
+										"type": "text",
+										"value": "resource=2.0, protocol=1.0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:8080/openam/json/realms/root/authenticate",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"openam",
+										"json",
+										"realms",
+										"root",
+										"authenticate"
+									]
+								},
+								"description": "Login to OpenAM"
+							},
+							"response": []
+						},
+						{
+							"name": "OpenAM-OAuth2-ClientCredentials",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "code",
+											"value": "7qoFkzzM6sSwftHNVYT8Cl5h12c",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "client_credentials",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "tpp-dynamic-1",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "tpp-dynamic-1",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "payments",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "http://google.com",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/access_token?",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"realms",
+										"root",
+										"realms",
+										"openbanking",
+										"access_token"
+									],
+									"query": [
+										{
+											"key": "code",
+											"value": "pU6QeG_A-D8xffbpZyJMCmC1b10",
+											"disabled": true
+										},
+										{
+											"key": "content-type",
+											"value": "application/json",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OpenAM-OAuth2-Introspect",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "code",
+											"value": "7qoFkzzM6sSwftHNVYT8Cl5h12c",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "grant_type",
+											"value": "client_credentials",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "ig_agent_oauth2",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "ig_agent_oauth2",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "http://google.ro",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/oauth2/openbanking/access_token?",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"oauth2",
+										"openbanking",
+										"access_token"
+									],
+									"query": [
+										{
+											"key": "code",
+											"value": "pU6QeG_A-D8xffbpZyJMCmC1b10",
+											"disabled": true
+										},
+										{
+											"key": "content-type",
+											"value": "application/json",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetResourceType",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept-API-Version",
+										"type": "text",
+										"value": "resource=1.0, protocol=1.0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/json/realms/openbanking/policies/aisp-9fb18b59-943e-422d-8f3a-af63be9692c2",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"json",
+										"realms",
+										"openbanking",
+										"policies",
+										"aisp-9fb18b59-943e-422d-8f3a-af63be9692c2"
+									],
+									"query": [
+										{
+											"key": "_action",
+											"value": "query",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "name+eq+\"^(?!Delegation Service$).*\"",
+											"disabled": true
+										},
+										{
+											"key": "_pageSize",
+											"value": "200",
+											"disabled": true
+										},
+										{
+											"key": "_sortKeys",
+											"value": "name",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateResourceType",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5444490c-129c-4f4b-a180-1d89cde9cff2",
+										"exec": [
+											"var data = JSON.parse(responseBody);",
+											"tests[\"Policy Created\"] = responseBody.has(\"uuid\");",
+											"postman.setEnvironmentVariable(\"resourceTypeUuid\", data.uuid);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept-API-Version",
+										"type": "text",
+										"value": "resource=1.0, protocol=1.0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\":\"OBIE PISP Resource\",\r\n   \"patterns\": [\r\n       \"*://*:*/*/access_token?*\",\r\n       \"*://*:*/*/authorize?*\",\r\n       \"*://*:*/*/introspect?*\"\r\n       ],\r\n   \"actions\":{\r\n      \"GET\":true,\r\n      \"POST\":true,\r\n      \"DELETE\":true\r\n   }\r\n}"
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/json/realms/openbanking/resourcetypes?_action=create",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"json",
+										"realms",
+										"openbanking",
+										"resourcetypes"
+									],
+									"query": [
+										{
+											"key": "_action",
+											"value": "create"
+										},
+										{
+											"key": "name",
+											"value": "psd2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreatePolicySet",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept-API-Version",
+										"value": "resource=2.0, protocol=1.0",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"name\":\"AISP Authorization\",\r\n   \"displayName\": \"AISP Authorization\",\r\n   \"applicationType\":\"iPlanetAMWebAgentService\",\r\n   \"description\":\"OBIE AISP Authorization Service\",\r\n   \"resourceTypeUuids\" : [\"UrlResourceType\"],\r\n   \"conditions\":[\r\n    \"IP\",\r\n    \"SimpleTime\",\r\n    \"OAuth2Scope\",\r\n    \"OR\",\r\n    \"AuthLevel\",\r\n    \"Session\",\r\n    \"NOT\",\r\n    \"AND\",\r\n    \"ResourceEnvIP\"\r\n   ],\r\n   \"subjects\":[\r\n    \"JwtClaim\",\r\n    \"AuthenticatedUsers\",\r\n    \"Identity\",\r\n    \"NOT\",\r\n    \"AND\",\r\n    \"OR\"\r\n   ],\r\n   \"entitlementCombiner\":\"DenyOverride\"\r\n}"
+								},
+								"url": {
+									"raw": "{{OPENAM_LOCAL}}/json/realms/openbanking/applications?_action=create",
+									"host": [
+										"{{OPENAM_LOCAL}}"
+									],
+									"path": [
+										"json",
+										"realms",
+										"openbanking",
+										"applications"
+									],
+									"query": [
+										{
+											"key": "_action",
+											"value": "create"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreatePolicyForConsentClaimsAISP",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept-API-Version",
+										"value": "resource=2.0, protocol=1.0",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"aisp-123123-943e-422d-8f3a-af63be9692c2\",\n    \"active\": true,\n    \"description\": \"OB AISP Consent Policy - autogenerated by IDM\",\n    \"resources\": [\n        \"*://*.*/openbanking/v3.1/*-account-information-consents\",\n        \"https://openidm.psd2accelerators.fridam.aeet-forgerock.com:443/openbanking/v3.1/accounts/123123-943e-422d-8f3a-af63be9692c2\"\n    ],\n    \"applicationName\": \"AISP Authorization Policy\",\n    \"actionValues\": {\n        \"POST\": true,\n        \"GET\": true\n    },\n    \"resourceTypeUuid\": \"76656a38-5f8e-401b-83aa-4ccb74ce88d2\",\n    \"subject\": {\n        \"type\": \"AND\",\n        \"subjects\": [\n            {\n                \"type\": \"JwtClaim\",\n                \"claimName\": \"sub\",\n                \"claimValue\": \"demo\"\n            },\n            {\n                \"type\": \"OR\",\n                \"subjects\": [\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadAccountsDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadBalances\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadBeneficiariesDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadDirectDebits\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadProducts\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadStandingOrdersDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadTransactionsCredits\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadTransactionsDebits\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadTransactionsDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadOffers\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadPAN\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadParty\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadPartyPSU\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadScheduledPaymentsDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"22289:ReadStatementsDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadAccountsDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadBalances\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadBeneficiariesDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadDirectDebits\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadProducts\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadStandingOrdersDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadTransactionsCredits\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadTransactionsDebits\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadTransactionsDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadOffers\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadPAN\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadParty\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadPartyPSU\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadScheduledPaymentsDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"31820:ReadStatementsDetail\"\n                    },\n                    {\n                        \"type\": \"JwtClaim\",\n                        \"claimName\": \"PermissionType\",\n                        \"claimValue\": \"allGrantedAccounts\"\n                    }\n                ]\n            }\n        ]\n    },\n    \"resourceAttributes\": [\n        {\n            \"type\": \"Static\",\n            \"propertyName\": \"grantedAccounts\",\n            \"propertyValues\": [\n                \"22289\",\n                \"31820\"\n            ]\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/json/realms/openbanking/policies?_action=create",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"json",
+										"realms",
+										"openbanking",
+										"policies"
+									],
+									"query": [
+										{
+											"key": "_action",
+											"value": "create"
+										},
+										{
+											"key": "name",
+											"value": "pis-123456789",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "resourceName",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "actions",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "subject",
+											"value": "user=[customeruserid], jwt {  \"type\": \"JwtClaim\",   \"claimName\": \"accounts\",   \"claimValue\": \"[AccountRequestID\" }",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreatePolicyForConsentClaimsPISP",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept-API-Version",
+										"type": "text",
+										"value": "resource=2.0, protocol=1.0"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"pisp-123123-63d9-4b10-92a2-9513a01a0d36\",\n    \"active\": true,\n    \"description\": \"OB PISP Consent Policy - autogenerated by IDM\",\n    \"resources\": [\n        \"https://openidm.psd2accelerators.fridam.aeet-forgerock.com:443/openbanking/v3.1/domestic-payments/123123-63d9-4b10-92a2-9513a01a0d36\",\n        \"*://*.*/openbanking/v3.1/*-payment-consents\"\n    ],\n    \"applicationName\": \"PISP Authorization Policy\",\n    \"actionValues\": {\n        \"POST\": true,\n        \"GET\": true\n    },\n    \"resourceTypeUuid\": \"76656a38-5f8e-401b-83aa-4ccb74ce88d2\",\n    \"subject\": {\n        \"type\": \"AND\",\n        \"subjects\": [\n            {\n                \"type\": \"JwtClaim\",\n                \"claimName\": \"sub\",\n                \"claimValue\": \"demo\"\n            },\n            {\n                \"type\": \"JwtClaim\",\n                \"claimName\": \"Initiation\",\n                \"claimValue\": \"{\\\"InstructionIdentification\\\":\\\"ACME412\\\",\\\"EndToEndIdentification\\\":\\\"FRESCO.21302.GFX.20\\\",\\\"InstructedAmount\\\":{\\\"Amount\\\":\\\"165.88\\\",\\\"Currency\\\":\\\"GBP\\\"},\\\"CreditorAccount\\\":{\\\"SchemeName\\\":\\\"SortCodeAccountNumber\\\",\\\"Identification\\\":\\\"08080021325698\\\",\\\"Name\\\":\\\"ACMEInc\\\",\\\"SecondaryIdentification\\\":\\\"0002\\\"},\\\"RemittanceInformation\\\":{\\\"Reference\\\":\\\"FRESCO-101\\\",\\\"Unstructured\\\":\\\"Internalopscode5120101\\\"}}\"\n            }\n        ]\n    }\n}"
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/json/realms/openbanking/policies?_action=create",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"json",
+										"realms",
+										"openbanking",
+										"policies"
+									],
+									"query": [
+										{
+											"key": "_action",
+											"value": "create"
+										},
+										{
+											"key": "name",
+											"value": "pis-123456789",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "resourceName",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "actions",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "subject",
+											"value": "user=[customeruserid], jwt {  \"type\": \"JwtClaim\",   \"claimName\": \"accounts\",   \"claimValue\": \"[AccountRequestID\" }",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EvaluatePolicyForConsentClaimsPISP",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept-API-Version",
+										"type": "text",
+										"value": "resource=2.0, protocol=1.0"
+									},
+									{
+										"key": "iPlanetDirectoryPro",
+										"value": "uFK6OxuzKcB6DOCZSc3GNjTIiaE.*AAJTSQACMDIAAlNLABwxbmZHeE5VZmFEczh0R25yVWVGelgwN1BJMVE9AAR0eXBlAANDVFMAAlMxAAIwMQ..*",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"resources\":[\r\n      \"https://openidm.psd2accelerators.fridam.aeet-forgerock.com/openbanking/v3.1/domestic-payments/97e98e0f-a7c1-4e49-83df-84910baff3cc\"\r\n   ],\r\n   \"subject\":{\r\n      \"claims\":{\r\n         \"sub\":\"demo\",         \r\n         \"Initiation\":\"{\\\"InstructionIdentification\\\":\\\"ACME412\\\",\\\"EndToEndIdentification\\\":\\\"FRESCO.21302.GFX.20\\\",\\\"InstructedAmount\\\":{\\\"Amount\\\":\\\"165.88\\\",\\\"Currency\\\":\\\"GBP\\\"},\\\"CreditorAccount\\\":{\\\"SchemeName\\\":\\\"SortCodeAccountNumber\\\",\\\"Identification\\\":\\\"08080021325698\\\",\\\"Name\\\":\\\"ACME Inc\\\",\\\"SecondaryIdentification\\\":\\\"0002\\\"},\\\"RemittanceInformation\\\":{\\\"Reference\\\":\\\"FRESCO-101\\\",\\\"Unstructured\\\":\\\"Internalopscode5120101\\\"}}\",\r\n         \"iss\":\"http://login.psd2accelerators.fridam.aeet-forgerock.com:80/oauth2/realms/root/realms/openbanking\"\r\n      }\r\n   },\r\n   \"application\":\"PISP Authorization Policy\"\r\n}"
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/json/realms/openbanking/policies?_action=evaluate",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"json",
+										"realms",
+										"openbanking",
+										"policies"
+									],
+									"query": [
+										{
+											"key": "_action",
+											"value": "evaluate"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EvaluatePolicyForConsentClaimsAISP",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept-API-Version",
+										"type": "text",
+										"value": "resource=2.0, protocol=1.0"
+									},
+									{
+										"key": "iPlanetDirectoryPro",
+										"type": "text",
+										"value": "uFK6OxuzKcB6DOCZSc3GNjTIiaE.*AAJTSQACMDIAAlNLABwxbmZHeE5VZmFEczh0R25yVWVGelgwN1BJMVE9AAR0eXBlAANDVFMAAlMxAAIwMQ..*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"resources\" : [\n      \"https://openidm.psd2accelerators.fridam.aeet-forgerock.com/openbanking/v3.1/accounts/35f292db-ce18-4d91-8407-c2f4bfa794c2\"\n    ], \n    \"application\": \"AISP Authorization Policy\",\n    \"subject\":{\n    \t\"claims\": {\n    \t\t\"sub\": \"demo\",\n    \t\t\"PermissionType\": \"allGrantedAccounts\"\n    \t}\n    }\n}\n"
+								},
+								"url": {
+									"raw": "{{OPENAM_CLOUD}}/json/realms/openbanking/policies?_action=evaluate",
+									"host": [
+										"{{OPENAM_CLOUD}}"
+									],
+									"path": [
+										"json",
+										"realms",
+										"openbanking",
+										"policies"
+									],
+									"query": [
+										{
+											"key": "_action",
+											"value": "evaluate"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "IDM",
+					"item": [
+						{
+							"name": "Payment Intent",
+							"item": [
+								{
+									"name": "1. Create Payment Intent",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "f215fc03-e82f-45cc-92a7-74e2324932da",
+												"exec": [
+													"var data = JSON.parse(responseBody);",
+													"postman.setEnvironmentVariable(\"intentId\", data.result);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-OpenIDM-Username",
+												"type": "text",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "X-OpenIDM-Password",
+												"type": "text",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"Data\": {\n    \"Initiation\": {\n      \"InstructionIdentification\": \"ACME412\",\n      \"EndToEndIdentification\": \"FRESCO.21302.GFX.20\",\n      \"InstructedAmount\": {\n        \"Amount\": \"165.88\",\n        \"Currency\": \"GBP\"\n      },\n      \"CreditorAccount\": {\n        \"SchemeName\": \"SortCodeAccountNumber\",\n        \"Identification\": \"08080021325698\",\n        \"Name\": \"ACME Inc\",\n        \"SecondaryIdentification\": \"0002\"\n      },\n      \"RemittanceInformation\": {\n        \"Reference\": \"FRESCO-101\",\n        \"Unstructured\": \"Internal ops code 5120101\"\n      }\n    }\n  },\n  \"Risk\": {\n    \"PaymentContextCode\": \"EcommerceGoods\",\n    \"MerchantCategoryCode\": \"5967\",\n    \"MerchantCustomerIdentification\": \"053598653254\",\n    \"DeliveryAddress\": {\n      \"AddressLine\": [\n        \"Flat 7\",\n        \"Acacia Lodge\"\n      ],\n      \"StreetName\": \"Acacia Avenue\",\n      \"BuildingNumber\": \"27\",\n      \"PostCode\": \"GU31 2ZZ\",\n      \"TownName\": \"Sparsholt\",\n      \"CountySubDivision\": [\n        \"Wessex\"\n      ],\n      \"Country\": \"UK\"\n    }\n  }\n}"
+										},
+										"url": {
+											"raw": "{{OPENIDM_CLOUD}}/endpoint/paymentIntent?_action=create",
+											"host": [
+												"{{OPENIDM_CLOUD}}"
+											],
+											"path": [
+												"endpoint",
+												"paymentIntent"
+											],
+											"query": [
+												{
+													"key": "_action",
+													"value": "create"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "2. Get Payment Intent Details",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "X-OpenIDM-Username",
+												"type": "text",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "X-OpenIDM-Password",
+												"type": "text",
+												"value": "openidm-admin"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{OPENIDM_CLOUD}}/managed/OBPaymentIntent/{{intentId}}?_prettyPrint=true",
+											"host": [
+												"{{OPENIDM_CLOUD}}"
+											],
+											"path": [
+												"managed",
+												"OBPaymentIntent",
+												"{{intentId}}"
+											],
+											"query": [
+												{
+													"key": "_prettyPrint",
+													"value": "true"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "3. Update Payment Intent + Create Policy",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-OpenIDM-Username",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "X-OpenIDM-Password",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n   \"consent\":[\r\n      {\r\n         \"operation\":\"replace\",\r\n         \"field\":\"Status\",\r\n         \"value\":\"AcceptedCustomerProfile\"\r\n      }\r\n   ],\r\n   \"claims\":{\r\n      \"sub\":\"subName\",\r\n      \"Initiation\":{\r\n         \"InstructionIdentification\":\"ACME412\",\r\n         \"EndToEndIdentification\":\"FRESCO.21302.GFX.20\",\r\n         \"InstructedAmount\":{\r\n            \"Amount\":\"165.88\",\r\n            \"Currency\":\"GBP\"\r\n         },\r\n         \"CreditorAccount\":{\r\n            \"SchemeName\":\"SortCodeAccountNumber\",\r\n            \"Identification\":\"08080021325698\",\r\n            \"Name\":\"ACME Inc\",\r\n            \"SecondaryIdentification\":\"0002\"\r\n         },\r\n         \"RemittanceInformation\":{\r\n            \"Reference\":\"FRESCO-101\",\r\n            \"Unstructured\":\"Internal ops code 5120101\"\r\n         }\r\n      }\r\n   }\r\n}"
+										},
+										"url": {
+											"raw": "{{OPENIDM_CLOUD}}/endpoint/paymentIntent/{{intentId}}?_action=patch",
+											"host": [
+												"{{OPENIDM_CLOUD}}"
+											],
+											"path": [
+												"endpoint",
+												"paymentIntent",
+												"{{intentId}}"
+											],
+											"query": [
+												{
+													"key": "_action",
+													"value": "patch"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Account Access Intent",
+							"item": [
+								{
+									"name": "1. Create Account Intent",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "f215fc03-e82f-45cc-92a7-74e2324932da",
+												"exec": [
+													"var data = JSON.parse(responseBody);",
+													"postman.setEnvironmentVariable(\"intentId\", data.result);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-OpenIDM-Username",
+												"type": "text",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "X-OpenIDM-Password",
+												"type": "text",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"Data\": {\n    \"Permissions\": [\n      \"ReadAccountsDetail\",\n      \"ReadBalances\",\n      \"ReadBeneficiariesDetail\",\n      \"ReadDirectDebits\",\n      \"ReadProducts\",\n      \"ReadStandingOrdersDetail\",\n      \"ReadTransactionsCredits\",\n      \"ReadTransactionsDebits\",\n      \"ReadTransactionsDetail\",\n      \"ReadOffers\",\n      \"ReadPAN\",\n      \"ReadParty\",\n      \"ReadPartyPSU\",\n      \"ReadScheduledPaymentsDetail\",\n      \"ReadStatementsDetail\"\n    ],\n    \"TransactionFromDateTime\": \"2017-05-03T00:00:00+00:00\",\n    \"TransactionToDateTime\": \"2018-12-03T00:00:00+00:00\"\n  },\n  \"Risk\": {}\n}"
+										},
+										"url": {
+											"raw": "{{OPENIDM_CLOUD}}/endpoint/accountAccessIntent?_action=create",
+											"host": [
+												"{{OPENIDM_CLOUD}}"
+											],
+											"path": [
+												"endpoint",
+												"accountAccessIntent"
+											],
+											"query": [
+												{
+													"key": "_action",
+													"value": "create"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "2. Get Account Intent Details",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "X-OpenIDM-Username",
+												"type": "text",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "X-OpenIDM-Password",
+												"type": "text",
+												"value": "openidm-admin"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{OPENIDM_CLOUD}}/managed/OBAccountAccessIntent/{{intentId}}",
+											"host": [
+												"{{OPENIDM_CLOUD}}"
+											],
+											"path": [
+												"managed",
+												"OBAccountAccessIntent",
+												"{{intentId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "3. Update Account Intent + Create Policy",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-OpenIDM-Username",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "X-OpenIDM-Password",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"consent\": [\r\n\t    {\r\n\t\t\t\"operation\":\"replace\",\r\n\t\t\t\"field\":\"Status\",\r\n\t\t\t\"value\":\"Authorised\"\r\n\t    }\r\n\t],\r\n\t\"claims\": {\r\n\t\t\"sub\": \"demo\",\r\n\t\t\"accounts\": [{\r\n\t\t\t\"accountid\": \"1047522205595\",\r\n\t\t\t\"Permissions\": [\r\n\t\t\t      \"ReadAccountsDetail\",\r\n\t\t\t      \"ReadBalances\",\r\n\t\t\t      \"ReadBeneficiariesDetail\",\r\n\t\t\t      \"ReadDirectDebits\",\r\n\t\t\t      \"ReadProducts\",\r\n\t\t\t      \"ReadStandingOrdersDetail\",\r\n\t\t\t      \"ReadTransactionsCredits\",\r\n\t\t\t      \"ReadTransactionsDebits\",\r\n\t\t\t      \"ReadTransactionsDetail\",\r\n\t\t\t      \"ReadOffers\",\r\n\t\t\t      \"ReadPAN\",\r\n\t\t\t      \"ReadParty\",\r\n\t\t\t      \"ReadPartyPSU\",\r\n\t\t\t      \"ReadScheduledPaymentsDetail\",\r\n\t\t\t      \"ReadStatementsDetail\"\r\n\t\t\t ]\r\n\t\t\t},\r\n\t\t\t{\r\n\t\t\t\"accountid\": \"728336866657961\",\r\n\t\t\t\"Permissions\": [\r\n\t\t\t      \"ReadAccountsDetail\",\r\n\t\t\t      \"ReadBalances\",\r\n\t\t\t      \"ReadBeneficiariesDetail\",\r\n\t\t\t      \"ReadDirectDebits\",\r\n\t\t\t      \"ReadProducts\",\r\n\t\t\t      \"ReadStandingOrdersDetail\",\r\n\t\t\t      \"ReadTransactionsCredits\",\r\n\t\t\t      \"ReadTransactionsDebits\",\r\n\t\t\t      \"ReadTransactionsDetail\",\r\n\t\t\t      \"ReadOffers\",\r\n\t\t\t      \"ReadPAN\",\r\n\t\t\t      \"ReadParty\",\r\n\t\t\t      \"ReadPartyPSU\",\r\n\t\t\t      \"ReadScheduledPaymentsDetail\",\r\n\t\t\t      \"ReadStatementsDetail\"\r\n\t\t\t ]\r\n\t\t\t}\r\n\t\t]\r\n\t}\r\n}"
+										},
+										"url": {
+											"raw": "{{OPENIDM_CLOUD}}/endpoint/accountAccessIntent/{{intentId}}?_action=patch",
+											"host": [
+												"{{OPENIDM_CLOUD}}"
+											],
+											"path": [
+												"endpoint",
+												"accountAccessIntent",
+												"{{intentId}}"
+											],
+											"query": [
+												{
+													"key": "_action",
+													"value": "patch"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "TPP",
+							"item": [
+								{
+									"name": "1. Create TPP Object",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "f215fc03-e82f-45cc-92a7-74e2324932da",
+												"exec": [
+													"var data = JSON.parse(responseBody);",
+													"postman.setEnvironmentVariable(\"intentId\", data.result);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-OpenIDM-Username",
+												"type": "text",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "X-OpenIDM-Password",
+												"type": "text",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"TPP Test1\",\n  \"identifier\": \"tpp-test-1\"\n}"
+										},
+										"url": {
+											"raw": "{{OPENIDM_CLOUD}}/managed/OBTpp?_action=create",
+											"host": [
+												"{{OPENIDM_CLOUD}}"
+											],
+											"path": [
+												"managed",
+												"OBTpp"
+											],
+											"query": [
+												{
+													"key": "_action",
+													"value": "create"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "2. Get TPP Details",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "X-OpenIDM-Username",
+												"type": "text",
+												"value": "openidm-admin"
+											},
+											{
+												"key": "X-OpenIDM-Password",
+												"type": "text",
+												"value": "openidm-admin"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{OPENIDM_CLOUD}}/managed/OBTpp?_queryFilter=identifier+eq+\"tpp-test-1\"",
+											"host": [
+												"{{OPENIDM_CLOUD}}"
+											],
+											"path": [
+												"managed",
+												"OBTpp"
+											],
+											"query": [
+												{
+													"key": "_queryFilter",
+													"value": "identifier+eq+\"tpp-test-1\""
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "IG",
+					"item": [
+						{
+							"name": "Create Payment Intent",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer adASLV6yUqR468dZTvDVQ5SUTS8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Data\": {\n    \"Initiation\": {\n      \"InstructionIdentification\": \"ACME412\",\n      \"EndToEndIdentification\": \"FRESCO.21302.GFX.20\",\n      \"InstructedAmount\": {\n        \"Amount\": \"165.88\",\n        \"Currency\": \"GBP\"\n      },\n      \"CreditorAccount\": {\n        \"SchemeName\": \"SortCodeAccountNumber\",\n        \"Identification\": \"08080021325698\",\n        \"Name\": \"ACME Inc\",\n        \"SecondaryIdentification\": \"0002\"\n      },\n      \"RemittanceInformation\": {\n        \"Reference\": \"FRESCO-101\",\n        \"Unstructured\": \"Internal ops code 5120101\"\n      }\n    }\n  },\n  \"Risk\": {\n    \"PaymentContextCode\": \"EcommerceGoods\",\n    \"MerchantCategoryCode\": \"5967\",\n    \"MerchantCustomerIdentification\": \"053598653254\",\n    \"DeliveryAddress\": {\n      \"AddressLine\": [\n        \"Flat 7\",\n        \"Acacia Lodge\"\n      ],\n      \"StreetName\": \"Acacia Avenue\",\n      \"BuildingNumber\": \"27\",\n      \"PostCode\": \"GU31 2ZZ\",\n      \"TownName\": \"Sparsholt\",\n      \"CountySubDivision\": [\n        \"Wessex\"\n      ],\n      \"Country\": \"UK\"\n    }\n  }\n}"
+								},
+								"url": {
+									"raw": "{{OPENIG_CLOUD}}/openbanking/v3.1/domestic-payment-consents",
+									"host": [
+										"{{OPENIG_CLOUD}}"
+									],
+									"path": [
+										"openbanking",
+										"v3.1",
+										"domestic-payment-consents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Accounts Intent",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer LDimmij-FdsrSIoFPUGxlug-c2M"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Data\": {\n    \"Permissions\": [\n      \"ReadAccountsDetail\",\n      \"ReadBalances\",\n      \"ReadBeneficiariesDetail\",\n      \"ReadDirectDebits\",\n      \"ReadProducts\",\n      \"ReadStandingOrdersDetail\",\n      \"ReadTransactionsCredits\",\n      \"ReadTransactionsDebits\",\n      \"ReadTransactionsDetail\",\n      \"ReadOffers\",\n      \"ReadPAN\",\n      \"ReadParty\",\n      \"ReadPartyPSU\",\n      \"ReadScheduledPaymentsDetail\",\n      \"ReadStatementsDetail\"\n    ],\n    \"TransactionFromDateTime\": \"2017-05-03T00:00:00+00:00\",\n    \"TransactionToDateTime\": \"2018-12-03T00:00:00+00:00\"\n  },\n  \"Risk\": {}\n}"
+								},
+								"url": {
+									"raw": "{{OPENIG_CLOUD}}/openbanking/v3.1/account-access-consents",
+									"host": [
+										"{{OPENIG_CLOUD}}"
+									],
+									"path": [
+										"openbanking",
+										"v3.1",
+										"account-access-consents"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		}
+	]
+}
