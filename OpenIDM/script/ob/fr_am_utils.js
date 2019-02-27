@@ -1,0 +1,115 @@
+/***************************************************************************
+ *  Copyright 2019 ForgeRock AS.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ***************************************************************************/
+
+function constructAmUri(amServer){
+	var uri = "";
+	
+	uri = amServer.protocol + "://" + amServer.host + ":" + amServer.port
+	
+	return uri;
+}
+
+function AM_logout(amServer){
+	var result = {};
+	var ssoToken = amServer.ssoToken;
+	
+	restCall = {};
+	restCall.url = constructAmUri(amServer) + "/json/sessions/?_action=logout";
+	restCall.headers = {"contentType" 		: "application/json", 
+					"Accept-API-Version"	: "resource=2.0, protocol=1.0",
+					"iPlanetDirectoryPro"	: ssoToken};
+	restCall.body = "{}";
+	restCall.method = "POST";
+	
+	result = executeRest(restCall);
+	
+	if (result.result == "Successfully logged out"){
+		amServer.loggedin = false;
+		amServer.ssoToken = "";
+		return "SUCCESS";	
+
+	}
+	else{
+		return "FAILED";
+	}
+	
+}
+
+function AM_login_getSsoToken(amServer){
+	var ssoToken = "";
+	var result = {};
+	
+	restCall = {};
+	restCall.url = constructAmUri(amServer) + "/json/realms/" + amServer.realm + "/authenticate";
+		
+	restCall.headers = {"Content-Type" 		: "application/json", 
+					"Accept-API-Version"	: "resource=2.0, protocol=1.0",
+					"X-OpenAM-Username"		: amServer.username,
+					"X-OpenAM-Password"		: amServer.password};
+	restCall.body = "{}";
+	restCall.method = "POST";
+	
+	
+	ssoToken = executeRest(restCall).tokenId;
+	console.log("SSOTOKEN: "+ssoToken);
+	amServer.ssoToken = ssoToken;
+	amServer.loggedin = true;	
+	
+	return ssoToken;
+}
+
+//Call AM in order to create the authorization policy
+function AM_policy_create(amServer, policyData){
+	
+	var result = {};
+	var ssoToken = amServer.ssoToken;
+	
+	restCall = {};
+	restCall.url = constructAmUri(amServer) + "/json/realms/" + amServer.policyRealm + "/policies?_action=create";
+	restCall.headers = {"contentType" 		: "application/json", 
+					"Accept-API-Version"	: "protocol=1.0",
+					"amlbcookie"			: "01",
+					"iPlanetDirectoryPro"	: ssoToken};
+	restCall.body = JSON.stringify(policyData);
+	restCall.method = "POST";
+	
+	executeRest(restCall);
+	
+	return;
+	
+}
+
+function executeRest(restCall){
+	var result = {};
+	
+	try {
+		result = openidm.action("external/rest", "call", restCall);
+	}
+ 
+	catch (e) { 
+		console.log("Exception: "+e);
+	}
+	
+	return result;
+	
+}
+
+function getHeader(thisHeader){
+
+	return context.http.headers[thisHeader];
+	
+}
+
