@@ -7,7 +7,7 @@ Run in terminal/ecliplse maven
 	mvn clean install -DskipTests -Ptest
 
 rename 
-	psd-2-rsc-sevice-0.0.1-SNAPSHOT.war -> ASPSP_ASSET.war
+	obie-remote-consent-service-0.0.1-SNAPSHOT.war -> ASPSP_ASSET.war
 
 kill  process 
 	ps -ef | grep ASPSP_ASSET
