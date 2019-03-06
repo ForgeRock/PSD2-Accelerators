@@ -1,0 +1,16 @@
+{
+    "name": "psd-2-rsc-sevice",
+    "version": "0.0.0",
+    "description": "Description for psd2RSCSevice",
+    "private": true,
+    "license": "UNLICENSED",
+    "cacheDirectories": [
+        "node_modules"
+    ],
+    "devDependencies": {
+        "generator-jhipster": "5.7.2"
+    },
+    "engines": {
+        "node": ">=8.9.0"
+    }
+}

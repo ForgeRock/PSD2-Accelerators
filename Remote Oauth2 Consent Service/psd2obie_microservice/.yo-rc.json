@@ -1,0 +1,35 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.forgerock.openbanking.aspsp.rs.rcs"
+    },
+    "jhipsterVersion": "5.7.2",
+    "applicationType": "microservice",
+    "baseName": "psd2RSCSevice",
+    "packageName": "com.forgerock.openbanking.aspsp.rs.rcs",
+    "packageFolder": "com/forgerock/openbanking/aspsp/rs/rcs",
+    "serverPort": "8083",
+    "authenticationType": "jwt",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "no",
+    "devDatabaseType": "no",
+    "prodDatabaseType": "no",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZDYyOTM5YTY4Yjg3NzFjODZiNTViNDAxMmNkM2ZjMDhjMTQ3MmM3OTgwMGI4NDE3MjEwOTYzYmM3NmYzOGM3MTMzYzZiZDU0N2NjOTNlM2I5MDY5OWUxMTUyNjhmNjdlNTRmMGQ5M2E3ZDRkOWIzMTg3MmE3OTVhZGVhMzEwMzg=",
+    "testFrameworks": [
+      "gatling"
+    ],
+    "jhiPrefix": "jhi",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}
