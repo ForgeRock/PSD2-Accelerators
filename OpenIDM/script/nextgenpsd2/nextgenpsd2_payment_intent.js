@@ -13,14 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ***************************************************************************/
-load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/bg/config.js");
-load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/bg/fr_am_utils.js");
-load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/bg/bg_am_policy.js");
+load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/nextgenpsd2/config.js");
+load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/nextgenpsd2/fr_am_utils.js");
+load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/nextgenpsd2/nextgenpsd2_am_policy.js");
 
 function payment_intent_main(){
 	
 	if (request.method == "create") {
-		console.log("DATA BG paymentIntentData request: "+ request);
+		console.log("DATA NextGenPSD2 paymentIntentData request: "+ request);
 		paymentIntentResult = createPaymentIntent(request.content);
 		return paymentIntentResult;
 	}
@@ -35,7 +35,7 @@ function payment_intent_main(){
 	};
 }
 
-//Create initial Berlin Group Payment Intent object with status Pending
+//Create initial NextGenPSD2 Payment Intent object with status Pending
 function createPaymentIntent(paymentIntentData){
 	
 	//Set the Payment Intent pending status
@@ -43,12 +43,9 @@ function createPaymentIntent(paymentIntentData){
 	paymentIntentResponse = {};
 
 	console.log("DATA paymentIntentData with status: "+ paymentIntentData);
-        console.log("DATA request paymentIntentData : "+ request);
-//	console.log("DATA response paymentIntentData: "+ response);
-
 	
-	//Create the IDM BG Payment Intent object
-    	paymentIntentID = openidm.create("/managed/BGPaymentIntent", "", paymentIntentData);
+	//Create the IDM NextGenPSD2 Payment Intent object
+    	paymentIntentID = openidm.create("/managed/NextGenPSD2PaymentIntent", "", paymentIntentData);
 	
 	console.log("\nRESULT paymentIntentID: "+ paymentIntentID);
   
@@ -69,17 +66,15 @@ function createPaymentIntent(paymentIntentData){
 }
 
 
-//Update Berlin Group Payment Intent status to Authorised
+//Update NextGenPSD2 Payment Intent status to Authorised
 function updatePaymentIntent(paymentIntentData){
 	
-	console.log("[DEBUG] BG Request: "+ request);
-	console.log("[DEBUG] paymentIntentData: "+ paymentIntentData);
+	console.log("[DEBUG] NextGenPSD2 update paymentIntentData: "+ paymentIntentData);
 	
 	inputPaymentIntentId = request.resourcePath;
-	console.log("Input Payment Intent Id: "+ inputPaymentIntentId);	
 	
-	//Update the IDM BG Payment Intent object Status 
-    	paymentIntentID = openidm.patch("/managed/BGPaymentIntent/" + inputPaymentIntentId, null, paymentIntentData.consent);
+	//Update the IDM NextGenPSD2 Payment Intent object Status 
+    	paymentIntentID = openidm.patch("/managed/NextGenPSD2PaymentIntent/" + inputPaymentIntentId, null, paymentIntentData.consent);
 
 	console.log("RESULT paymentIntentID: "+ paymentIntentID);
 	

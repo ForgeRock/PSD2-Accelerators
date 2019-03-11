@@ -114,7 +114,7 @@
         "config" : {
           "onRequest" : [ {
             "target" : "${request.uri.path}",
-            "value" : "${attributes.accountId != null ?  '/openidm/endpoint/bgAccountDetails' : '/openidm/endpoint/bgAccountList'}"
+            "value" : "${attributes.accountId != null ?  '/openidm/endpoint/nextGenPSD2AccountDetails' : '/openidm/endpoint/nextGenPSD2AccountList'}"
           }, {
             "target" : "${request.uri.query}",
             "value" : "accounts=${contexts.policyDecision.attributes.grantedAccounts}"

@@ -37,7 +37,7 @@ var idmServer = {
 
 //OBIE IDM Managed Objects
 CONFIG_managedObjects = {
-	"bgPaymentIntent" : "/managed/BGPaymentIntent",
-	"bgAccountAccessConsent" : "/managed/BGAccountAccessConsent",
-	"bgTpp" : "/managed/BGTpp"
+	"NextGenPSD2PaymentIntent" : "/managed/NextGenPSD2PaymentIntent",
+	"NextGenPSD2AccountAccessConsent" : "/managed/NextGenPSD2AccountAccessConsent",
+	"NextGenPSD2Tpp" : "/managed/NextGenPSD2Tpp"
 };

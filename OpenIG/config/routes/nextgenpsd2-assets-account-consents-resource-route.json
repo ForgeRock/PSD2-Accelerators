@@ -86,7 +86,7 @@
         "config" : {
           "onRequest" : [ {
             "target" : "${request.uri.path}",
-            "value" : "${attributes.accountId != null ?  '/openidm/endpoint/bgConsentDetails' : '/openidm/endpoint/bgConsentStatus'}"
+            "value" : "${attributes.accountId != null ?  '/openidm/endpoint/nextGenPSD2ConsentDetails' : '/openidm/endpoint/nextGenPSD2ConsentStatus'}"
           } ]
         }
       }, {

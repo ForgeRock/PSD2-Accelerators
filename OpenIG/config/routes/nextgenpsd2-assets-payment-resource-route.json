@@ -110,7 +110,7 @@
         "config" : {
           "onRequest" : [ {
             "target" : "${request.uri.path}",
-            "value" : "${attributes.paymentId != null ?  '/openidm/endpoint/bgPaymentStatus' : '/openidm/endpoint/bgPaymentIntent'}"
+            "value" : "${attributes.paymentId != null ?  '/openidm/endpoint/nextGenPSD2PaymentStatus' : '/openidm/endpoint/nextGenPSD2PaymentIntent'}"
           } ]
         }
       }, {

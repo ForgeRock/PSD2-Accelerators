@@ -1194,7 +1194,7 @@
             }
         },
         {
-            "name" : "BGPaymentIntent",
+            "name" : "NextGenPSD2PaymentIntent",
             "schema" : {
                 "$schema" : "http://forgerock.org/json-schema#",
                 "type" : "object",
@@ -1234,8 +1234,7 @@
                         "properties" : { },
                         "order" : [ ],
                         "description" : null,
-                        "isVirtual" : false,
-                        "required" : [ ]
+                        "isVirtual" : false
                     },
                     "creditorAccount" : {
                         "title" : "Creditor Account",
@@ -1304,7 +1303,7 @@
             }
         },
         {
-            "name" : "BGTpp",
+            "name" : "NextGenPSD2Tpp",
             "schema" : {
                 "$schema" : "http://forgerock.org/json-schema#",
                 "type" : "object",
@@ -1335,13 +1334,13 @@
                     "identifier"
                 ],
                 "required" : [
-                    "identifier",
-                    "name"
+                    "name",
+                    "identifier"
                 ]
             }
         },
         {
-            "name" : "BGAccountAccessConsent",
+            "name" : "NextGenPSD2AccountAccessConsent",
             "schema" : {
                 "$schema" : "http://forgerock.org/json-schema#",
                 "type" : "object",
