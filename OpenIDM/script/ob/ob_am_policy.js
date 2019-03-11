@@ -30,9 +30,8 @@ function constructPISPPolicyData(paymentIntentID, inputSub, inputPaymentInitiati
 	policyData.actionValues["POST"] = true;
 	policyData.actionValues["GET"] = true;
 	
-	var res1 = "*://*.*/openbanking/v3.1/*-payment-consents";
-	var res2 = constructIdmUri(idmServer) + "/openbanking/v3.1/domestic-payments/" + paymentIntentID;	
-	policyData.resources = [res1, res2];
+	var res1 = constructIdmUri(idmServer) + "/openbanking/v3.1/domestic-payments/" + paymentIntentID;	
+	policyData.resources = [res1];
 
 	if (inputSub != null && inputSub != "" && inputPaymentInitiation != null && inputPaymentInitiation != "") {
 		policyData.subject = {
@@ -74,9 +73,8 @@ function constructAISPPolicyData(accountInformationIntentID, inputSub, inputAcco
 	policyData.actionValues["POST"] = true;
 	policyData.actionValues["GET"] = true;	
 
-	var res1 = "*://*.*/openbanking/v3.1/*-account-information-consents";
-	var res2 = constructIdmUri(idmServer) + "/openbanking/v3.1/accounts/" + accountInformationIntentID;	
-	policyData.resources = [res1, res2];
+	var res1 = constructIdmUri(idmServer) + "/openbanking/v3.1/accounts/" + accountInformationIntentID;	
+	policyData.resources = [res1];
 
 	if (inputSub != null && inputSub != "" && inputAccountInitiation != null && inputAccountInitiation != "") {
 
