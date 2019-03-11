@@ -1,0 +1,68 @@
+{
+  "metadata" : {
+    "realm" : "/nextgenpsd2",
+    "amsterVersion" : "6.5.0",
+    "entityType" : "OAuth2Clients",
+    "entityId" : "643fc79f-7f27-4074-ac75-21359135bee2",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "643fc79f-7f27-4074-ac75-21359135bee2",
+    "signEncOAuth2ClientConfig" : {
+      "idTokenEncryptionMethod" : "A128CBC_HS256",
+      "jwkSet" : null,
+      "idTokenEncryptionAlgorithm" : "RSA1_5",
+      "userinfoResponseFormat" : "JSON",
+      "mTLSTrustedCert" : null,
+      "jwksCacheTimeout" : 0,
+      "userinfoSignedResponseAlg" : null,
+      "requestParameterEncryptedAlg" : "RSA-OAEP-256",
+      "tokenEndpointAuthSigningAlgorithm" : "RS256",
+      "requestParameterEncryptedEncryptionAlgorithm" : "A128CBC_HS256",
+      "mTLSSubjectDN" : "CN=login.psd2accelerators.fridam.aeet-forgerock.com",
+      "jwkStoreCacheMissCacheTime" : 0,
+      "idTokenSignedResponseAlg" : "RS256",
+      "idTokenEncryptionEnabled" : false,
+      "idTokenPublicEncryptionKey" : null,
+      "userinfoEncryptedResponseEncryptionAlgorithm" : "A128CBC_HS256",
+      "publicKeyLocation" : "x509",
+      "userinfoEncryptedResponseAlg" : null,
+      "jwksUri" : null,
+      "mTLSCertificateBoundAccessTokens" : true,
+      "requestParameterSignedAlg" : "RS256",
+      "clientJwtPublicKey" : null
+    },
+    "advancedOAuth2ClientConfig" : {
+      "grantTypes" : [ "refresh_token", "authorization_code" ],
+      "updateAccessToken" : "kuF_yZo29ohECjtpfM_4pUiZ-2A",
+      "contacts" : [ "test2@example.org", "test1@example.org" ],
+      "responseTypes" : [ "code" ],
+      "subjectType" : "pairwise",
+      "tokenEndpointAuthMethod" : "tls_client_cert"
+    },
+    "coreOAuth2ClientConfig" : {
+      "clientType" : "Public",
+      "userpassword" : null,
+      "userpassword-encrypted" : "AAAAA0FFUwIQeMazAobF0xEfLHmK+t+64LtyToGTv9Ts2QTf+/DR1qq3kwowZ74XLhfqnz8PJ14nFJzETtNyTAL7sU3Sf8zba/hxku2her4mR3X7afRSggRH1HnXOr+1R9PjfBpw5tKPTYMqgFJ+fn6R0T+Uazassw==",
+      "scopes" : [ "openid", "^AIS:", "^PIS:" ],
+      "authorizationCodeLifetime" : 0,
+      "accessTokenLifetime" : 0,
+      "refreshTokenLifetime" : 0,
+      "defaultScopes" : [ ],
+      "redirectionUris" : [ "https://www.google.com" ],
+      "clientName" : [ "Konsentus Payment Services Limited" ],
+      "status" : "Active"
+    },
+    "coreOpenIDClientConfig" : {
+      "jwtTokenLifetime" : 0,
+      "defaultAcrValues" : [ ],
+      "defaultMaxAgeEnabled" : false,
+      "defaultMaxAge" : 1
+    },
+    "_type" : {
+      "_id" : "OAuth2Client",
+      "name" : "OAuth2 Clients",
+      "collection" : true
+    }
+  }
+}

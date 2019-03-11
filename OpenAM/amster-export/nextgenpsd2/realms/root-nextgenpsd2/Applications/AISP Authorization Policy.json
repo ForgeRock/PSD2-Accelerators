@@ -1,0 +1,29 @@
+{
+  "metadata" : {
+    "realm" : "/nextgenpsd2",
+    "amsterVersion" : "6.5.0",
+    "entityType" : "Applications",
+    "entityId" : "AISP Authorization Policy",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "AISP Authorization Policy",
+    "displayName" : "AISP Authorization Policy",
+    "description" : "Berlin Group PISP Authorization Policy",
+    "subjects" : [ "Policy", "NOT", "OR", "JwtClaim", "AuthenticatedUsers", "AND", "Identity", "NONE" ],
+    "entitlementCombiner" : "DenyOverride",
+    "resourceComparator" : null,
+    "attributeNames" : [ ],
+    "creationDate" : 1551190626932,
+    "lastModifiedDate" : 1551190635877,
+    "lastModifiedBy" : "id=amAdmin,ou=user,ou=am-config",
+    "createdBy" : "id=amAdmin,ou=user,ou=am-config",
+    "editable" : true,
+    "saveIndex" : null,
+    "searchIndex" : null,
+    "applicationType" : "iPlanetAMWebAgentService",
+    "resourceTypeUuids" : [ "76656a38-5f8e-401b-83aa-4ccb74ce88d2" ],
+    "conditions" : [ "LEAuthLevel", "Policy", "Script", "AuthenticateToService", "SimpleTime", "AMIdentityMembership", "OR", "IPv6", "IPv4", "SessionProperty", "AuthScheme", "AuthLevel", "NOT", "Transaction", "AuthenticateToRealm", "AND", "ResourceEnvIP", "LDAPFilter", "OAuth2Scope", "Session" ],
+    "name" : "AISP Authorization Policy"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "metadata" : {
+    "realm" : "/nextgenpsd2",
+    "amsterVersion" : "6.5.0",
+    "entityType" : "OAuth2Provider",
+    "entityId" : "OAuth2Provider",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "",
+    "coreOAuth2Config" : {
+      "refreshTokenLifetime" : 604800,
+      "accessTokenLifetime" : 3600,
+      "usePolicyEngineForScope" : false,
+      "codeLifetime" : 120,
+      "issueRefreshTokenOnRefreshedToken" : true,
+      "issueRefreshToken" : true,
+      "statelessTokensEnabled" : false
+    },
+    "coreOIDCConfig" : {
+      "supportedIDTokenEncryptionMethods" : [ "A256GCM", "A192GCM", "A128GCM", "A128CBC-HS256", "A192CBC-HS384", "A256CBC-HS512" ],
+      "jwtTokenLifetime" : 3600,
+      "supportedClaims" : [ "phone_number|Phone number", "address|Postal Address", "bg_consent_id", "email|Email Address", "family_name|Family name", "profile|Your personal information", "bg_intent_id", "name|Full name", "acr|Authentication context class reference", "locale|Locale", "given_name|Given Name", "zoneinfo|Time zone" ],
+      "supportedIDTokenEncryptionAlgorithms" : [ "RSA-OAEP", "RSA-OAEP-256", "A128KW", "A256KW", "RSA1_5", "dir", "A192KW" ],
+      "supportedIDTokenSigningAlgorithms" : [ "RS384", "PS284", "ES384", "HS256", "HS512", "ES256", "RS256", "HS384", "ES512", "PS256", "PS512", "RS512" ],
+      "oidcClaimsScript" : "eddc4381-5bcc-4cf8-93c6-066b1da5b192"
+    },
+    "advancedOAuth2Config" : {
+      "supportedScopes" : [ "openid", "^AIS:", "offline_access", "^PIS:" ],
+      "codeVerifierEnforced" : "true",
+      "tokenSigningAlgorithm" : "HS256",
+      "authenticationAttributes" : [ "uid" ],
+      "defaultScopes" : [ "openid" ],
+      "tlsClientCertificateTrustedHeader" : "ssl-am-client-cert",
+      "scopeImplementationClass" : "org.forgerock.openam.scope.CustomScopeValidator",
+      "responseTypeClasses" : [ "code|org.forgerock.oauth2.core.AuthorizationCodeResponseTypeHandler", "id_token|org.forgerock.openidconnect.IdTokenResponseTypeHandler", "device_code|org.forgerock.oauth2.core.TokenResponseTypeHandler", "token|org.forgerock.oauth2.core.TokenResponseTypeHandler" ],
+      "tlsCertificateBoundAccessTokensEnabled" : true,
+      "moduleMessageEnabledInPasswordGrant" : false,
+      "tokenEncryptionEnabled" : false,
+      "tokenCompressionEnabled" : false,
+      "grantTypes" : [ "implicit", "refresh_token", "password", "client_credentials", "authorization_code" ],
+      "displayNameAttribute" : "cn",
+      "supportedSubjectTypes" : [ "public", "pairwise" ]
+    },
+    "advancedOIDCConfig" : {
+      "storeOpsTokens" : true,
+      "defaultACR" : [ ],
+      "supportedRequestParameterEncryptionEnc" : [ "A256GCM", "A192GCM", "A128GCM", "A128CBC-HS256", "A192CBC-HS384", "A256CBC-HS512" ],
+      "claimsParameterSupported" : true,
+      "amrMappings" : { },
+      "supportedUserInfoEncryptionEnc" : [ "A256GCM", "A192GCM", "A128GCM", "A128CBC-HS256", "A192CBC-HS384", "A256CBC-HS512" ],
+      "requireRequestUriRegistration" : false,
+      "alwaysAddClaimsToToken" : true,
+      "supportedUserInfoSigningAlgorithms" : [ "ES384", "HS256", "HS512", "ES256", "RS256", "HS384", "ES512" ],
+      "supportedRequestParameterEncryptionAlgorithms" : [ "RSA-OAEP", "RSA-OAEP-256", "A128KW", "A256KW", "RSA1_5", "dir", "A192KW" ],
+      "authorisedOpenIdConnectSSOClients" : [ ],
+      "idTokenInfoClientAuthenticationEnabled" : true,
+      "supportedRequestParameterSigningAlgorithms" : [ "PS384", "RS384", "ES384", "HS256", "HS512", "ES256", "RS256", "HS384", "ES512", "PS256", "PS512", "RS512" ],
+      "supportedUserInfoEncryptionAlgorithms" : [ "RSA-OAEP", "RSA-OAEP-256", "A128KW", "A256KW", "RSA1_5", "dir", "A192KW" ],
+      "supportedTokenEndpointAuthenticationSigningAlgorithms" : [ "PS384", "RS384", "ES384", "HS256", "HS512", "ES256", "RS256", "HS384", "ES512", "PS256", "PS512", "RS512" ],
+      "loaMapping" : {
+        "urn:openbanking:psd2:sca" : "berlingroup",
+        "urn:openbanking:psd2:ca" : "berlingroup"
+      }
+    },
+    "clientDynamicRegistrationConfig" : {
+      "dynamicClientRegistrationSoftwareStatementRequired" : false,
+      "dynamicClientRegistrationScope" : "dynamic_client_registration",
+      "requiredSoftwareStatementAttestedAttributes" : [ ],
+      "generateRegistrationAccessTokens" : true,
+      "allowDynamicRegistration" : true
+    },
+    "consent" : {
+      "enableRemoteConsent" : true,
+      "supportedRcsRequestSigningAlgorithms" : [ "PS384", "RS384", "ES384", "HS256", "HS512", "ES256", "RS256", "HS384", "ES512", "PS256", "PS512", "RS512" ],
+      "supportedRcsResponseSigningAlgorithms" : [ "PS384", "RS384", "ES384", "HS256", "HS512", "ES256", "RS256", "HS384", "ES512", "PS256", "PS512", "RS512" ],
+      "clientsCanSkipConsent" : false,
+      "supportedRcsRequestEncryptionAlgorithms" : [ "RSA-OAEP", "RSA-OAEP-256", "A128KW", "RSA1_5", "A256KW", "dir", "A192KW" ],
+      "supportedRcsResponseEncryptionMethods" : [ "A256GCM", "A192GCM", "A128GCM", "A128CBC-HS256", "A192CBC-HS384", "A256CBC-HS512" ],
+      "supportedRcsRequestEncryptionMethods" : [ "A256GCM", "A192GCM", "A128GCM", "A128CBC-HS256", "A192CBC-HS384", "A256CBC-HS512" ],
+      "remoteConsentServiceId" : "forgerock-rcs",
+      "supportedRcsResponseEncryptionAlgorithms" : [ "RSA-OAEP", "RSA-OAEP-256", "A128KW", "A256KW", "RSA1_5", "dir", "A192KW" ]
+    },
+    "deviceCodeConfig" : {
+      "devicePollInterval" : 5,
+      "deviceCodeLifetime" : 300
+    },
+    "_type" : {
+      "_id" : "oauth-oidc",
+      "name" : "OAuth2 Provider",
+      "collection" : false
+    }
+  }
+}

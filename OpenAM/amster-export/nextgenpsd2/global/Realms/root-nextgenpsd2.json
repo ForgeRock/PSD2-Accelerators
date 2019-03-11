@@ -1,0 +1,16 @@
+{
+  "metadata" : {
+    "realm" : null,
+    "amsterVersion" : "6.5.0",
+    "entityType" : "Realms",
+    "entityId" : "L25leHRnZW5wc2Qy",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "L25leHRnZW5wc2Qy",
+    "parentPath" : "/",
+    "active" : true,
+    "name" : "nextgenpsd2",
+    "aliases" : [ ]
+  }
+}

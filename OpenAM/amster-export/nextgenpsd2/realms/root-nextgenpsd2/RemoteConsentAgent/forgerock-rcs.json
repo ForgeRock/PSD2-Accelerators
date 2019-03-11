@@ -1,0 +1,34 @@
+{
+  "metadata" : {
+    "realm" : "/nextgenpsd2",
+    "amsterVersion" : "6.5.0",
+    "entityType" : "RemoteConsentAgent",
+    "entityId" : "forgerock-rcs",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "forgerock-rcs",
+    "remoteConsentResponseEncryptionAlgorithm" : "RSA-OAEP-256",
+    "jwkStoreCacheMissCacheTime" : 60000,
+    "remoteConsentRequestEncryptionMethod" : "A128GCM",
+    "remoteConsentResponseEncryptionMethod" : "A128GCM",
+    "jwkSet" : "{\"keys\":[{\"kty\":\"RSA\",\"e\":\"AQAB\",\"use\":\"sig\",\"kid\":\"b840f20c-1021-4d07-8cc3-51521d499b55\",\"n\":\"rZA7K-2RsuDmYgU9tR9WFCWaGbzyefr9Oxi12KIZzw4Q8jJNLOwVaCwvC2-SX52Zdr2z1uDbUg6Z9oKCiaHh0Tgn-0c5OBGUjY6auUb6BYaRUbNhqhTqXB10O1r-2O0lAaVYV0vq-HYgY-jYiYnYlemf2vPYBUCXmhrupAkIVXwFrw7QfZaYTdgVEgl5tLGoCnhxWidZHkuI6x6nd8sF6oXN628V09q9jEe0CaFufzes0Vq7O3HULNzA6RxuTnKduBvXA2q3EAGhqiqoHzgRZHAErQLEW1oszLwp2vnBSkGEXGu2ADf2htwF5UnWprebdZ5JcFYhfLlr0VTuh1AdVw\"}]}",
+    "remoteConsentResponseSigningAlg" : "RS256",
+    "requestTimeLimit" : 180,
+    "agentgroup" : null,
+    "jwksUri" : "http://18.211.177.234:8094/api/rcs/consent/jwk_pub",
+    "remoteConsentRequestEncryptionAlgorithm" : "RSA-OAEP-256",
+    "userpassword" : null,
+    "userpassword-encrypted" : "AAAAA0FFUwIQ1446O+3DcanYA/NN+SBE+v5uqYqZZvwHetqZxtTk1RKNdAPcgW3psw==",
+    "jwksCacheTimeout" : 3600000,
+    "remoteConsentRedirectUrl" : "http://18.211.177.234:8094/api/rcs/consent",
+    "publicKeyLocation" : "jwks",
+    "remoteConsentRequestSigningAlgorithm" : "RS256",
+    "remoteConsentRequestEncryptionEnabled" : false,
+    "_type" : {
+      "_id" : "RemoteConsentAgent",
+      "name" : "OAuth2 Remote Consent Service",
+      "collection" : true
+    }
+  }
+}
