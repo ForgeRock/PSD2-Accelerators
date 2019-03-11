@@ -510,7 +510,7 @@
 										},
 										{
 											"key": "code",
-											"value": "htabPS9Dyl75sG1F9sW5CPc9guM",
+											"value": "AyeQZY6DKpwvpUPV9R48pu0q8PQ",
 											"type": "text"
 										},
 										{
@@ -1615,7 +1615,7 @@
 										},
 										{
 											"key": "code",
-											"value": "uKlDpVBJaYnYOPaEaBRpTOqUS0g",
+											"value": "KliK1EiEKabULWx-lhnMOnPZ0io",
 											"type": "text"
 										},
 										{
@@ -3578,7 +3578,7 @@
 												"id": "f215fc03-e82f-45cc-92a7-74e2324932da",
 												"exec": [
 													"var data = JSON.parse(responseBody);",
-													"postman.setEnvironmentVariable(\"intentId\", data.result);"
+													"postman.setEnvironmentVariable(\"PaymentId\", data.result.paymentId);"
 												],
 												"type": "text/javascript"
 											}
@@ -3647,14 +3647,14 @@
 											"raw": ""
 										},
 										"url": {
-											"raw": "{{OPENIDM_CLOUD}}/managed/BGPaymentIntent/{{intentId}}",
+											"raw": "{{OPENIDM_CLOUD}}/managed/BGPaymentIntent/{{PaymentId}}",
 											"host": [
 												"{{OPENIDM_CLOUD}}"
 											],
 											"path": [
 												"managed",
 												"BGPaymentIntent",
-												"{{intentId}}"
+												"{{PaymentId}}"
 											]
 										}
 									},
@@ -3717,7 +3717,7 @@
 												"id": "f215fc03-e82f-45cc-92a7-74e2324932da",
 												"exec": [
 													"var data = JSON.parse(responseBody);",
-													"postman.setEnvironmentVariable(\"consentId\", data.result);"
+													"postman.setEnvironmentVariable(\"ConsentId\", data.result.consentId);"
 												],
 												"type": "text/javascript"
 											}
@@ -3843,14 +3843,14 @@
 											"raw": ""
 										},
 										"url": {
-											"raw": "{{OPENIDM_CLOUD}}/managed/BGAccountAccessConsent/2237be84-bb7d-4633-9b2a-cac84304e80c",
+											"raw": "{{OPENIDM_CLOUD}}/managed/BGAccountAccessConsent/{{ConsentId}}",
 											"host": [
 												"{{OPENIDM_CLOUD}}"
 											],
 											"path": [
 												"managed",
 												"BGAccountAccessConsent",
-												"2237be84-bb7d-4633-9b2a-cac84304e80c"
+												"{{ConsentId}}"
 											]
 										}
 									},
@@ -3879,14 +3879,14 @@
 											"raw": "{\n    \"consent\": [\n        {\n            \"operation\": \"replace\",\n            \"field\": \"Status\",\n            \"value\": \"valid\"\n        },\n        {\n            \"operation\": \"replace\",\n            \"field\": \"access\",\n            \"value\": {\n                \"accounts\": [\n                    {\n                        \"iban\": \"DE40100100103307118608\",\n                        \"currency\": \"EUR\"\n                    }\n                ],\n                \"balances\": [\n                    {\n                        \"iban\": \"DE02100100109307118603\",\n                        \"currency\": \"USD\"\n                    }\n                ],\n                \"transactions\": [\n                    {\n                        \"iban\": \"DE40100100103307118608\"\n                    },\n                    {\n                        \"maskedPan\": \"123456xxxxxx1234\"\n                    }\n                ]\n            }\n        }\n    ],\n    \"claims\": {\n        \"sub\": \"demo\",\n        \"accounts\": [\n            {\n                \"accountid\": \"1047522205595\",\n                \"Permissions\": [\n                    \"ReadAccountsDetail\",\n                    \"ReadBalances\",\n                    \"ReadTransactions\"\n                ]\n            },\n            {\n                \"accountid\": \"728336866657961\",\n                \"Permissions\": [\n                    \"ReadAccountsDetail\",\n                    \"ReadBalances\",\n                    \"ReadTransactions\"\n                ]\n            }\n        ],\n        \"recurringIndicator\": false,\n        \"validUntil\": \"2019-03-31\",\n        \"frequencyPerDay\": \"4\",\n        \"combinedServiceIndicator\": false\n    }\n}"
 										},
 										"url": {
-											"raw": "{{OPENIDM_CLOUD}}/endpoint/bgAccountAccessConsent/2237be84-bb7d-4633-9b2a-cac84304e80c?_action=patch",
+											"raw": "{{OPENIDM_CLOUD}}/endpoint/bgAccountAccessConsent/{{ConsentId}}?_action=patch",
 											"host": [
 												"{{OPENIDM_CLOUD}}"
 											],
 											"path": [
 												"endpoint",
 												"bgAccountAccessConsent",
-												"2237be84-bb7d-4633-9b2a-cac84304e80c"
+												"{{ConsentId}}"
 											],
 											"query": [
 												{
@@ -3942,13 +3942,13 @@
 											"raw": "{\n  \"name\": \"TPP Test1\",\n  \"identifier\": \"tpp-test-1\"\n}"
 										},
 										"url": {
-											"raw": "{{OPENIDM_CLOUD}}/managed/BGTpp?_action=create",
+											"raw": "{{OPENIDM_CLOUD}}/managed/NextGenPSD2Tpp?_action=create",
 											"host": [
 												"{{OPENIDM_CLOUD}}"
 											],
 											"path": [
 												"managed",
-												"BGTpp"
+												"NextGenPSD2Tpp"
 											],
 											"query": [
 												{
@@ -3981,13 +3981,13 @@
 											"raw": ""
 										},
 										"url": {
-											"raw": "{{OPENIDM_CLOUD}}/managed/BGTpp?_queryFilter=identifier+eq+\"tpp-test-1\"",
+											"raw": "{{OPENIDM_CLOUD}}/managed/NextGenPSD2Tpp?_queryFilter=identifier+eq+\"tpp-test-1\"",
 											"host": [
 												"{{OPENIDM_CLOUD}}"
 											],
 											"path": [
 												"managed",
-												"BGTpp"
+												"NextGenPSD2Tpp"
 											],
 											"query": [
 												{
