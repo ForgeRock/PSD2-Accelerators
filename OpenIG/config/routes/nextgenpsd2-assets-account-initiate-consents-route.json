@@ -48,7 +48,7 @@
         "config" : {
           "onRequest" : [ {
             "target" : "${request.uri.path}",
-            "value" : "/openidm/endpoint/bgAccountAccessConsent"
+            "value" : "/openidm/endpoint/nextGenPSD2AccountAccessConsent"
           }, {
             "target" : "${request.uri.query}",
             "value" : "_action=create"

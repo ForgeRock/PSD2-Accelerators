@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ***************************************************************************/
-load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/bg/config.js");
-load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/bg/fr_am_utils.js");
-load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/bg/bg_am_policy.js");
+load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/nextgenpsd2/config.js");
+load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/nextgenpsd2/fr_am_utils.js");
+load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/nextgenpsd2/nextgenpsd2_am_policy.js");
  
 function account_access_consent_main(){
 
@@ -34,7 +34,7 @@ function account_access_consent_main(){
 	};
 }
 
-//Create Berlin Group Account Information Consent with AwaitingAuthorisation status
+//Create NextGenPSD2 Account Information Consent with AwaitingAuthorisation status
 function createAccountConsent(accountConsentData){
 
 	//Set the Account Information Consent to pending status
@@ -42,8 +42,8 @@ function createAccountConsent(accountConsentData){
 
 	console.log("DATA accountConsentData with status: "+ accountConsentData);
 
-	//Create the IDM BG Account Information Consent object	
-	accountConsentID = openidm.create("/managed/BGAccountAccessConsent", "", accountConsentData);
+	//Create the IDM NextGenPSD2 Account Information Consent object	
+	accountConsentID = openidm.create("/managed/NextGenPSD2AccountAccessConsent", "", accountConsentData);
 
 	accountConsentResponse = {};
 
@@ -62,17 +62,16 @@ function createAccountConsent(accountConsentData){
 }
 
 
-//Update Berlin Group Account Information Intent status to Authorised
+//Update NextGenPSD2 Account Information Intent status to Authorised
 function updateAccountConsent(accountConsentData){
 	
-	console.log("[DEBUG] BG Request: "+ request);
-	console.log("[DEBUG] accountConsentData: "+ accountConsentData);
+	console.log("[DEBUG] NextGenPSD2 accountConsentData: "+ accountConsentData);
 	
 	inputAccountConsentId = request.resourcePath;
 	console.log("Input Account Information Consent Id: "+ inputAccountConsentId);	
 	
 	//Update the IDM OB Payment Consent object Status 
-	accountConsentID = openidm.patch("/managed/BGAccountAccessConsent/" + inputAccountConsentId, null, accountConsentData.consent);
+	accountConsentID = openidm.patch("/managed/NextGenPSD2AccountAccessConsent/" + inputAccountConsentId, null, accountConsentData.consent);
 	
 	console.log("RESULT accountConsentID: "+ accountConsentID);
 	

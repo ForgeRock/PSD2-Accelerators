@@ -50,10 +50,10 @@
           }
         }
       }, {
-        "name" : "RegisterBGTppForwardFilter",
-        "type" : "RegisterBGTppForwardFilter",
+        "name" : "NextGenPSD2RegisterTppForwardFilter",
+        "type" : "NextGenPSD2RegisterTppForwardFilter",
         "config" : {
-          "idmURL" : "https://openidm.psd2accelerators.fridam.aeet-forgerock.com/openidm/managed/BGTpp?_action=create",
+          "idmURL" : "https://openidm.psd2accelerators.fridam.aeet-forgerock.com/openidm/managed/NextGenPSD2Tpp?_action=create",
           "openIdmPassword" : "openidm-admin",
           "openIdmUsername" : "openidm-admin"
         }
