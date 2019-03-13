@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/header3 :: headFragment">
+<title id="pageTitle">All payments registered in the system,
+	completed or not.</title>
+</head>
+<body>
+	<!--/* Insert content fragment with content of the element with id = 'task-list' */-->
+	<div id="content" class="container">
+		<div class="row">
+			<div class="col"></div>
+			<div class="col-6 mat-card">
+				<div class="text-center">
+					<img class="forgerock-customer-logo" th:src="@{/images/logo.svg}"
+						width="230" height="0">
+				</div>
+				<h6
+					th:text="'Permissions asked by the application : ' + ${client_name} "></h6>
+
+				<div class="divider"></div>
+				<h6 th:if="${flow=='pisp'||flow=='aisp'}" class="title"
+					th:text="'The client requested the following token scopes that have not yet been approved:'"></h6>
+				<div id="accounts-list">
+					<form action="#" th:action="@{/api/rcs/consent/sendconsent}"
+						method="post">
+						<div th:if="${flow!='pisp'&&flow!='aisp'}">
+							<p>Do you consent to approve scopes:</p>
+							<ul class="no-list-type">
+								<li th:each="scope : ${scopeList}">
+									<div class="custom-control custom-checkbox">
+										<input checked="checked" type="checkbox" th:id="${scope}"
+											name="scope" class="custom-control-input" th:value="${scope}" />
+										<label class="custom-control-label" th:for="${scope}"
+											th:text="${scope}"></label>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div th:if="${flow=='pisp'||flow=='aisp'}">
+							<input th:each="scope : ${scopeList} " type="hidden" name="scope"
+								th:value="${scope}" />
+						</div>
+						<div th:if="${flow=='aisp'}" class="divider"></div>
+
+						<div th:if="${flow=='aisp'&& bgAccountsAccessConsentAIPS.access.allPsd2!=null}">
+							<p>Accounts:</p>
+
+							<ul  class="no-list-type">
+								<li th:each="account : ${accountList}">
+									<div class="custom-control custom-checkbox">
+										<input checked="checked" type="checkbox"
+											th:id="${'account'+account.resourceId}" name="account"
+											class="custom-control-input" th:value="${account.resourceId}" />
+										<label class="custom-control-label"
+											th:for="${'account'+account.resourceId}"
+											th:text="${account.currency+' '+ account.product+'('+account.iban+')'}"></label>
+									</div>
+								</li>
+							</ul>
+							<p>Balances:</p>
+							<ul  class="no-list-type">
+								<li th:each="account : ${accountList}">
+									<div class="custom-control custom-checkbox">
+										<input checked="checked" type="checkbox"
+											th:id="${'balance'+account.resourceId}" name="balance"
+											class="custom-control-input" th:value="${account.resourceId}" />
+										<label class="custom-control-label"
+											th:for="${'balance'+account.resourceId}"
+											th:text="${account.currency+' '+ account.product+'('+account.iban+')'}"></label>
+									</div>
+								</li>
+							</ul>
+							
+							<p>Transactions:</p>
+							<ul  class="no-list-type">
+								<li th:each="account : ${accountList}">
+									<div class="custom-control custom-checkbox">
+										<input checked="checked" type="checkbox"
+											th:id="${'transaction'+account.resourceId}" name="transaction"
+											class="custom-control-input" th:value="${account.resourceId}" />
+										<label class="custom-control-label"
+											th:for="${'transaction'+account.resourceId}"
+											th:text="${account.currency+' '+ account.product+'('+account.iban+')'}"></label>
+									</div>
+								</li>
+							</ul>
+							
+						</div>
+						<div th:if="${flow=='aisp'&& bgAccountsAccessConsentAIPS.access.allPsd2==null && listOfABT!=null}">
+							
+							<p>Accounts:</p>
+							<ul  class="no-list-type">
+								<li
+									th:each="account : ${listOfABT.accounts}">
+									<div class="custom-control custom-checkbox">
+										<input checked="checked" type="checkbox"
+											th:id="${'account'+account.iban}" name="account"
+											class="custom-control-input" th:value="${account.resourceId}" /> <label
+											class="custom-control-label" th:for="${'account'+account.iban}"
+											th:text="${account.currency+' '+ account.iban}"></label>
+									</div>
+								</li>
+							</ul>
+
+							<p>Balances:</p>
+
+							<ul  class="no-list-type">
+								<li
+									th:each="balance : ${listOfABT.balances}">
+									<div class="custom-control custom-checkbox">
+										<input checked="checked" type="checkbox"
+											th:id="${'balance'+balance.iban}" name="balance"
+											class="custom-control-input" th:value="${balance.resourceId}" /> <label
+											class="custom-control-label" th:for="${'balance'+balance.iban}"
+											th:text="${balance.currency+' '+ balance.iban}"></label>
+									</div>
+								</li>
+							</ul>
+
+							<p>Transactions:</p>
+
+							<ul class="no-list-type">
+								<li
+									th:each="transaction : ${listOfABT.transactions}">
+									<div class="custom-control custom-checkbox">
+										<input checked="checked" type="checkbox"
+											th:id="${'transaction'+transaction.iban}" name="transaction"
+											class="custom-control-input" th:value="${transaction.resourceId}" />
+										<label class="custom-control-label"
+											th:for="${'transaction'+transaction.iban}" th:text="${transaction.iban}"></label>
+									</div>
+								</li>
+							</ul>
+						</div>
+						
+
+						<div th:if="${flow=='pisp'}">
+						<div th:if="${bgPaymentConsentPISP.debtorAccount==null}">
+						<p>Accounts:</p>
+							<ul th:if="${flow=='pisp'}" class="no-list-type">
+								<li th:each="account : ${accountList}">
+									<div class="custom-control custom-radio custom-control-inline">
+										<input type="radio" th:id="${account.resourceId}" required="required"
+											name="account" class="custom-control-input"
+											th:value="${account.iban}" /> <label class="custom-control-label"
+											th:for="${account.resourceId}" th:text="${account.currency+' '+ account.product+'('+account.iban+')'}"></label>
+									</div>
+								</li>
+							</ul>
+							<div class="divider"></div>
+						</div>
+							<p>Payment Details</p>
+							<p>
+								Amount: <span
+									th:text="${bgPaymentConsentPISP.instructedAmount.amount}">_165.00_</span>
+							</p>
+							<p>
+								Currency: <span
+									th:text="${bgPaymentConsentPISP.instructedAmount.currency}">_GBP_</span>
+							</p>
+
+							<p>
+								Creditor Account: <span
+									th:text="${bgPaymentConsentPISP.creditorAccount.iban}"></span>
+							</p>
+							<p th:if="${bgPaymentConsentPISP.debtorAccount!=null}">
+								Debtor Account: <span
+									th:text="${bgPaymentConsentPISP.debtorAccount.iban}"></span>
+							</p>
+							<p>
+								Status: <span th:text="${bgPaymentConsentPISP.status}"></span>
+							</p>
+						</div>
+
+						
+						<input type="hidden" th:name="${consent_request_field_name}"
+							th:value="${consent_request}" /> <input type="hidden"
+							name="flow" th:value="${flow}" /> <input type="hidden"
+							name="claims" th:value="${claims}" /> <input type="hidden"
+							name="bgIntentId" th:value="${bgIntentId}" />
+						<div class="divider"></div>
+						<div class="form-group row mat-card-actions">
+							<div class="col-xs-12">
+								<button name='decision' value="deny" type="submit"
+									class="btn mat-stroked-button">Deny</button>
+								<button name='decision' value="allow" type="submit"
+									class="btn raised-button">Allow</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col"></div>
+		</div>
+	</div>
+	<footer th:replace="fragments/footer3 :: footer">Footer</footer>
+</body>
+</html>
