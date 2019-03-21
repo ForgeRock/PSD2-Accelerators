@@ -22,14 +22,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Security;
 import java.security.Signature;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
+import java.security.spec.MGF1ParameterSpec;
+import java.security.spec.PSSParameterSpec;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.forgerock.http.Filter;
 import org.forgerock.http.Handler;
 import org.forgerock.http.protocol.Request;
@@ -67,7 +71,7 @@ public class SSAVerificationFilter implements Filter {
 					registrationJwt.getClaimsSet().getClaim("software_statement").toString(), Jwt.class);
 			String jwksUri = ssaJwt.getClaimsSet().getClaim("software_jwks_endpoint").toString();
 			if (!verifyJwtSignature(jwt, registrationJwt, jwksUri) || !verifyJwtClaims(registrationJwt, ssaJwt)) {
-				Response response = new Response(Status.FORBIDDEN);
+				Response response = new Response(Status.UNAUTHORIZED);
 				return Promises.newResultPromise(response);
 			}
 		} catch (ParseException e1) {
@@ -100,21 +104,37 @@ public class SSAVerificationFilter implements Filter {
 					}
 				}
 			}
+
+			Security.addProvider(new BouncyCastleProvider());
+			String jcaAlg = null;
+			PSSParameterSpec pssSpec = null;
+
 			if (!algorithm.isEmpty()) {
 				switch (algorithm) {
 				case "RS256":
-					algorithm = "SHA256withRSA";
-					break;
-				case "RS515":
-					algorithm = "SHA512withRSA";
+					jcaAlg = "SHA256withRSA";
 					break;
 				case "RS384":
-					algorithm = "SHA384withRSA";
+					jcaAlg = "SHA384withRSA";
 					break;
-				default:
-					algorithm = "SHA256withRSA";
+				case "RS512":
+					jcaAlg = "SHA512withRSA";
+					break;
+				case "PS256":
+					jcaAlg = "SHA256withRSAandMGF1";
+					pssSpec = new PSSParameterSpec("SHA256", "MGF1", MGF1ParameterSpec.SHA256, 32, 1);
+					break;
+				case "PS384":
+					jcaAlg = "SHA384withRSAandMGF1";
+					pssSpec = new PSSParameterSpec("SHA384", "MGF1", MGF1ParameterSpec.SHA384, 48, 1);
+					break;
+				case "PS512":
+					jcaAlg = "SHA512withRSAandMGF1";
+					pssSpec = new PSSParameterSpec("SHA512", "MGF1", MGF1ParameterSpec.SHA512, 64, 1);
+					break;
 				}
 			}
+			logger.info("Algorithm: " + jcaAlg);
 			// Step2:
 			// - Format the JWT assertion - header.payload
 			// - Extract the JWT signature
@@ -126,13 +146,20 @@ public class SSAVerificationFilter implements Filter {
 				jwtSignature = jwtTokenValues[2];
 			}
 
-			if (jwtAssertion != null && jwtSignature != null && algorithm != null) {
+			if (jwtAssertion != null && jwtSignature != null && jcaAlg != null) {
 				byte[] decodedJwtSignature = base64.decode(jwtSignature.getBytes());
 				byte[] decodedX509Cert = base64.decode(X509Cert.getBytes());
 				try {
 					CertificateFactory cf = CertificateFactory.getInstance("X.509");
 					Certificate certificate = cf.generateCertificate(new ByteArrayInputStream(decodedX509Cert));
-					Signature signature = Signature.getInstance(algorithm);
+					Signature signature = Signature.getInstance(jcaAlg);
+					if (pssSpec != null) {
+						try {
+							signature.setParameter(pssSpec);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					} 
 					signature.initVerify(certificate);
 					signature.update(jwtAssertion.getBytes());
 					boolean signatureOK = signature.verify(decodedJwtSignature);
