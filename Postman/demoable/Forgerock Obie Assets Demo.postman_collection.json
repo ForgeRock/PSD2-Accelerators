@@ -239,11 +239,6 @@
 									"mode": "urlencoded",
 									"urlencoded": [
 										{
-											"key": "code",
-											"value": "7qoFkzzM6sSwftHNVYT8Cl5h12c",
-											"type": "text"
-										},
-										{
 											"key": "grant_type",
 											"value": "client_credentials",
 											"type": "text"
@@ -455,7 +450,7 @@
 										},
 										{
 											"key": "code",
-											"value": "6f2sobui2Dp25m-S8P6Gl_PYQ6o",
+											"value": "A2MUYpaSnWE9qZSmz02HopYM_4k",
 											"type": "text"
 										},
 										{
@@ -1544,7 +1539,7 @@
 										},
 										{
 											"key": "code",
-											"value": "IBugmA0wa7PWz4OkfA6LuieXX5A",
+											"value": "zcAXyYb40uXl4p1pIhW4uHRsf0M",
 											"type": "text"
 										},
 										{
@@ -2643,7 +2638,7 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/openbanking/.well-known/openid-configuration",
+									"raw": "{{OPENAM_CLOUD}}/oauth2/realms/root/realms/nextgenpsd2/.well-known/openid-configuration",
 									"host": [
 										"{{OPENAM_CLOUD}}"
 									],
@@ -2652,7 +2647,7 @@
 										"realms",
 										"root",
 										"realms",
-										"openbanking",
+										"nextgenpsd2",
 										".well-known",
 										"openid-configuration"
 									]
@@ -3265,7 +3260,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n   \"resources\":[\r\n      \"https://openidm.psd2accelerators.fridam.aeet-forgerock.com/openbanking/v3.1/domestic-payments/97e98e0f-a7c1-4e49-83df-84910baff3cc\"\r\n   ],\r\n   \"subject\":{\r\n      \"claims\":{\r\n         \"sub\":\"demo\",         \r\n         \"Initiation\":\"{\\\"InstructionIdentification\\\":\\\"ACME412\\\",\\\"EndToEndIdentification\\\":\\\"FRESCO.21302.GFX.20\\\",\\\"InstructedAmount\\\":{\\\"Amount\\\":\\\"165.88\\\",\\\"Currency\\\":\\\"GBP\\\"},\\\"CreditorAccount\\\":{\\\"SchemeName\\\":\\\"SortCodeAccountNumber\\\",\\\"Identification\\\":\\\"08080021325698\\\",\\\"Name\\\":\\\"ACME Inc\\\",\\\"SecondaryIdentification\\\":\\\"0002\\\"},\\\"RemittanceInformation\\\":{\\\"Reference\\\":\\\"FRESCO-101\\\",\\\"Unstructured\\\":\\\"Internalopscode5120101\\\"}}\",\r\n         \"iss\":\"http://login.psd2accelerators.fridam.aeet-forgerock.com:80/oauth2/realms/root/realms/openbanking\"\r\n      }\r\n   },\r\n   \"application\":\"PISP Authorization Policy\"\r\n}"
+									"raw": "{\r\n   \"resources\":[\r\n      \"https://openidm.psd2accelerators.fridam.aeet-forgerock.com:443/openbanking/v3.1/domestic-payments/2dde32ef-e5aa-4eab-bd31-4e263d882a72\"\r\n   ],\r\n   \"subject\":{\r\n      \"claims\":{\r\n         \"sub\":\"demo\",         \r\n         \"Initiation\":\"{\\\"InstructionIdentification\\\":\\\"ACME412\\\",\\\"EndToEndIdentification\\\":\\\"FRESCO.21302.GFX.20\\\",\\\"InstructedAmount\\\":{\\\"Amount\\\":\\\"165.88\\\",\\\"Currency\\\":\\\"GBP\\\"},\\\"CreditorAccount\\\":{\\\"SchemeName\\\":\\\"SortCodeAccountNumber\\\",\\\"Identification\\\":\\\"08080021325698\\\",\\\"Name\\\":\\\"ACME Inc\\\",\\\"SecondaryIdentification\\\":\\\"0002\\\"},\\\"RemittanceInformation\\\":{\\\"Reference\\\":\\\"FRESCO-101\\\",\\\"Unstructured\\\":\\\"Internalopscode5120101\\\"}}\",\r\n         \"iss\":\"http://login.psd2accelerators.fridam.aeet-forgerock.com:80/oauth2/realms/root/realms/openbanking\"\r\n      }\r\n   },\r\n   \"application\":\"PISP Authorization Policy\"\r\n}"
 								},
 								"url": {
 									"raw": "{{OPENAM_CLOUD}}/json/realms/openbanking/policies?_action=evaluate",
@@ -3312,7 +3307,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n   \"resources\" : [\n      \"https://openidm.psd2accelerators.fridam.aeet-forgerock.com/openbanking/v3.1/accounts/35f292db-ce18-4d91-8407-c2f4bfa794c2\"\n    ], \n    \"application\": \"AISP Authorization Policy\",\n    \"subject\":{\n    \t\"claims\": {\n    \t\t\"sub\": \"demo\",\n    \t\t\"PermissionType\": \"allGrantedAccounts\"\n    \t}\n    }\n}\n"
+									"raw": "{\n   \"resources\" : [\n      \"https://openidm.psd2accelerators.fridam.aeet-forgerock.com/openbanking/v3.1/accounts/9fb18b59-943e-422d-8f3a-af63be9692c2\"\n    ], \n    \"application\": \"AISP Authorization Policy\",\n    \"subject\":{\n    \t\"claims\": {\n    \t\t\"sub\": \"demo\",\n    \t\t\"PermissionType\": \"allGrantedAccounts\"\n    \t}\n    }\n}\n"
 								},
 								"url": {
 									"raw": "{{OPENAM_CLOUD}}/json/realms/openbanking/policies?_action=evaluate",
