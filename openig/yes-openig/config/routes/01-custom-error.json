@@ -1,0 +1,34 @@
+{
+  "properties" : {
+    "prop" : {
+      "$location" : "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name" : "01 custom error (purpose)",
+  "baseURI" : "${prop.openamUrl}",
+  "condition" : "${matches(request.uri.path,'authorize') and  matches(request.uri.query, '.*scope=([^&=]*?)profile.*')}",
+  "handler" : {
+    "type" : "Chain",
+    "config" : {
+      "filters" : [ {
+        "name" : "ScriptableFilter-checkPurpose",
+        "type" : "ScriptableFilter",
+        "config" : {
+          "type" : "application/x-groovy",
+          "file" : "checkPurpose.groovy",
+          "args" : {
+            "openamUrl" : "${prop.openamUrl}/${prop.openamPath}",
+            "user" : "${prop.user}",
+            "password" : "${prop.password}",
+            "param" : "https://www.yes.com/parameters/purpose",
+            "min" : 3,
+            "max" : 30,
+            "error" : "invalid_request",
+            "description" : "invalid_purpose_length"
+          }
+        }
+      } ],
+      "handler" : "ReverseProxyHandler"
+    }
+  }
+}

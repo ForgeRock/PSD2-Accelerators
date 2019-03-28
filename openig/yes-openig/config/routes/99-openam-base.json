@@ -1,0 +1,10 @@
+{
+  "properties" : {
+    "prop" : {
+      "$location" : "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name" : "openam base",
+  "baseURI" : "${prop.openamUrl}",
+  "handler" : "ReverseProxyHandler"
+}
