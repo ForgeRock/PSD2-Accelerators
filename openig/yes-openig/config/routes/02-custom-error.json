@@ -6,7 +6,7 @@
   },
   "name" : "02 custom error (max age)",
   "baseURI" : "${prop.openamUrl}",
-  "condition" : "${(matches(request.uri.query, 'verified_person_data') and matches(request.uri.path,'authorize')) or matches(request.uri.path,'oauth2')}",
+  "condition": "${(matches(urlDecode(request.uri.query), '.*(claims=)([^&=]*?)verified_person_data([^&=]*?)max_age([^&=]*?)essential([^&=]*?)true.*') and matches(request.uri.path,'authorize')) or matches(request.uri.path,'userinfo')}",
   "handler" : {
     "type" : "Chain",
     "config" : {

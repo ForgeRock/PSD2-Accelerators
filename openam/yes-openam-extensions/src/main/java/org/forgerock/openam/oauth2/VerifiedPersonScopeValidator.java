@@ -107,8 +107,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
+import static java.util.regex.Pattern.compile;
 import java.util.stream.Collectors;
 
 import static org.forgerock.json.JsonValue.field;
@@ -142,7 +143,8 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
     private final TokenRestrictionResolver agentValidator;
     private final SessionService sessionService;
     private final ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
+    private static List<String> allowScopeList;   
+    private static List<Predicate<String>> patternsList;
 
     /**
      * Constructs a new VerifiedPersonScopeValidator.
@@ -465,17 +467,19 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
                     JSONArray array = new JSONArray();
                     JSONObject item = new JSONObject();
                     item.put("action", "token_retrieved");
-                    item.put("token", accessToken.getTokenId());
-                    item.put("scopes", accessToken.getScope());
+                    if(accessToken!=null){
+                        item.put("token", accessToken.getTokenId());
+                        item.put("scopes", accessToken.getScope());
+                    }
                     array.put(item);
                     json.put("action_details", array);
-
+                    
                     MediationRecord mr = new MediationRecord(json);
                     mr.sendMediationRecord();
+
                 } catch (JSONException jpe) {
                     logger.error("Unable to send mediation record: "+jpe.getMessage());
                 }
-
                 return userInfoClaims;
             } catch (ScriptException e) {
                 InvalidRequestException oAuth2Exception = unwrapInvalidRequestException(e);
@@ -806,34 +810,39 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
                             uiClaims = this.addTransactionId(uiClaims, keyName, userInfoClaimsName);
                         }
                     } else if (this.isClaimRequestAllowed(reqClaims, userInfoClaimsName)) {
-                        LinkedHashMap userInfoClaimDetails = (LinkedHashMap) uiClaims.getValues().get(userInfoClaimsName);
-                        LinkedHashMap<String, Object> newValues = new LinkedHashMap<>();
+                        Object userInfoClaimDetail = uiClaims.getValues().get(userInfoClaimsName);
 
-                        // this contains the details from the UserInfoClaims
-                        LinkedHashMap<String, Object> individualClaimsMap = (LinkedHashMap) userInfoClaimDetails.get(keyName);
+                        if (userInfoClaimDetail instanceof LinkedHashMap) {
 
-                        if (!validRequestedClaims(allowedVpdNestedClaims, nestedClaims.get(keyName))) {
-                            throw new InvalidRequestException("invalid_request");
-                        }
+                            LinkedHashMap userInfoClaimDetails = (LinkedHashMap) uiClaims.getValues().get(userInfoClaimsName);
+                            LinkedHashMap<String, Object> newValues = new LinkedHashMap<>();
 
-                        if (nestedClaims.get(keyName).size() != 0 && individualClaimsMap != null && individualClaimsMap.size() > 0) {
-                            for (String individualClaimName : individualClaimsMap.keySet()) {
-                                if (this.isClaimRequestAllowed(nestedClaims.get(keyName), individualClaimName)) {
-                                    if (this.isClaimRequestAllowed(allowedVpdNestedClaims, individualClaimName)) {
-                                        newValues.put(individualClaimName, individualClaimsMap.get(individualClaimName));
-                                    }else{
-                                        logger.error("claim "+individualClaimName+" was requested but is not valid for this request");
-                                    }
-                                }
+                            // this contains the details from the UserInfoClaims
+                            LinkedHashMap<String, Object> individualClaimsMap = (LinkedHashMap) userInfoClaimDetails.get(keyName);
+
+                            if (!validRequestedClaims(allowedVpdNestedClaims, nestedClaims.get(keyName))) {
+                                throw new InvalidRequestException("invalid_request");
                             }
 
-                            LinkedHashMap currentValues = (LinkedHashMap) ((LinkedHashMap) uiClaims.getValues().get(userInfoClaimsName)).get(keyName);
-                            if (currentValues.size() > 0) {
-                                ((LinkedHashMap) uiClaims.getValues().get(userInfoClaimsName)).put(keyName, newValues);
-                            }else {
-                                LinkedHashMap uiClaimsTree = new LinkedHashMap();
-                                uiClaimsTree.put(keyName, newValues);
-                                uiClaims.getValues().put(userInfoClaimsName, uiClaimsTree);
+                            if (nestedClaims.get(keyName).size() != 0 && individualClaimsMap != null && individualClaimsMap.size() > 0) {
+                                for (String individualClaimName : individualClaimsMap.keySet()) {
+                                    if (this.isClaimRequestAllowed(nestedClaims.get(keyName), individualClaimName)) {
+                                        if (this.isClaimRequestAllowed(allowedVpdNestedClaims, individualClaimName)) {
+                                            newValues.put(individualClaimName, individualClaimsMap.get(individualClaimName));
+                                        } else {
+                                            logger.error("claim " + individualClaimName + " was requested but is not valid for this request");
+                                        }
+                                    }
+                                }
+
+                                LinkedHashMap currentValues = (LinkedHashMap) ((LinkedHashMap) uiClaims.getValues().get(userInfoClaimsName)).get(keyName);
+                                if (currentValues.size() > 0) {
+                                    ((LinkedHashMap) uiClaims.getValues().get(userInfoClaimsName)).put(keyName, newValues);
+                                } else {
+                                    LinkedHashMap uiClaimsTree = new LinkedHashMap();
+                                    uiClaimsTree.put(keyName, newValues);
+                                    uiClaims.getValues().put(userInfoClaimsName, uiClaimsTree);
+                                }
                             }
                         }
                         if (shouldAddTransactionId) {
@@ -1100,8 +1109,10 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
             JSONArray array = new JSONArray();
             JSONObject item = new JSONObject();
             item.put("action", "token_retrieved");
-            item.put("token", accessToken.getTokenId());
-            item.put("scopes", accessToken.getScope());
+            if (accessToken != null) {
+                item.put("token", accessToken.getTokenId());
+                item.put("scopes", accessToken.getScope());
+            }
             array.put(item);
             json.put("action_details", array);
 
@@ -1131,14 +1142,14 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
         } else {
             scopes = new HashSet<>(allowedScopes);
             scopes.retainAll(requestedScopes);
-
-            for (String allowedScope : allowedScopes) {
-                scopes.addAll(filter(requestedScopes, allowedScope));
+            List<Predicate<String>> patterns = compilePatterns(new ArrayList<>(allowedScopes));
+            for (Predicate<String> pattern : patterns) {
+                scopes.addAll(filter(requestedScopes, pattern));
             }
 
             if (requestedScopes.size() > scopes.size()) {
                 Set<String> invalidScopes = new HashSet<>(requestedScopes);
-                invalidScopes.removeAll(allowedScopes);
+                invalidScopes.removeAll(scopes);
 
                 throw InvalidScopeException.create("Unknown/invalid scope(s): " + invalidScopes.toString(), request);
             }
@@ -1150,8 +1161,19 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
 
         return scopes;
     }
-
-
+    /**
+     * Returns a list of compile patterns and only recompile when allow scopes have changed.
+     *
+     * @param patterns
+     * @return
+     */
+    private List<Predicate<String>> compilePatterns(List<String> patterns) {               
+        if (allowScopeList == null || !allowScopeList.equals(patterns)){
+            allowScopeList = patterns;
+            patternsList = patterns.stream().map(pattern -> compile(pattern).asPredicate()).collect(Collectors.toList());
+        }
+        return patternsList;
+    }
     /**
      * Returns a list of dynamically matched scopes against an allowedScope
      *
@@ -1159,9 +1181,8 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
      * @param allowedScope
      * @return
      */
-    private Set<String> filter(Set<String> requestedScopes, String allowedScope) {
-        Pattern pattern = Pattern.compile(allowedScope);
-        return requestedScopes.stream().filter(pattern.asPredicate()).collect(Collectors.toSet());
+    private Set<String> filter(Set<String> requestedScopes, Predicate<String> allowedScope) {
+        return requestedScopes.stream().filter(allowedScope).collect(Collectors.toSet());
     }
 
 
@@ -1194,7 +1215,7 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
             if (providedClaim.getValues().isEmpty()) {
                 claims.put(providedClaim.getName(), null);
             } else {
-                List<String> valueObject = providedClaim.getValues();
+                List<Object> valueObject = providedClaim.getValues();
                 if (valueObject.size() > 1) {
                     claims.put(providedClaim.getName(), providedClaim.getValues());
                 }else {
@@ -1212,8 +1233,8 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
      * @param requestedClaims
      * @return
      */
-    private Map<String, Set<String>> requestedClaimsToLegacyFormat(List<Claim> requestedClaims) {
-        Map<String, Set<String>> claims = new HashMap<>();
+    private Map<String, Set<Object>> requestedClaimsToLegacyFormat(List<Claim> requestedClaims) {
+        Map<String, Set<Object>> claims = new HashMap<>();
         for (Claim requestedClaim : requestedClaims) {
             claims.put(requestedClaim.getName(), new HashSet<>(requestedClaim.getValues()));
         }

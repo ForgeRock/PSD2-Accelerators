@@ -6,7 +6,7 @@
   },
   "name" : "01 custom error (purpose)",
   "baseURI" : "${prop.openamUrl}",
-  "condition" : "${matches(request.uri.path,'authorize') and  matches(request.uri.query, '.*scope=([^&=]*?)profile.*')}",
+  "condition" : "${matches(request.uri.path,'authorize') and  matches(urlDecode(request.uri.query), '.*scope=([^&=]*?)profile.*')}",
   "handler" : {
     "type" : "Chain",
     "config" : {
