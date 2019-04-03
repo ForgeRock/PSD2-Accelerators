@@ -36,8 +36,9 @@ var idmServer = {
 }
 
 //OBIE IDM Managed Objects
-CONFIG_managedObjects = {
-	"obPaymentIntent" : "/managed/OBPaymentIntent",
-	"obAccountAccessIntent" : "/managed/OBAccountAccessIntent",
-	"obTpp" : "/managed/OBTpp"
+var CONFIG_managedObjects = {
+	"obPaymentIntent" : "/managed/obPaymentIntent",
+	"obAccountAccessIntent" : "/managed/obAccountAccessIntent",
+	"obTpp" : "/managed/obTpp",
+	"obTppSsa" : "/managed/obTppSsa"
 };

@@ -16,24 +16,40 @@
  
 load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/ob/ob_payment_intent.js");
 load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/ob/ob_account_access_intent.js");
+load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/ob/ob_tpp.js");
 load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/ob/ob_utils.js");
 
 (function(){
 	d = new Date();
 	s = d.getTime();
-	console.log("Main OB Handler - " + s);
+	console.log("[DEBUG] Main OB Handler - " + s);
     
 	returnObject = {};
 	
 	switch (thisUriComponent("APPLICATION")) {
-    
+
+		//TMP to be removed  - used for DEMOABLE assets   
 		case "paymentIntent":
 			returnObject = payment_intent_main();
 			break;
-			
+
+		//TMP to be removed   - used for DEMOABLE assets
 		case "accountAccessIntent":
+                        returnObject = account_access_intent_main();
+                        break;
+
+                case "obPaymentIntent":
+                        returnObject = payment_intent_main();
+                        break;
+			
+		case "obAccountAccessIntent":
 			returnObject = account_access_intent_main();
 			break;
+
+                case "obTpp":
+                        returnObject = create_tpp_main();
+                        break;
+
 	}
 			
     return {

@@ -46,6 +46,24 @@ function thisAPI(){
 	return context.current.matchedUri.split("/")[1];	
 }
 
+// Takes UNIX style timestamp and outputs OB compatible ISO 8601 format.
+function timeStampToOB(timeStamp){
+	var dateTime = new Date(timeStamp * 1000);
+	return dateTime.toISOString();
+}
+
+// Convert OB compatible ISO 8601 strings into UNIX timestamp
+function obToTimeStamp(obDateTime){
+	var dateTime = new Date.parse(obDateTime);
+	return Math.floor(dateTime.getTime()/1000);	
+}
+
+// Generates UNIX style timestamp from current date / time
+function generateTimestamp(){
+	var dateTime = new Date();
+	return dateTime.toISOString();
+}
+
 var Base64 = {
 	_keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 	encode: function (e) {
