@@ -1,28 +1,30 @@
 {
-  "properties" : {
-    "prop" : {
-      "$location" : "${fileToUrl(openig.configDirectory)}/env.json"
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
     }
   },
-  "name" : "02 custom error (max age)",
-  "baseURI" : "${prop.openamUrl}",
-  "condition": "${(matches(urlDecode(request.uri.query), '.*(claims=)([^&=]*?)verified_person_data([^&=]*?)max_age([^&=]*?)essential([^&=]*?)true.*') and matches(request.uri.path,'authorize')) or matches(request.uri.path,'userinfo')}",
-  "handler" : {
-    "type" : "Chain",
-    "config" : {
-      "filters" : [ {
-        "name" : "ScriptableFilter-checkMaxAge",
-        "type" : "ScriptableFilter",
-        "config" : {
-          "type" : "application/x-groovy",
-          "file" : "checkMaxAge.groovy",
-          "args" : {
-            "error" : "unable_to_meet_requirement",
-            "description" : "Unable to refresh the user's verification"
+  "name": "02 custom error (max age)",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${(matches(urlDecode(request.uri.query), '.*(claims=)([^&=]*?)verified_person_data([^&=]*?)max_age([^&=]*?)essential([^&=]*?)true.*') and matches(request.uri.path,'^&{prop.openamPath}/oauth2/authorize$')) or matches(request.uri.path,'^&{prop.openamPath}/oauth2/userinfo$')}",
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "ScriptableFilter-checkMaxAge",
+          "type": "ScriptableFilter",
+          "config": {
+            "type": "application/x-groovy",
+            "file": "checkMaxAge.groovy",
+            "args": {
+              "error": "unable_to_meet_requirement",
+              "description": "Unable to refresh the user's verification"
+            }
           }
         }
-      } ],
-      "handler" : "ReverseProxyHandler"
+      ],
+      "handler": "ReverseProxyHandler"
     }
   }
 }

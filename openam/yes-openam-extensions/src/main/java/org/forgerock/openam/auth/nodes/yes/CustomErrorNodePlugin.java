@@ -66,7 +66,7 @@ public class CustomErrorNodePlugin extends AbstractNodeAmPlugin {
     @Override
     protected Map<String, Iterable<? extends Class<? extends Node>>> getNodesByVersion() {
         return Collections.singletonMap(CustomErrorNodePlugin.currentVersion,
-                Collections.singletonList(VerifiedPersonDataCollectorNode.class));
+                Collections.singletonList(CustomErrorNode.class));
     }
 
     /**

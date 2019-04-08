@@ -23,6 +23,7 @@ import org.forgerock.openam.auth.node.api.Node;
 import org.forgerock.openam.auth.node.api.NodeProcessException;
 import org.forgerock.openam.auth.node.api.SingleOutcomeNode;
 import org.forgerock.openam.auth.node.api.TreeContext;
+import org.forgerock.openam.core.realms.Realm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,15 +33,15 @@ import java.net.URLDecoder;
 import java.util.List;
 
 import static org.forgerock.openam.auth.node.api.Action.send;
-import static org.forgerock.openam.auth.node.api.SharedStateConstants.USER_GOTO_PARAM_KEY;
 
 /**
- * A node that creates a custom error redirect callback
+ * A node that redirects with an error and error_description upon a specific condition in the tree.
  */
 @Node.Metadata(outcomeProvider = SingleOutcomeNode.OutcomeProvider.class, configClass = CustomErrorNode.Config.class)
 public class CustomErrorNode extends SingleOutcomeNode {
     private final Logger logger = LoggerFactory.getLogger(CustomErrorNode.class);
     private final Config config;
+    private final Realm realm;
     private final String REDIRECT_URI = "redirect_uri";
     private final String STATE = "state";
     private final String NONCE = "nonce";
@@ -51,23 +52,24 @@ public class CustomErrorNode extends SingleOutcomeNode {
      */
     public interface Config {
         /**
-         * The error code to be mapped
-         * @return
+         * The name of the error
+         *
+         * @return String
          */
         @Attribute(order = 100)
         default String errorCode() {
-            return "<error>";
+            return "name_of_error";
         }
 
         /**
-         * The description for the error code
+         * The error description
+         *
          * @return
          */
         @Attribute(order = 200)
         default String errorDescription() {
-            return "<error_description>";
+            return "description of error";
         }
-
     }
 
 
@@ -76,11 +78,13 @@ public class CustomErrorNode extends SingleOutcomeNode {
      * from the plugin.
      *
      * @param config The service config.
+     * @param realm The realm the node is in.
      * @throws NodeProcessException If the configuration was not valid.
      */
     @Inject
-    public CustomErrorNode(@Assisted Config config) throws NodeProcessException {
+    public CustomErrorNode(@Assisted Config config, @Assisted Realm realm) throws NodeProcessException {
         this.config = config;
+        this.realm = realm;
     }
 
 
@@ -93,10 +97,9 @@ public class CustomErrorNode extends SingleOutcomeNode {
      */
     @Override
     public Action process(TreeContext context) throws NodeProcessException {
-        logger.debug("goto from shared state={}", context.sharedState.get(USER_GOTO_PARAM_KEY) );
-        logger.debug("parameters:{}", context.request.parameters);
         List<String> gotoUrl = context.request.parameters.get("goto");
-        if (gotoUrl != null){
+
+        if (gotoUrl != null) {
             String redirectUri = getParamValue(gotoUrl.get(0),REDIRECT_URI);
             String targetUrl = redirectUri+"?error="+config.errorCode()+"&error_description="+config.errorDescription();
             String state = getParamValue(gotoUrl.get(0),STATE);
@@ -108,7 +111,10 @@ public class CustomErrorNode extends SingleOutcomeNode {
             RedirectCallback callback = new RedirectCallback(targetUrl, null, "GET");
             callback.setTrackingCookie(true);
             return send(callback).build();
+        }else{
+            logger.warn("No goto URL found inside shared state, cannot set custom error message");
         }
+
         throw new NodeProcessException("No goto parameter in URL");
     }
 
