@@ -117,8 +117,6 @@ echo "Access token: ${at}"
 echo "Refresh token: ${rt}"
 echo
 
-exit;
-
 _tokeninfo_response=$(get_tokeninfo "${at}")
 echo "Response from tokeninfo endpoint: "
 jq . <<< ${_tokeninfo_response}

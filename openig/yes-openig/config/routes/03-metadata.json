@@ -1,0 +1,31 @@
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "03 custom authorization server metadata",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path,'^&{prop.openamPath}/oauth2/.well-known/oauth-authorization-server$')}",
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "OAuth2MetadataFilter",
+          "type": "org.forgerock.openig.filter.OAuth2MetadataFilter",
+          "config": {
+            "rewriteFrom": "/xs/oauth2/.well-known/oauth-authorization-server",
+            "rewriteTo": "/xs/oauth2/.well-known/openid-configuration",
+            "rewriteResponseBody": true,
+            "excludeSymmetricAlgorithms": true,
+            "rewriteFields": {
+              "userinfo_signing_alg_values_supported": "introspection_signing_alg_values_supported"
+            }
+          }
+        }
+      ],
+      "handler": "ReverseProxyHandler"
+    }
+  }
+}

@@ -144,6 +144,11 @@ AM requires requested claims to be part of the 'Supported Claims' setting inside
 ###### Claims Parameter
 The claims parameter on a request can be allowed by setting the 'Enable "claims_parameter_supported"' in the OAuth2 Provider configuration under the 'Advanced OpenID Connect' tab and hit 'Save Changes'.
 
+###### ACR Values
+The acr_values that are to be included into the response from AM can be found in the 'Advanced OpenID Connect' tab for the 'OAuth2 Provider'. Here you can set the corresponding mapping between an `acr` value and its corresponding authentication tree or chain.
+
+For example, you can add a mapping to point acr 'https://www.yes.com/acrs/online_banking_sca' to the 'YES Authentication Tree' to include 'https://www.yes.com/acrs/online_banking_sca' inside the `acr` field in the userinfo response.
+
 ###### Using The Scope Validator
 To use the custom Verified Person Data Scope Validator inside an OAuth2 provider, navigate to the realm in question and go to 'Services' -> 'OAuth2 Provider' and edit the 'Advanced' tab to update the field 'Scope Implementation Class' with the class name for this plugin.
 
@@ -196,7 +201,7 @@ A sample configuration for realm with name "realm1" might look like this:
 ```
 Once this is added, click on the '+' next to this field to add it to the list of advanced properties, followed by 'Save Changes'. 
 
-N.B. this step is not needed when a configure 'Verified Person Data Node' is active inside the same realm, that configuration will be used instead.
+N.B. this step is not needed when a configured 'Verified Person Data Node' is active inside the same realm, that configuration will be used instead.
 
 ### Authentication Node Setup
 #### Verified Person Data Node
@@ -316,12 +321,256 @@ The following example starts the Jetty server in the foreground and sets the val
 ```
 $ java -Dig.instance.dir=/path/to/openig -jar start.jar
 ```
+## Support OAuth2 Authorization Server Metadata
+AM does not support the 'OAuth 2.0 Authorization Server Metadata' standard as defined in [RFC8414](https://datatracker.ietf.org/doc/rfc8414/?include_text=1). By using the OAuth2Metadata filter in IG, this endpoint can be made available by using this filter for requests towards `/openam/oauth2/.well-known/oauth-authorization-server`.
+
+It does this by reverse proxying the `/openam/oauth2/.well-known/openid-configuration` endpoint and modifying the response before being sent back to the client. 
+
+### Configuration
+To active the OAuth2MetadataFilter it needs to be applied to a specific URL for the `.well-known/oauth-authorization-server` endpoint inside a route definition. Example route:
+
+```
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "03 custom authorization server metadata",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path,'^&{prop.openamPath}/oauth2/.well-known/oauth-authorization-server$')}",
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "OAuth2MetadataFilter",
+          "type": "org.forgerock.openig.filter.OAuth2MetadataFilter",
+          "config": {
+            "rewriteFrom": "/openam/oauth2/.well-known/oauth-authorization-server",
+            "rewriteTo": "/openam/oauth2/.well-known/openid-configuration",
+            "rewriteResponseBody": true,
+            "excludeSymmetricAlgorithms": true,
+            "rewriteFields": {
+              "userinfo_signing_alg_values_supported": "introspection_signing_alg_values_supported"
+            }
+          }
+        }
+      ],
+      "handler": "ReverseProxyHandler"
+    }
+  }
+}
+```
+
+Note that the request handler has been set to `ReverseProxyHandler`. This is available by default inside IG to handle reverse proxy requests which uses the value in `baseURI` to determine the endpoint for reverse proxy requests.
+
+The following fields are available:
+
+- rewriteFrom: incoming path of this request that should be replaced on the request towards the backend
+- rewriteTo: outgoing path of this request that should be used to fetch the data from
+- rewriteResponseBody: if set, the fields inside `rewriteFields` will be mapped onto the response
+- excludeSymmetricAlgorithms: if set to `true`, symmetric algorithms are not returned in the response (note that even if this is set to `false` it will not work since no symmetric algorithm is implemented in this filter - this is left as an exercise to the integrator if so desired)
+- rewriteFields: a mapping with fields in the response and under what name it should become available. In the above route example, the signing algorithms that AM returns for userinfo requests is stored under key `introspection_signing_alg_values_supported`
+
+When `rewriteResponseBody` is set to `false` this filter only makes the `.well-known/openid-configuration` available under `.well-known/oauth-authorization-server` which is what some products already do. This will not work in case of introspection signing unless that information is already available inside the normal `.well-known/openid-configuration` response (which is not the case for AM at this moment).
+
+## Setting up OpenIG to sign introspect responses
+AM does not support the draft [jwt introspection response](https://tools.ietf.org/id/draft-lodderstedt-oauth-jwt-introspection-response-01.html). This filter adds this capability (for signing).
+
+Once IG is placed in front of AM, any introspect response requested with content-type `application/jwt` will get signed before the response is returned. Signing occurs using the same keys as AM exposes so that the `jwks_uri` response does not have to be altered.
+
+### Keystore setup
+The easiest way to configure this filter is by using the secrets from the same AM as that is being protected.
+
+The filter expects the existing certificates from AM to be available inside IG. To achieve this we generate a PKCS12 keystore from the existing keystore in use inside AM (or, if you've already configured AM to use a PKCS12 store, you'll only have to copy this one).
+
+The default keystore type configured inside AM is JCEKS. Find the alias of the private keypair that you want to use from AM, and then import it into a new or existing PKCS12 keystore:
+
+```
+$ keytool \
+    -importkeystore \
+    -srckeystore keystore.jceks \
+    -destkeystore ks.p12 \
+    -srcstoretype JCEKS \
+    -deststoretype PKCS12 \
+    -srcstorepass $(cat .storepass) \
+    -deststorepass changeit \
+    -srckeypass $(cat .keypass) \
+    -destkeypass changeit \
+    -alias rsajwtsigningkey
+```
+ 
+This is only an example and may not match your environment. If you're having trouble getting a certificate into the correct format you could consider using a tool like [portecle](http://portecle.sourceforge.net/) or [keystore explorer](https://keystore-explorer.org/).
+
+Once this is available in PKCS12 format, the resulting file needs to be copied to the system running IG.
+
+Note: the keystore can also be used in its current format (JKS or JCEKS) but will be regarded as legacy due to less security in these implementations.
+
+### Secrets configuration
+There are two types of configuration needed. First, a place where the secrets are stored inside the filesystem, for looking up secrets that are later used inside the keystore configuration.
+
+```
+  {
+    "name": "FilesystemSecret",
+    "type": "FileSystemSecretStore",
+    "config": {
+      "format": "BASE64",
+      "directory": "/path/to/secrets"
+    }
+  }
+```
+
+The configuration that points to the actual keystore looks somewhat like this:
+
+```
+  {
+    "name": "IntrospectSigningKeystore",
+    "type": "KeyStoreSecretStore",
+    "config": {
+      "file": "/path/to/keystore.p12",
+      "storeType": "PKCS12",
+      "storePassword": "ig.introspect.signing.storepass",
+      "keyEntryPassword": "ig.introspect.signing.keypass",
+      "mappings": [
+        {
+          "secretId": "ig.introspect.signing.key",
+          "aliases": [
+            "es256test"
+          ]
+        }
+      ]
+    }
+  }
+```
+
+The fields `storePassword` and `keyEntryPassword` are references to secrets by name, following the recently introduced secret storage mechanisms.
+
+The `secretId` field inside the mapping is used for fetching the alias from that should be used to sign the introspect response.
+
+#### Adding secrets
+To make this work, the `FileSystemSecretStore` needs an entry for the values of fields `storePassword` and `keyEntryPassword`. To do so, base64-encode the store password and the keypassword and add them to the directory used by the `FileSystemSecretStore`. For example:
+
+```
+ $ echo -n "storepass" | openssl enc -a > /path/to/secrets/ig.introspect.signing.storepass
+```
+
+and:
+
+```
+ $ echo -n "keypass" | openssl enc -a > /path/to/secrets/ig.introspect.signing.keypass
+```
+
+### Route configuration
+The above secret definitions are (in this case) stored inside the route definition. However if these secrets are needed elsewhere, these can also be added to the main `config.json` instead.
+
+The route contains an addition for when it's supposed to start signing introspect responses:
+
+- Request path matches `/openam/oauth2/introspect`
+- Request content-type is set to `application/x-www-form-urlencoded`
+- Request accept header includes `application/jwt`
+- Request method is set to `POST`
+
+When these conditions are met, the rest of the configuration for this route is used.
+
+An example route configuration looks something like this:
+
+```
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "04 signed introspection response",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path, '^&{prop.openamPath}/oauth2/introspect$') and matches(request.headers['Accept'][0], 'application/jwt') and matches(request.headers['Content-Type'][0], 'application/x-www-form-urlencoded') and matches(request.method, 'POST')}",
+  "secrets": {
+    "stores": [
+      {
+        "name": "FilesystemSecret",
+        "type": "FileSystemSecretStore",
+        "config": {
+          "format": "BASE64",
+          "directory": "/path/to/secrets"
+        }
+      },
+      {
+        "name": "IntrospectSigningKeystore",
+        "type": "KeyStoreSecretStore",
+        "config": {
+          "file": "/path/to/keystore.p12",
+          "storeType": "PKCS12",
+          "storePassword": "ig.introspect.signing.storepass",
+          "keyEntryPassword": "ig.introspect.signing.keypass",
+          "mappings": [
+            {
+              "secretId": "ig.introspect.signing.key",
+              "aliases": [
+                "rsajwtsigningkey"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "SignedIntrospectFilter",
+          "type": "org.forgerock.openig.filter.SignedIntrospectFilter",
+          "config": {
+            "signature": {
+              "secretId": "ig.introspect.signing.key",
+              "algorithm": "RS256"
+            }
+          }
+        }
+      ],
+      "handler": "ReverseProxyHandler"
+    }
+  }
+}
+```
+The response is a signed JWT with a HTTP 200 response and its `Content-Type` set to `application/jwt`. The signed JWT contains the `kid` which can be used by the client to select the appropriate JWK from AM's `jwk_uri` to validate the signature.
+
+The `algorithm` example here includes an RSA example. This is not required, it's also perfectly fine to use an Elliptic Curve algorithm. In that case the alias inside the `KeyStoreSecretStore` definition needs to point to a keypair that was generated with an Elliptic Curve algorithm. The configuration for the `SignedIntrospectFilter` needs to be changed to one of the supported algorithms.
+
+There is no configuration for a keyId here; this is determined automatically based on the selected certificate and algorithm in the same way as AM.
+
+NB: symmetric key support is currently not included.
+
+### Fetching Additional Data
+The introspect response cannot be modified from within AM. This filter addresses this with an example for getting information from the userinfo endpoint and putting it into the response.
+
+To configure it, add an `additionalData` section to the filters' configuration. For example:
+```
+   "additionalData": {
+     "sourceType": "userinfo",
+     "fields": [
+       "https://www.yes.com/scopes/verified_person_data"
+     ]
+  }
+```
+With this example the signed introspection response will contain the scope data for scope `https://www.yes.com/scopes/verified_person_data` when it is available inside the userinfo response. This data is added before the response is returned as a signed JWT.
+
+Source `userinfo` is currently the only one implemented but it's trivial to expand this with your own custom data retrieval methods, if so required. 
+
+Note: when the `additionalData` entry is omitted no additional data will be added to the response; it will only ensure that the introspection response gets signed.
+
+### Future Improvements
+One could add support for symmetric keys. It's not included at this point in time because it introduces a need to share the keys with others. Improved performance could be an argument to opt for symmetric keys, but be sure to understand the implications.
+
+One could also use different keys for signing the Jwt as what is currently available inside AM. When this is desired, the normal `jwks_uri` response will have to be adjusted as well so the client can continue to use the discovery response to determine the `jwks_uri` and use that in turn to validate the signature against.
 
 # Troubleshooting
 ## Invalid Authentication Method
 When an mTLS authentication is attemped and AM returns an error with 'Invalid authentication method for accessing this endpoint', then the used authentication method is not in line with how the OAuth2 client is configured.
 
-For mTLS this needs to be set to 'self_signed_tls_client_auth' in case of self-signed mTLS.
+For mTLS this needs to be set to `self_signed_tls_client_auth` in case of self-signed mTLS.
 
 To fix this, navigate to the realm -> 'Applications' -> 'OAuth2' -> click on the client in question -> 'Advanced' and set the 'Token Endpoint Authentication Method' to the correct value.
 
@@ -390,6 +639,19 @@ http://www.example.com/callback?error_description=Unknown%2Finvalid%20scope%28s%
 ```
 
 AM does not allow scopes that are not configured. To configure additional scopes, navigate to the client in question and add the necessary scopes to the 'Scope(s)' field in the 'Core' tab of the client. 
+
+## Incorrect algorithm configuration in IG
+When a message is logged like this:
+```
+[http-nio-8080-exec-2] ERROR o.f.o.filter.SignedIntrospectFilter @04-signed-introspect - incorrect algorithm configuration: Not an ECDSA algorithm.
+```
+or:
+```
+[http-nio-8080-exec-3] ERROR o.f.o.filter.SignedIntrospectFilter @04-signed-introspect - incorrect algorithm configuration: Not an RSA algorithm.
+```
+
+The `alias` in question has not been created using the same algorithm as defined inside the `SignedIntrospectFilter` configuration. Align the `alias` with the `algorithm` to fix this.
+
 
 # BUGS
 Probably. The spec is somewhat unclear about actual responses so it could very well be that not all of it is working correctly. While developing we did not have access to any environment suitable for testing the end-to-end flow.

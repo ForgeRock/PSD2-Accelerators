@@ -1,0 +1,64 @@
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "04 signed introspection response",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path, '^&{prop.openamPath}/oauth2/introspect$') and matches(request.headers['Accept'][0], 'application/jwt') and matches(request.headers['Content-Type'][0], 'application/x-www-form-urlencoded') and matches(request.method, 'POST')}",
+  "secrets": {
+    "stores": [
+      {
+        "name": "FilesystemSecret",
+        "type": "FileSystemSecretStore",
+        "config": {
+          "format": "BASE64",
+          "directory": "/opt/install/templates/openig/secrets"
+        }
+      },
+      {
+        "name": "IntrospectSigningKeystore",
+        "type": "KeyStoreSecretStore",
+        "config": {
+          "file": "/opt/install/software/am-keystore.p12",
+          "storeType": "PKCS12",
+          "storePassword": "ig.introspect.signing.storepass",
+          "keyEntryPassword": "ig.introspect.signing.keypass",
+          "mappings": [
+            {
+              "secretId": "ig.introspect.signing.key",
+              "aliases": [
+                "rsajwtsigningkey"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "SignedIntrospectFilter",
+          "type": "org.forgerock.openig.filter.SignedIntrospectFilter",
+          "config": {
+            "signature": {
+              "secretId": "ig.introspect.signing.key",
+              "algorithm": "RS256"
+            },
+            "additionalData": {
+              "sourceType": "userinfo",
+              "fields": [
+                "https://www.yes.com/scopes/verified_person_data"
+              ]
+            }
+          }
+        }
+      ],
+      "handler": "ReverseProxyHandler"
+    }
+  }
+}

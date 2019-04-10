@@ -7,13 +7,13 @@ pass="testing123"
 # name of the session cookie as configured inside AM (default is iPlanetDirectoryPro)
 cookie_name="iPlanetDirectoryPro"
 # base uri of IG
-openam_endpoint=https://login6.booleans.local:8443/xs
+openam_endpoint=http://login6.booleans.local:8080/xs
 # client settings
 client_id="booleans_client"
 # a redirect URI
 redirect_uri=http://someservice.booleans.local:8080/dummycallback
 # which scopes to request
-scope="uid%20openid"
+scope="uid%20openid%20profile"
 # ssl location
 ssl_dir="ssl/"
 # curl settings

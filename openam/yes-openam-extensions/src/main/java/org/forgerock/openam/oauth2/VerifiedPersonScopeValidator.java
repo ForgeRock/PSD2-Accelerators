@@ -133,6 +133,7 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
     private static final String DEFAULT_TIMESTAMP = "0";
     private static final DateFormat TIMESTAMP_DATE_FORMAT = new SimpleDateFormat("yyyyMMddhhmmss");
     private static final String ADVANCED_SERVER_CONFIG_PROPERTY = "org.forgerock.openam.oauth2.VerifiedPersonDataConfig";
+    private static final String signingScopePrefix = "https://www.yes.com/scopes/sign:";
     private final OAuth2ProviderSettingsFactory providerSettingsFactory;
     private final Debug logger = Debug.getInstance("VerifiedPersonDataScopeValidator");
     private final IdentityManager identityManager;
@@ -275,6 +276,8 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
         for (String scopeName : scopes) {
             if (ScopeToClaimsMapper.getScopeToClaimsMap().containsKey(scopeName)) {
                 vpdScopes.add(scopeName);
+            } else if (scopeName.startsWith(signingScopePrefix)) {
+                vpdScopes.add("https://www.yes.com/scopes/verified_person_data");
             }else{
                 logger.warning("getVPDScopes: scopeToClaimsMap does not contain scope "+scopeName);
             }
@@ -311,7 +314,12 @@ public class VerifiedPersonScopeValidator implements ScopeValidator {
      */
     private List<Claim> getAssociatedVPDClaims(String claimName) {
         try {
-            List<Claim> definedClaims = ScopeToClaimsMapper.getScopeToClaimsMap().get(claimName);
+            List<Claim> definedClaims;
+            if (claimName.startsWith(signingScopePrefix)) {
+                definedClaims = ScopeToClaimsMapper.getScopeToClaimsMap().get("https://www.yes.com/claims/verified_person_data");
+            }else {
+                definedClaims = ScopeToClaimsMapper.getScopeToClaimsMap().get(claimName);
+            }
             return definedClaims;
         } catch (Exception e) {
         }

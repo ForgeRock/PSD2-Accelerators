@@ -7,7 +7,7 @@ pass="testing123"
 # name of the session cookie as configured inside AM (default is iPlanetDirectoryPro)
 cookie_name="iPlanetDirectoryPro"
 # base uri of AM
-openam_endpoint=https://login4.booleans.local:8443/xs
+openam_endpoint=https://login44.booleans.local:8443/xs
 # client settings
 client_id="booleans_client"
 # a redirect URI

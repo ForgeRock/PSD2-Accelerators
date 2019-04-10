@@ -7,7 +7,7 @@ pass="testing123"
 # name of the session cookie as configured inside AM (default is iPlanetDirectoryPro)
 cookie_name="iPlanetDirectoryPro"
 # base uri of IG
-openig_endpoint=https://login6.booleans.local:8443/xs
+openig_endpoint=http://login6.booleans.local:8080/xs
 # client settings
 client_id="booleans_client"
 # a redirect URI
@@ -18,6 +18,12 @@ scope="uid%20openid"
 ssl_dir="ssl/"
 # curl settings
 curl_opts="-k"
+# mtls header name
+mtls_header="X-Yes-mtlsCertAuth"
+# client certificate
+client_cert=${ssl_dir}oauth2_client.crt
+# client certificate as one line
+certificate_header=$(egrep -v ' CERTIFICATE-----' ${client_cert} | awk 'NF {sub(/\r/, ""); printf "%s",$0;}')
 # claims
 claims='{"userinfo":{"https://www.yes.com/claims/verified_person_data":{"verification":{"date":{"max_age":"63113852", "essential": true}},"claims":null}}}'
 
@@ -60,17 +66,13 @@ get_authorization_code_prompt_consent_url() {
 
 # exchange the access_code for a token
 exchange_ac_for_token() {
-    set -x
     local _access_code="${1}";
     local _token_resp=$(curl \
         -s \
         -X POST ${curl_opts} \
-        --cert ${ssl_dir}oauth2_client.crt \
-        --key ${ssl_dir}oauth2_client.key \
-        --cacert ${ssl_dir}login.booleans.local.crt \
+        -H "${mtls_header}: ${certificate_header}" \
         -d "client_id=${client_id}&code=${_access_code}&redirect_uri=${redirect_uri}&grant_type=authorization_code" \
         ${openig_endpoint}/oauth2/access_token)
-    set +x
     echo "${_token_resp}"
 }
 
@@ -81,9 +83,7 @@ get_introspect() {
     local _token_resp=$(curl \
         -s \
         -X POST ${curl_opts} \
-        --cert ${ssl_dir}oauth2_client.crt \
-        --key ${ssl_dir}oauth2_client.key \
-        --cacert ${ssl_dir}login.booleans.local.crt \
+        -H "${mtls_header}: ${certificate_header}" \
         -H "Cookie: ${cookie_name}=${sessionid}" \
         -d "client_id=${client_id}&token_type_hint=access_token&token=${_access_token}" \
         ${openig_endpoint}/oauth2/introspect)
