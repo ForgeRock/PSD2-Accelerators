@@ -25,11 +25,11 @@ The artifacts extend AM and IG to perform the following tasks:
 
 # AM Setup
 ## AM Artifact
-Because the official release containing the mTLS setup is not yet released as version 6.5.1, there's also a version of AM included (release candidate 2) which can be found here: [https://github.com/ForgeRock/PSD2-Accelerators/releases/download/v6.5.1-RC2/AM-6.5.1-RC2.war](https://github.com/ForgeRock/PSD2-Accelerators/releases/download/v6.5.1-RC2/AM-6.5.1-RC2.war)
+Release 6.5.1 contains support for setting up mTLS and can be downloaded here: [https://backstage.forgerock.com/downloads/browse/am/latest](https://backstage.forgerock.com/downloads/browse/am/latest). You'll need a valid Backstage subscription to get it.
 
-The built JAR is also available in case it's not possible to build it yourself and can be found here: [https://github.com/ForgeRock/PSD2-Accelerators/releases/download/v6.5.1-RC2/yes-openam-extensions-1.0-SNAPSHOT.jar](https://github.com/ForgeRock/PSD2-Accelerators/releases/download/v6.5.1-RC2/yes-openam-extensions-1.0-SNAPSHOT.jar)
+The built JAR is available in case it's not possible to build it yourself and can be found here: [https://github.com/ForgeRock/PSD2-Accelerators/releases/download/v6.5.1/yes-openam-extensions-1.0-SNAPSHOT.jar](https://github.com/ForgeRock/PSD2-Accelerators/releases/download/v6.5.1/yes-openam-extensions-1.0-SNAPSHOT.jar)
 
-## Building (the official way)
+## Building
 Ensure that you have access to the ForgeRock maven repositories. This requires a backstage account which is associated with a ForgeRock subscription.
 
 Detailed instructions for setting up maven repository access can be found here: [https://backstage.forgerock.com/knowledge/kb/article/a74096897](https://backstage.forgerock.com/knowledge/kb/article/a74096897)
@@ -41,27 +41,16 @@ Once setup, run maven to build a JAR:
 
 Once the build has succeeded, the JAR is in the ```target/``` directory and can be copied to an AM instance for installation.
 
-## Building (against a release candidate)
-Section only applies when the official release is not yet there and you'd like to build it after making changes. This is somewhat more tricky since there is no maven repository available but with maven you can add the dependencies to your local maven repository.
-
-There's a script that can be used as inspiration in the ```demo-scripts/``` directory called ```add-local-deps-from-war.sh```.
-
-This script unzips a WAR into a temporary directory and attempts to perform ```mvn install:install-file``` commands for each JAR for which the version, artifactId and groupId can be determined. Not all JARs have this info available so not all dependencies may get installed.
-
-The local build process against a release candidate is temporary until the official release comes out (this section will be removed when this is the case).
-
 ## Installation
 The JAR that was built needs to be available to the OpenAM instance. Place a copy of the JAR into the unpacked deployed application under your Tomcat's webapps directory, in the ```WEB-INF/lib``` folder. AM will need to be restarted after installation.
 
 ## Configuration
 
 ### mTLS Setup
-This section is included here but is obsolete once the official Forgerock documentation for this feature has been published (expected as part of the 6.5.1 release). In the mean time, this is how to enable mTLS support as per the [draft mTLS spec](https://tools.ietf.org/html/draft-ietf-oauth-mtls-13).
-
-Note: the early access documentation is also available with a valid Backstage account and can be found here: [https://ea.forgerock.com/docs/am/oauth2-guide/index.html#self-signed-mtls](https://ea.forgerock.com/docs/am/oauth2-guide/index.html#self-signed-mtls)
+Setting up AM to enable mTLS as per the [draft mTLS spec](https://tools.ietf.org/html/draft-ietf-oauth-mtls-13) is documented here: [https://backstage.forgerock.com/docs/am/6.5/oauth2-guide/#client-auth-mtls](https://backstage.forgerock.com/docs/am/6.5/oauth2-guide/#client-auth-mtls)
 
 #### Tomcat Setup
-In this document we assume that Tomcat is used as the container of choice for the AM deployment. The configuration outlined here also assumes the tomcat-native library to be installed and available in the Tomcat library path.
+The official AM doc does not contain an example for setting up the container for mTLS. This is an example setup for supporting mTLS with Tomcat 8.5.x. as the container of choice for the AM deployment. The configuration outlined here also assumes the tomcat-native library to be installed and available in the Tomcat library path.
 
 This example uses self-signed certificates for the setup and assumes that TLS terminates at the AM container. If TLS termination is handled elsewhere, the client certificate should be added to a header in the forwarded request towards AM.
 
@@ -656,4 +645,4 @@ The `alias` in question has not been created using the same algorithm as defined
 # BUGS
 Probably. The spec is somewhat unclear about actual responses so it could very well be that not all of it is working correctly. While developing we did not have access to any environment suitable for testing the end-to-end flow.
 
-This has been created against version 6.5.1-RC2 that includes mTLS support. When the next version (6.5.1 is due shortly at the time of writing) is released there could be some rework needed to adhere to API changes inside AM and an update of the ```pom.xml``` to point to the correct version. This should also enable local builds again.
+This has been originally created against version 6.5.1-RC2 that includes mTLS support. This has now been updated to point to the officially released version 6.5.1.
