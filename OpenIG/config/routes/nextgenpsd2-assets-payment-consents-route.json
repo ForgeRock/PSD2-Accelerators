@@ -27,7 +27,7 @@
     "name" : "AmService-1",
     "type" : "AmService",
     "config" : {
-      "url" : "https://login.psd2accelerators.fridam.aeet-forgerock.com/openam",
+      "url" : "https://login.psd2accelerators.fridam.aeet-forgerock.com",
       "realm" : "/nextgenpsd2",
       "ssoTokenHeader" : "iPlanetDirectoryPro",
       "version" : "6.5",

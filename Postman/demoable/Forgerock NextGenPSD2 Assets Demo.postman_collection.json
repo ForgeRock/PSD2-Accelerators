@@ -72,12 +72,11 @@
 									"raw": "{\r\n  \"application_type\": \"web\",\r\n  \"redirect_uris\": [\r\n    \"https://www.google.com\"\r\n  ],\r\n  \"client_type\": \"public\",\r\n  \"subject_type\": \"pairwise\",\r\n  \"token_endpoint_auth_method\": \"tls_client_cert\",\r\n  \"tls_client_certificate_bound_access_tokens\": true,\r\n  \"token_endpoint_auth_signing_alg\": \"RS256\",\r\n  \"request_object_encryption_alg\": \"RSA-OAEP-256\",\r\n  \"grant_types\": [\r\n    \"authorization_code\",\r\n    \"refresh_token\"\r\n  ],\r\n  \"iss\": \"5c5072c188610e0035bd2930\",\r\n  \"scope\": \"openid ^PIS: ^AIS:\",\r\n  \"request_object_signing_alg\": \"RS256\",\r\n  \"request_object_encryption_enc\": \"A128CBC-HS256\",\r\n  \"response_types\": [\r\n    \"code\"\r\n  ],\r\n  \"id_token_signed_response_alg\": \"RS256\",\r\n  \"contacts\": [\"test1@example.org\", \"test2@example.org\"],\r\n  \"exp\": {{exp}}\r\n}"
 								},
 								"url": {
-									"raw": "{{OPENIG_CLOUD}}/openam/oauth2/realms/root/realms/nextgenpsd2/register",
+									"raw": "{{OPENIG_CLOUD}}/oauth2/realms/root/realms/nextgenpsd2/register",
 									"host": [
 										"{{OPENIG_CLOUD}}"
 									],
 									"path": [
-										"openam",
 										"oauth2",
 										"realms",
 										"root",
@@ -510,7 +509,7 @@
 										},
 										{
 											"key": "code",
-											"value": "AyeQZY6DKpwvpUPV9R48pu0q8PQ",
+											"value": "rM_CMomkxfyba4MKhOTTYMTrnGY",
 											"type": "text"
 										},
 										{
@@ -1124,7 +1123,7 @@
 									},
 									{
 										"key": "X-Request-ID",
-										"value": "99391c7e-ad88-49ec-a2ad-99ddcb1f7721",
+										"value": "99391c7e-ad88-49ec-a2ad-99ddcb1f77",
 										"type": "text"
 									},
 									{
@@ -1615,7 +1614,7 @@
 										},
 										{
 											"key": "code",
-											"value": "KliK1EiEKabULWx-lhnMOnPZ0io",
+											"value": "8mUqCMUsWGxksKbCvD8q6IVm2Hk",
 											"type": "text"
 										},
 										{
@@ -4001,6 +4000,43 @@
 								}
 							],
 							"_postman_isSubFolder": true
+						},
+						{
+							"name": "User - List all managed users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-OpenIDM-Username",
+										"value": "openidm-admin"
+									},
+									{
+										"key": "X-OpenIDM-Password",
+										"value": "openidm-admin"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{OPENIDM_CLOUD}}/managed/user?_api",
+									"host": [
+										"{{OPENIDM_CLOUD}}"
+									],
+									"path": [
+										"managed",
+										"user"
+									],
+									"query": [
+										{
+											"key": "_api",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"_postman_isSubFolder": true
