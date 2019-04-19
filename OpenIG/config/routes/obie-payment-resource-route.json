@@ -27,7 +27,7 @@
     "name" : "AmService-1",
     "type" : "AmService",
     "config" : {
-      "url" : "https://login.psd2accelerators.fridam.aeet-forgerock.com/openam",
+      "url" : "https://login.psd2accelerators.fridam.aeet-forgerock.com",
       "realm" : "/openbanking",
       "ssoTokenHeader" : "iPlanetDirectoryPro",
       "version" : "6.5",
@@ -47,7 +47,7 @@
         "name" : "UserInfoVerificationFilter",
         "type" : "UserInfoVerificationFilter",
         "config" : {
-          "userInfoURL" : "https://login.psd2accelerators.fridam.aeet-forgerock.com/openam/oauth2/realms/root/realms/openbanking/userinfo"
+          "userInfoURL" : "https://login.psd2accelerators.fridam.aeet-forgerock.com/oauth2/realms/root/realms/openbanking/userinfo"
         }
       }, {
         "name" : "OAuth2ResourceServerFilter-1",
@@ -60,7 +60,7 @@
             "name" : "token-resolver-1",
             "type" : "TokenIntrospectionAccessTokenResolver",
             "config" : {
-              "endpoint" : "https://login.psd2accelerators.fridam.aeet-forgerock.com/openam/oauth2/realms/root/realms/openbanking/introspect",
+              "endpoint" : "https://login.psd2accelerators.fridam.aeet-forgerock.com/oauth2/realms/root/realms/openbanking/introspect",
               "providerHandler" : {
                 "type" : "Chain",
                 "config" : {

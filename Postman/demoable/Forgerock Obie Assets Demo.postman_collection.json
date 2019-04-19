@@ -53,12 +53,11 @@
 									"raw": "{{dynamic_registration_request}}"
 								},
 								"url": {
-									"raw": "{{OPENIG_CLOUD}}/openam/oauth2/realms/root/realms/openbanking/register",
+									"raw": "{{OPENIG_CLOUD}}/oauth2/realms/root/realms/openbanking/register",
 									"host": [
 										"{{OPENIG_CLOUD}}"
 									],
 									"path": [
-										"openam",
 										"oauth2",
 										"realms",
 										"root",
@@ -450,7 +449,7 @@
 										},
 										{
 											"key": "code",
-											"value": "vlHC8p8hawsLznA7BbnK0QrWrYA",
+											"value": "TH9nrsclxo2TR-FC2WPA-l-qRXA",
 											"type": "text"
 										},
 										{
@@ -1539,7 +1538,7 @@
 										},
 										{
 											"key": "code",
-											"value": "hoeQJ6WhQ0LpbUqYsZRsRdLkTrk",
+											"value": "voe57lu49ifG54ocpG0wPHpVCgk",
 											"type": "text"
 										},
 										{

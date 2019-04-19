@@ -17,7 +17,7 @@
 // AM server details
 var amServer = {
 	"protocol": "http",
-	"host": "10.8.0.5",
+	"host": "10.8.1.7",
 	"port": "8080",
 	"path": "openam",
 	"realm": "root",
