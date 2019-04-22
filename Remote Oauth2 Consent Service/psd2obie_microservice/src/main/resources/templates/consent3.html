@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/header3 :: headFragment">
+<title id="pageTitle">All payments registered in the system,
+	completed or not.</title>
+</head>
+<body>
+	<!--/* Insert content fragment with content of the element with id = 'task-list' */-->
+	<div id="content" class="container">
+		<div class="row">
+			<div class="col"></div>
+			<div class="col-6 mat-card">
+				<div class="text-center">
+					<img class="forgerock-customer-logo" th:src="@{/images/logo.svg}"
+						width="230" height="0">
+				</div>
+				<h6
+					th:text="'Permissions asked by the application : ' + ${client_name} "></h6>
+
+				<div class="divider"></div>
+				<h6 th:if="${flow=='pisp'||flow=='aisp'}" class="title"
+					th:text="'The client requested the following token scopes that have not yet been approved:'"></h6>
+				<div id="accounts-list">
+					<form action="#" th:action="@{/api/rcs/web/consent/sendconsent}"
+						method="post">
+						<div th:if="${flow!='pisp'&&flow!='aisp'}">
+							<p>Do you consent to approve scopes:</p>
+							<ul class="no-list-type">
+								<li th:each="scope : ${scopeList}">
+									<div class="custom-control custom-checkbox">
+										<input checked="checked" type="checkbox" th:id="${scope}"
+											name="scope" class="custom-control-input" th:value="${scope}" />
+										<label class="custom-control-label" th:for="${scope}"
+											th:text="${scope}"></label>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div th:if="${flow=='pisp'||flow=='aisp'}">
+							<input th:each="scope : ${scopeList} " type="hidden" name="scope"
+								th:value="${scope}" />
+						</div>
+						<div th:if="${flow=='pisp'||flow=='aisp'}" class="divider"></div>
+
+						<div th:if="${flow=='pisp'||flow=='aisp'}">
+							<p>Accounts:</p>
+							<ul th:if="${flow=='pisp'}" class="no-list-type">
+								<li th:each="account : ${accountList}">
+									<div class="custom-control custom-radio custom-control-inline">
+										<input type="radio" th:id="${account.AccountId}" required="required"
+											name="account" class="custom-control-input"
+											th:value="${account.AccountId}" /> <label class="custom-control-label"
+											th:for="${account.AccountId}" th:text="${ account.Currency+' '+ account.Nickname+'('+account.Account.Identification+')'}"></label>
+									</div>
+								</li>
+							</ul>
+
+							<ul th:if="${flow=='aisp'}" class="no-list-type">
+								<li th:each="account : ${accountList}">
+									<div class="custom-control custom-checkbox">
+										<input checked="checked" type="checkbox" th:id="${account.AccountId}"
+											name="account" class="custom-control-input"
+											th:value="${account.AccountId}" /> <label class="custom-control-label"
+											th:for="${account.AccountId}" th:text="${account.Currency+' '+ account.Nickname+'('+account.Account.Identification+')'}"></label>
+									</div>
+								</li>
+							</ul>
+
+
+
+						</div>
+						<div th:if="${flow=='pisp'||flow=='aisp'}" class="divider"></div>
+
+						<div th:if="${flow=='pisp'}">
+							<p>Payment Details</p>
+							<p>
+								Amount: <span
+									th:text="${obPaymentConsentPISP.Data.Initiation.InstructedAmount.Amount}">_165.00_</span>
+							</p>
+							<p>
+								Currency: <span
+									th:text="${obPaymentConsentPISP.Data.Initiation.InstructedAmount.Currency}">_GBP_</span>
+							</p>
+							<p>
+								Status: <span th:text="${obPaymentConsentPISP.status}"></span>
+							</p>
+						</div>
+
+						<div th:if="${flow=='aisp'}" class="accordion"
+							id="accordionExample">
+							<div class="card no-color-card">
+								<div class="card-header" id="headingOne">
+									<h2 class="mb-0">
+										<button class="btn btn-link card-header-holder" type="button"
+											data-toggle="collapse" data-target="#collapseOne"
+											aria-expanded="true" aria-controls="collapseOne">
+											Permissions</button>
+									</h2>
+								</div>
+
+								<div id="collapseOne" class="collapse show"
+									aria-labelledby="headingOne" data-parent="#accordionExample">
+									<div class="card-body">
+										<ul class="no-list-type">
+											<li
+												th:each="permisionItem : ${obAccountsAccessConsentAIPS.Data.Permissions}">
+												<div class="custom-control custom-checkbox">
+													<p th:text="${permisionItem}"></p>
+												</div>
+											</li>
+										</ul>
+
+									</div>
+								</div>
+							</div>
+							<!-- Account Collapse
+						  <div class="card">
+						    <div class="card-header" id="headingTwo">
+						      <h2 class="mb-0">
+						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						          Collapsible Group Item #2
+						        </button>
+						      </h2>
+						    </div>
+						    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+						      <div class="card-body">
+						        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+						      </div>
+						    </div>
+						  </div>
+						  <div class="card">
+						    <div class="card-header" id="headingThree">
+						      <h2 class="mb-0">
+						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+						          Collapsible Group Item #3
+						        </button>
+						      </h2>
+						    </div>
+						    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+						      <div class="card-body">
+						        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+						      </div>
+						    </div>
+						  </div>
+						  	 End Account Collapse -->
+						</div>
+
+
+						<input type="hidden" th:name="${consent_request_field_name}"
+							th:value="${consent_request}" /> <input type="hidden"
+							name="flow" th:value="${flow}" />
+							<input type="hidden" name="claims" th:value="${claims}" />
+						<div class="divider"></div>
+						<div class="form-group row mat-card-actions">
+							<div class="col-xs-12">
+								<button name='decision' value="deny" type="submit"
+									class="btn mat-stroked-button">Deny</button>
+								<button name='decision' value="allow" type="submit"
+									class="btn raised-button">Allow</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col"></div>
+		</div>
+	</div>
+	<footer th:replace="fragments/footer3 :: footer">Footer</footer>
+</body>
+</html>
