@@ -1,0 +1,27 @@
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "06 protect id_token_hint tree call",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path, '^&{prop.openamPath}/json/authenticate$') and keyMatch(request.form, 'authIndexValue') != null and matches(request.form.authIndexValue, '&{prop.idTokenHintTree}')}",
+  "heap": [
+    {
+      "name": "DeniedResponseHandler",
+      "type": "StaticResponseHandler",
+      "config": {
+        "status": 403,
+        "reason": "Forbidden",
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "entity": "{ \"error\": \"Forbidden to access this page.\"}"
+      }
+    }
+  ],
+  "handler": "DeniedResponseHandler"
+}

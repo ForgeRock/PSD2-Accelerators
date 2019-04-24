@@ -10,6 +10,7 @@ The following items are included in this project:
 - Custom scope validator for use inside an OAuth2 Provider
 - Custom plugin logic to retrieve Verified Person Data from a remote endpoint
 - Custom IG route configuration for use inside OpenIG
+- Custom filters for use inside OpenIG
 - Custom groovy scripts for use inside OpenIG
 - Demonstration scripts
 - Sample mock services
@@ -211,12 +212,25 @@ The Custom Error Message node can be used to redirect a previously detected erro
 
 There are two configuration properties:
 
-- error: naming of the error, for example ```invalid_request```
-- error_description: associated description, for example ```The request is invalid```
+- error: naming of the error, for example `invalid_request`
+- error_description: associated description, for example `The request is invalid`
 
 The Custom Error Message Node should be configured as a node that is connected to the failure state of a previous node as shown here:
 
 ![](custom-error-node.png)
+
+#### ID Token Hint Session Exchange Node
+The ID token hint session exchange node uses the submitted `id_token_hint` in the NameCallback to determine if the JWT is valid. If it is, the `sub` claim is extracted and used to create a new session.
+
+The node can return either `true` in case the value of `id_token_hint` is valid or `false` in case the value of `id_token_hint` is invalid. It should be isolated inside an Authentication tree with its outcome connected to `Success` and `Failure` like this:
+
+![](id_token_hint_node.png)
+
+The authentication node should be called from IG only. The name of the specific Authentication Tree will be configured inside IG (see the IG configuration section for more details).
+
+The option toggle for setting `Enable debugging information about the request` logs sensitive information from the request, so use with care!
+
+*This approach only works when the realm in question has 'Module Based Authentication' enabled through 'Authentication' -> 'Settings' -> 'Security' -> 'Module Based Authentication'. This is turned on by default.*
 
 ### Dynamic Scope Configuration
 In some cases it's needed to support scopes that include a value which is dynamic. The scope validator allows those if preconfigured.
@@ -555,6 +569,158 @@ One could add support for symmetric keys. It's not included at this point in tim
 
 One could also use different keys for signing the Jwt as what is currently available inside AM. When this is desired, the normal `jwks_uri` response will have to be adjusted as well so the client can continue to use the discovery response to determine the `jwks_uri` and use that in turn to validate the signature against.
 
+## Setting up IG for `id_token_hint` support
+AM does not support the use of the `id_token_hint` parameter as specified in the OpenID Connect spec [https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest](https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest). Filter `yes-openig-id_token_hint-filter` adds this capability.
+
+With IG placed in front of AM, requests towards the `/openam/oauth2/authorize` endpoint, using the HTTP POST method, with content-type set to `application/x-www-form-urlencoded` and the query parameters containing an `id_token_hint` value will go through this filter for validation.
+
+A backend call is made towards AM to interact directly with the ID Token Hint tree.
+
+### Route Configuration
+The condition and configuration for the `id_token_hint` functionality is combined into a route configuration:
+
+```
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "05 id_token_hint support",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path, '^&{prop.openamPath}/oauth2/authorize$') and matches(request.headers['Content-Type'][0], 'application/x-www-form-urlencoded') and matches(request.method, 'POST') and keyMatch(request.form, 'id_token_hint') != null}",
+  "heap": [],
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "IdTokenHintFilter",
+          "type": "org.forgerock.openig.filter.IdTokenHintFilter",
+          "config": {
+            "jwksEndpoint": "${prop.openamUrl}${prop.openamPath}/oauth2/connect/jwk_uri",
+            "validateIdToken": true,
+            "executionHandler": "ClientHandler",
+            "authenticationEndpoint": "${prop.openamUrl}${prop.openamPath}/json/authenticate",
+            "authenticationTreeName": "${prop.idTokenHintTree}",
+            "amSessionCookie": "${prop.openamCookie}",
+            "sessionValidationEndpoint": "${prop.openamUrl}${prop.openamPath}/json/sessions?_action=validate",
+            "clockSkew": "5 minutes",
+            "maxLifetimeLimit": "1 day",
+            "updateCookieConfig": {
+              "updateSetCookie": true,
+              "cookieDomain": "${prop.openamCookieDomain}",
+              "cookieHttpOnly": true,
+              "cookieSecure": true
+            }
+          }
+        }
+      ],
+      "handler": "ReverseProxyHandler"
+    }
+  }
+}
+```
+The following properties can be configured as part of this filters' configuration:
+
+* `jwksEndpoint` - URL where the JWK information can be retrieved for id_token_hint validation (unused when `validateIdToken` is set to `false`)
+* `validateIdToken` - boolean value indicating whether the id_token_hint value should be validated within IG. When set to `false`, the `id_token_hint` value is passed through without validation to AM (which _will_ perform validation)
+* `executionHandler` - the handler performing the request. Defaults to `ClientHandler` but can be changed to a different (custom) handler when additional steps are required within that handler (for example, a custom handler definition in the `heap` that also performs additional logging)
+* `authenticationEndpoint` - URI where authentication takes place inside AM. This is used to compose a direct call towards the specific authentication tree.
+* `authenticationTreeName` - name of the authentication tree as configured within AM. Used to compose a direct call towards the specific authentication tree inside AM. The value gets URL-encoded - spaces _are_ allowed.
+* `amSessionCookie` - name of the AM cookie. When set and found in the request, the session is validated before being sent towards AM.
+* `sessionValidationEndpoint` - endpoint within AM where the session is to be validated.
+* `clockSkew` - a `Duration` syntax for defining how much time skew is allowed. Normally one would use an NTP service to synchronize the system clock and this should be set to a few seconds to allow for a small time skew.
+* `maxLifetimeLimit` - a `Duration` syntax for defining the timespan in which the original `id_token_hint` should have been issued. For example: to allow this filter to work with `id_token` issued a week ago, one could set this to `7 days` or `168 hours`.
+* `updateCookieConfig`
+    * `updateSetCookie` - when the `id_token_hint` call leads to a new session because the original session was no longer valid, the response object will be enriched with an additional `Set-Cookie` header with the new AM session.
+    * `cookieDomain` - sets the cookie domain on the newly returned cookie.
+    * `cookieHttpOnly` - sets the `httpOnly` property on the cookie.
+    * `cookieSecure` - sets the `secure` property on the cookie.
+
+For more information about the `Duration` syntax please see [https://backstage.forgerock.com/docs/ig/6.5/reference/index.html#field-value-conventions](https://backstage.forgerock.com/docs/ig/6.5/reference/index.html#field-value-conventions)
+
+### Protecting the ID Token Hint Tree
+The ID Token Hint tree is designed to return a session when the submitted `id_token_hint` value is still valid. The call towards this endpoint is only needed for IG itself, so an additional route can be added to disallow external access to this endpoint with a route like this:
+
+```
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "06 protect id_token_hint tree call",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path, '^&{prop.openamPath}/json/authenticate$') and keyMatch(request.form, 'authIndexValue') != null and matches(request.form.authIndexValue, '&{prop.idTokenHintTree}')}",
+  "heap": [
+    {
+      "name": "DeniedResponseHandler",
+      "type": "StaticResponseHandler",
+      "config": {
+        "status": 403,
+        "reason": "Forbidden",
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "entity": "{ \"error\": \"Forbidden to access this page.\"}"
+      }
+    }
+  ],
+  "handler": "DeniedResponseHandler"
+}
+```
+The route gets applied when the request path matches the authenticate endpoint, the query parameters include an `authIndexValue` and query parameter `authIndexValue` is set to the name of the ID Token Hint tree.
+
+The `StaticResponseHandler` returns a static JSON body with an HTTP response code set to `403` in this case, but can be configured to return any static response. See [https://backstage.forgerock.com/docs/ig/6.5/reference/index.html#StaticResponseHandler](https://backstage.forgerock.com/docs/ig/6.5/reference/index.html#StaticResponseHandler) for the StaticResponseHandler options.
+
+## Setting up IG to terminate TLS
+Although officially not requested, this could come in handy at some point if end-to-end TLS is not an option.
+
+A filter called `CertificateToHeaderFilter` has been created for this purpose. It extracts the client certificate from the original request, encodes it to PEM format and injects it as a header inside the original request object to be sent towards AM using a ReverseProxyHandler.
+
+The container for IG will need to be configured to perform client authentication on its TLS connector; see the Tomcat example earlier in this document for an idea on how to set this up. 
+
+When using Tomcat the configuration is the same as explained earlier, with one clear difference: the setting for  `certificateVerification` was set to `optionalNoCA` in the AM scenario to also allow non-authenticated requests to go through.
+
+In order to be able to access the certificates in IG, this needs to be set to `true` or no certificates get populated into the original servlet object.
+
+Once available, the client certificate gets added to the original request object using the configured header under `targetHeader`. This setting needs to match whatever has been configured inside AM (see section 'Setup mTLS with HTTP Header').
+
+The route configuration looks something like this:
+
+```
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "07 terminate ssl",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path, '^&{prop.openamPath}/oauth2/') and matches(request.uri.port, '8443')}",
+  "heap": [],
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "CertificateToHeaderFilter",
+          "type": "org.forgerock.openig.filter.CertificateToHeaderFilter",
+          "config": {
+            "targetHeader": "X-Yes-mtlsCertAuth"
+          }
+        }
+      ],
+      "handler": "ReverseProxyHandler"
+    }
+  }
+}
+```
+Note that the `condition` here is quite broad and may need further refinement in other environments.
+
 # Troubleshooting
 ## Invalid Authentication Method
 When an mTLS authentication is attemped and AM returns an error with 'Invalid authentication method for accessing this endpoint', then the used authentication method is not in line with how the OAuth2 client is configured.
@@ -640,6 +806,13 @@ or:
 ```
 
 The `alias` in question has not been created using the same algorithm as defined inside the `SignedIntrospectFilter` configuration. Align the `alias` with the `algorithm` to fix this.
+
+## No debug logging in IG
+IG uses `logback` under the hood to perform its logging and default configuration is included inside the artifact. See [https://backstage.forgerock.com/docs/ig/6.5/gateway-guide/#logging-changing-all](https://backstage.forgerock.com/docs/ig/6.5/gateway-guide/#logging-changing-all) for details.
+
+The easiest way to increase loglevels is to extract the default `logback.xml` from the IG artifact, place it in the OpenIG configuration directory (either `~/.openig/` or the directory from JVM property `-Dig.instance.dir` and then in subfolder `config`) and make your modifications there. An example:
+
+`unzip -q -c /path/to/tomcat/webapps/ROOT/WEB-INF/lib/openig-servlet-6.5.0.jar org/forgerock/openig/servlet/logback.xml > ~/.openig/config/logback.xml`
 
 
 # BUGS

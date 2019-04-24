@@ -1,0 +1,26 @@
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "07 terminate ssl",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path, '^&{prop.openamPath}/oauth2/') and matches(request.uri.port, '8443')}",
+  "heap": [],
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "CertificateToHeaderFilter",
+          "type": "org.forgerock.openig.filter.CertificateToHeaderFilter",
+          "config": {
+            "targetHeader": "X-Yes-mtlsCertAuth"
+          }
+        }
+      ],
+      "handler": "ReverseProxyHandler"
+    }
+  }
+}

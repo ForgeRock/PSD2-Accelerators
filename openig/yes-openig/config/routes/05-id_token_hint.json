@@ -1,0 +1,40 @@
+{
+  "properties": {
+    "prop": {
+      "$location": "${fileToUrl(openig.configDirectory)}/env.json"
+    }
+  },
+  "name": "05 id_token_hint support",
+  "baseURI": "${prop.openamUrl}",
+  "condition": "${matches(request.uri.path, '^&{prop.openamPath}/oauth2/authorize$') and matches(request.headers['Content-Type'][0], 'application/x-www-form-urlencoded') and matches(request.method, 'POST') and keyMatch(request.form, 'id_token_hint') != null}",
+  "heap": [],
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "IdTokenHintFilter",
+          "type": "org.forgerock.openig.filter.IdTokenHintFilter",
+          "config": {
+            "jwksEndpoint": "http://login2.booleans.local:8080/xs/oauth2/connect/jwk_uri",
+            "validateIdToken": true,
+            "executionHandler": "ClientHandler",
+            "authenticationEndpoint": "http://login2.booleans.local:8080/xs/json/authenticate",
+            "authenticationTreeName": "${prop.idTokenHintTree}",
+            "amSessionCookie": "${prop.openamCookie}",
+            "sessionValidationEndpoint": "http://login2.booleans.local:8080/xs/json/sessions?_action=validate",
+            "clockSkew": "5 minutes",
+            "maxLifetimeLimit": "1 day",
+            "updateCookieConfig": {
+              "updateSetCookie": true,
+              "cookieDomain": "${prop.openamCookieDomain}",
+              "cookieHttpOnly": true,
+              "cookieSecure": true
+            }
+          }
+        }
+      ],
+      "handler": "ReverseProxyHandler"
+    }
+  }
+}

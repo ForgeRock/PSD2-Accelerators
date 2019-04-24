@@ -50,6 +50,13 @@ get_authorization_code_prompt_consent() {
     echo "${ac_response}"
 }
 
+# get the authorization code with prompt value
+get_authorization_code_prompt_consent_url() {
+    local prompt="consent";
+    local _goto="${openam_endpoint}/oauth2/authorize?response_type=code&scope=${scope}&client_id=${client_id}&redirect_uri=${redirect_uri}&prompt=${prompt}"
+    echo "${_goto}"
+}
+
 urlencode() {
     local LANG=C
     for ((i=0;i<${#1};i++)); do

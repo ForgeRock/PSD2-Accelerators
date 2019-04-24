@@ -9,8 +9,7 @@ cookie_name="iPlanetDirectoryPro"
 # base uri of AM
 openam_endpoint=https://login1.booleans.local:8443/xs
 # client settings
-client_id="client1"
-client_secret="Admin123"
+client_id="booleans_client"
 # a redirect URI
 redirect_uri=http://someservice.booleans.local:8080/dummycallback
 # which scopes to request
@@ -25,6 +24,9 @@ get_session_id() {
     session=$(curl \
         -s \
         -X POST ${curl_opts} \
+        --cert ${ssl_dir}oauth2_client.crt \
+        --key ${ssl_dir}oauth2_client.key \
+        --cacert ${ssl_dir}login.booleans.local.crt \
         -H "X-OpenAM-Username: ${user}" \
         -H "X-OpenAM-Password: ${pass}" \
         -H "Accept-API-Version: protocol=1.0,resource=1.0" \
@@ -38,6 +40,9 @@ get_authorization_code() {
     ac_response=$(curl\
         -s \
         -X POST ${curl_opts} \
+        --cert ${ssl_dir}oauth2_client.crt \
+        --key ${ssl_dir}oauth2_client.key \
+        --cacert ${ssl_dir}login.booleans.local.crt \
         -H "Cookie: ${cookie_name}=${sessionid}" \
         -d "response_type=code&scope=${scope}&client_id=${client_id}&nonce=123&csrf=${sessionid}&redirect_uri=${redirect_uri}&decision=allow" \
         -H 'Content-Type: application/x-www-form-urlencoded' \
@@ -54,7 +59,10 @@ exchange_ac_for_token() {
     local _token_resp=$(curl \
         -s \
         -X POST ${curl_opts} \
-        -d "client_id=${client_id}&client_secret=${client_secret}&code=${_access_code}&redirect_uri=${redirect_uri}&grant_type=authorization_code" \
+        --cert ${ssl_dir}oauth2_client.crt \
+        --key ${ssl_dir}oauth2_client.key \
+        --cacert ${ssl_dir}login.booleans.local.crt \
+        -d "client_id=${client_id}&code=${_access_code}&redirect_uri=${redirect_uri}&grant_type=authorization_code" \
         ${openam_endpoint}/oauth2/access_token)
     echo "${_token_resp}"
 }
@@ -65,6 +73,9 @@ get_introspect() {
     local _token_resp=$(curl \
         -s \
         -X POST ${curl_opts} \
+        --cert ${ssl_dir}oauth2_client.crt \
+        --key ${ssl_dir}oauth2_client.key \
+        --cacert ${ssl_dir}login.booleans.local.crt \
         -d "client_id=${client_id}&token_type_hint=access_token&token=${_access_token}" \
         ${openam_endpoint}/oauth2/introspect)
     echo "${_token_resp}";
@@ -124,6 +135,8 @@ rt=$(jq -r '.refresh_token' <<< "${_access_token_response}")
 echo "Access token: ${at}"
 echo "Refresh token: ${rt}"
 echo
+
+exit;
 
 _tokeninfo_response=$(get_tokeninfo "${at}")
 echo "Response from tokeninfo endpoint: "
