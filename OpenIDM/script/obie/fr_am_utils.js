@@ -91,6 +91,28 @@ function AM_policy_create(amServer, policyData){
 	
 }
 
+//Call AM in order to delete the authorization policy
+function AM_policy_delete(amServer, inputAccountIntentId){
+
+        var result = {};
+        var ssoToken = amServer.ssoToken;
+
+        restCall = {};
+        restCall.url = constructAmUri(amServer) + "/json/realms/" + amServer.policyRealm + "/policies/" + inputAccountIntentId;
+
+	console.log("[DEBUG]: url to delete - " + restCall.url);
+
+        restCall.headers = {"contentType"               : "application/json",
+                                        "Accept-API-Version"    : "protocol=1.0",
+                                        "iPlanetDirectoryPro"   : ssoToken};
+        restCall.method = "DELETE";
+
+        executeRest(restCall);
+
+        return;
+
+}
+
 function executeRest(restCall){
 	var result = {};
 	
@@ -99,7 +121,7 @@ function executeRest(restCall){
 	}
  
 	catch (e) { 
-		console.log("Exception: "+e);
+		console.log("Exception: "+e.stack);
 	}
 	
 	return result;
@@ -107,8 +129,6 @@ function executeRest(restCall){
 }
 
 function getHeader(thisHeader){
-
-	return context.http.headers[thisHeader];
-	
+	return context.http.headers[thisHeader];	
 }
 

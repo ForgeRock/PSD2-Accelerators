@@ -59,10 +59,12 @@ function createPaymentIntent(paymentIntentData){
        		if (tppIdmId != "-1"){
 			paymentIntentData.Tpp = { "_ref" : CONFIG_managedObjects.obTpp + "/" + tppIdmId};
                 }
+		/*
         	else {
             		returnObject.reason = "Invalid tppIdentifier";
 			return returnObject;
         	}
+		*/
     	}
     	else{
    		returnObject.reason = "tppIdentifier must be specified as a string";

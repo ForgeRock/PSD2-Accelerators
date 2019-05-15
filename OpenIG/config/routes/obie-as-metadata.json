@@ -3,6 +3,38 @@
   "name" : "OBIE AS Metadata",
   "baseURI" : "https://login.psd2acceldemo.fridam.aeet-forgerock.com",
   "condition" : "${matches(request.uri.path, '/.well-known/openid-configuration')}",
+  "auditService" : {
+    "name" : "obie-audit-service",
+    "type" : "AuditService",
+    "config" : {
+      "enabled" : true,
+      "event-handlers" : [ {
+        "class" : "org.forgerock.audit.handlers.json.JsonAuditEventHandler",
+        "config" : {
+          "name" : "obie-as-metadata",
+          "logDirectory" : "${openig.baseDirectory.path}/audit/obie",
+          "elasticsearchCompatible" : true,
+          "topics" : [ "access" ],
+          "buffering" : {
+            "enabled" : false,
+            "maxSize" : 10000,
+            "writeInterval" : "250 millis",
+            "maxBatchedEvents" : 500
+          },
+          "fileRotation" : {
+            "rotationEnabled" : true,
+            "rotationInterval" : "24 h",
+            "rotationFileSuffix" : "_yyyy-MM-dd",
+            "rotationTimes" : [ "1 m" ]
+          },
+          "fileRetention" : {
+            "maxNumberOfHistoryFiles" : 365
+          },
+          "rotationRetentionCheckInterval" : "1 m"
+        }
+      } ]
+    }
+  },
   "handler" : {
     "type" : "Chain",
     "config" : {

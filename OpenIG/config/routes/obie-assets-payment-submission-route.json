@@ -1,9 +1,34 @@
 {
-  "_copyright" : "Copyright 2019 ForgeRock AS Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions andlimitations under the License.",
+  "_copyright" : "Copyright 2019 ForgeRock ASLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions andlimitations under the License.",
   "name" : "OBIE Assets Payment Submission Route",
-  "baseURI" : "http://18.211.177.234:8089",
+  "baseURI" : "http://obie-rcs-mocks.psd2acceldemo.svc.cluster.local:8089",
   "condition" : "${matches(request.uri.path, '^/openbanking/v3.1/domestic-payments$')}",
   "capture" : [ "response", "request" ],
+  "auditService" : {
+    "name" : "obie-audit-service",
+    "type" : "AuditService",
+    "config" : {
+      "enabled" : true,
+      "event-handlers" : [ {
+        "class" : "org.forgerock.audit.handlers.json.JsonAuditEventHandler",
+        "config" : {
+          "name" : "obie-tpp-registration",
+          "logDirectory" : "${openig.baseDirectory.path}/audit/obie",
+          "elasticsearchCompatible" : true,
+          "topics" : [ "access" ],
+          "buffering" : {
+            "enabled" : false,
+            "maxSize" : 10000,
+            "writeInterval" : "250 millis",
+            "maxBatchedEvents" : 500
+          },
+          "fileRotation" : {
+            "rotationEnabled" : false
+          }
+        }
+      } ]
+    }
+  },
   "heap" : [ {
     "name" : "ReverseProxyHandler",
     "type" : "ReverseProxyHandler",
@@ -24,33 +49,55 @@
     },
     "capture" : [ "response", "request" ]
   }, {
-    "name" : "AmService-1",
+    "name" : "AmService-OBIE",
     "type" : "AmService",
     "config" : {
       "url" : "https://login.psd2acceldemo.fridam.aeet-forgerock.com",
       "realm" : "/openbanking",
       "ssoTokenHeader" : "iPlanetDirectoryPro",
-      "version" : "6.5",
+      "version" : "6.5.1",
       "agent" : {
         "username" : "ig_agent",
-        "password" : "ig_agent"
+        "passwordSecretId" : "ig.agent.secret"
       },
       "sessionCache" : {
         "enabled" : false
       }
     }
   } ],
+  "secrets" : {
+    "stores" : [ {
+      "type" : "FileSystemSecretStore",
+      "config" : {
+        "format" : "PLAIN",
+        "directory" : "${openig.baseDirectory.path}/secrets/obie"
+      }
+    } ]
+  },
   "handler" : {
     "type" : "Chain",
     "config" : {
       "filters" : [ {
-        "name" : "UserInfoVerificationFilter",
+        "name" : "RetrieveSecretsFilter",
+        "type" : "RetrieveSecretsFilter",
+        "config" : {
+          "directory" : "${openig.baseDirectory.path}/secrets/obie",
+          "passwordSecretIds" : "igAgentOauth"
+        }
+      }, {
+        "name" : "CertificateExtensionValidatorFilter",
+        "type" : "CertificateExtensionValidatorFilter",
+        "config" : {
+          "routeRole" : "Payment Initiation"
+        }
+      }, {
+        "name" : "UserInfoVerificationFilter-OBIE",
         "type" : "UserInfoVerificationFilter",
         "config" : {
           "userInfoURL" : "https://login.psd2acceldemo.fridam.aeet-forgerock.com/oauth2/realms/root/realms/openbanking/userinfo"
         }
       }, {
-        "name" : "OAuth2ResourceServerFilter-1",
+        "name" : "OAuth2ResourceServerFilter-OBIE",
         "type" : "OAuth2ResourceServerFilter",
         "config" : {
           "scopes" : [ "payments", "openid" ],
@@ -69,7 +116,7 @@
                     "config" : {
                       "messageType" : "request",
                       "add" : {
-                        "Authorization" : [ "Basic ${encodeBase64('ig_agent_oauth2:ig_agent_oauth2')}" ]
+                        "Authorization" : [ "Basic ${attributes.igAgentOauth}" ]
                       }
                     }
                   } ],
@@ -93,10 +140,13 @@
           }, {
             "target" : "${request.uri.path}",
             "value" : "/openbanking/v3.1/domestic-payment-consents/${attributes.openbankingIntentId}"
+          }, {
+            "target" : "${attributes.xfapiinteractionid}",
+            "value" : "${request.headers['x-fapi-interaction-id'][0]}"
           } ]
         }
       }, {
-        "name" : "PolicyEnforcementFilter-OBIE Assets Authorization Filter-1",
+        "name" : "PolicyEnforcementFilter-OBIE Assets Authorization Filter",
         "type" : "PolicyEnforcementFilter",
         "config" : {
           "pepRealm" : "/openbanking",
@@ -106,7 +156,7 @@
             "Initiation" : "${attributes.initiation}",
             "iss" : "http://login.psd2acceldemo.fridam.aeet-forgerock.com:80/oauth2/realms/root/realms/openbanking"
           },
-          "amService" : "AmService-1"
+          "amService" : "AmService-OBIE"
         }
       }, {
         "name" : "AssignmentFilter-TranslatePathToRS",
@@ -116,6 +166,16 @@
             "target" : "${request.uri.path}",
             "value" : "${toString('/domestic-payments/').concat(toString(attributes.paymentId))}"
           } ]
+        }
+      }, {
+        "name" : "HeaderFilter-AddResponseHeaders",
+        "type" : "HeaderFilter",
+        "config" : {
+          "messageType" : "RESPONSE",
+          "remove" : [ "Location", "Set-Cookie", "Server", "Strict-Transport-Security" ],
+          "add" : {
+            "x-fapi-interaction-id" : [ "${attributes.xfapiinteractionid}" ]
+          }
         }
       } ],
       "handler" : "ReverseProxyHandler"

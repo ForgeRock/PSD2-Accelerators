@@ -1,7 +1,32 @@
 {
   "_copyright" : "Copyright 2019 ForgeRock AS Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the\nLicense at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTI\nES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions andlimitations under the License.",
   "name" : "OBIE RS Metadata",
-  "baseURI" : "http://18.211.177.234:8089",
+  "baseURI" : "http://obie-rcs-mocks.psd2acceldemo.svc.cluster.local:8089",
   "condition" : "${matches(request.uri.path, '^/obRSDiscovery')}",
+  "auditService" : {
+    "name" : "obie-audit-service",
+    "type" : "AuditService",
+    "config" : {
+      "enabled" : true,
+      "event-handlers" : [ {
+        "class" : "org.forgerock.audit.handlers.json.JsonAuditEventHandler",
+        "config" : {
+          "name" : "obie-tpp-registration",
+          "logDirectory" : "${openig.baseDirectory.path}/audit/obie",
+          "elasticsearchCompatible" : true,
+          "topics" : [ "access" ],
+          "buffering" : {
+            "enabled" : false,
+            "maxSize" : 10000,
+            "writeInterval" : "250 millis",
+            "maxBatchedEvents" : 500
+          },
+          "fileRotation" : {
+            "rotationEnabled" : false
+          }
+        }
+      } ]
+    }
+  },
   "handler" : "ReverseProxyHandler"
 }

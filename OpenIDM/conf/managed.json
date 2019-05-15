@@ -275,7 +275,7 @@
                                 "title" : "Status Update Date Time",
                                 "type" : "string",
                                 "viewable" : true,
-                                "searchable" : false,
+                                "searchable" : true,
                                 "userEditable" : true,
                                 "description" : null,
                                 "minLength" : null,
@@ -333,7 +333,8 @@
                             "TransactionToDateTime"
                         ],
                         "description" : null,
-                        "isVirtual" : false
+                        "isVirtual" : false,
+                        "nullable" : false
                     },
                     "Risk" : {
                         "title" : "Risk",
@@ -439,7 +440,12 @@
                 ]
             },
             "iconClass" : "fa fa-database",
-            "type" : "Managed Object"
+            "type" : "Managed Object",
+            "onDelete" : {
+                "type" : "text/javascript",
+                "globals" : { },
+                "file" : "script/obie/ob_account_access_delete_intent.js"
+            }
         },
         {
             "name" : "ObDomesticPayment",
@@ -485,7 +491,7 @@
                                 "title" : "Status Update Date Time",
                                 "type" : "string",
                                 "viewable" : true,
-                                "searchable" : false,
+                                "searchable" : true,
                                 "userEditable" : true,
                                 "description" : null,
                                 "minLength" : null,
@@ -965,7 +971,8 @@
                         ],
                         "description" : "Data",
                         "isVirtual" : false,
-                        "required" : [ ]
+                        "required" : [ ],
+                        "nullable" : false
                     },
                     "Risk" : {
                         "title" : "Risk",

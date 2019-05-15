@@ -47,7 +47,7 @@ var igServer = {
 // Resource Server details
 var rsServer = {
         "protocol": "http",
-        "host": "18.211.177.234",
+        "host": "obie-rcs-mocks.psd2acceldemo.svc.cluster.local",
         "port": "8089"
 };
 

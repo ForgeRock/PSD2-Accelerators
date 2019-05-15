@@ -4,6 +4,31 @@
   "baseURI" : "https://openidm.psd2acceldemo.fridam.aeet-forgerock.com",
   "condition" : "${matches(request.uri.path, '^/openbanking/v3.1/account-access-consents')}",
   "capture" : [ "response", "request" ],
+  "auditService" : {
+    "name" : "obie-audit-service",
+    "type" : "AuditService",
+    "config" : {
+      "enabled" : true,
+      "event-handlers" : [ {
+        "class" : "org.forgerock.audit.handlers.json.JsonAuditEventHandler",
+        "config" : {
+          "name" : "obie-tpp-registration",
+          "logDirectory" : "${openig.baseDirectory.path}/audit/obie",
+          "elasticsearchCompatible" : true,
+          "topics" : [ "access" ],
+          "buffering" : {
+            "enabled" : false,
+            "maxSize" : 10000,
+            "writeInterval" : "250 millis",
+            "maxBatchedEvents" : 500
+          },
+          "fileRotation" : {
+            "rotationEnabled" : false
+          }
+        }
+      } ]
+    }
+  },
   "heap" : [ {
     "name" : "ReverseProxyHandler",
     "type" : "ReverseProxyHandler",
@@ -24,27 +49,49 @@
     },
     "capture" : [ "response", "request" ]
   }, {
-    "name" : "AmService-1",
+    "name" : "AmService-OBIE",
     "type" : "AmService",
     "config" : {
       "url" : "https://login.psd2acceldemo.fridam.aeet-forgerock.com",
       "realm" : "/openbanking",
       "ssoTokenHeader" : "iPlanetDirectoryPro",
-      "version" : "6.5",
+      "version" : "6.5.1",
       "agent" : {
         "username" : "ig_agent",
-        "password" : "ig_agent"
+        "passwordSecretId" : "ig.agent.secret"
       },
       "sessionCache" : {
         "enabled" : false
       }
     }
   } ],
+  "secrets" : {
+    "stores" : [ {
+      "type" : "FileSystemSecretStore",
+      "config" : {
+        "format" : "PLAIN",
+        "directory" : "${openig.baseDirectory.path}/secrets/obie"
+      }
+    } ]
+  },
   "handler" : {
     "type" : "Chain",
     "config" : {
       "filters" : [ {
-        "name" : "OAuth2ResourceServerFilter-1",
+        "name" : "RetrieveSecretsFilter",
+        "type" : "RetrieveSecretsFilter",
+        "config" : {
+          "directory" : "${openig.baseDirectory.path}/secrets/obie",
+          "passwordSecretIds" : "igAgentOauth,idmagentsecret"
+        }
+      }, {
+        "name" : "CertificateExtensionValidatorFilter",
+        "type" : "CertificateExtensionValidatorFilter",
+        "config" : {
+          "routeRole" : "Account Information"
+        }
+      }, {
+        "name" : "OAuth2ResourceServerFilter-OBIE",
         "type" : "OAuth2ResourceServerFilter",
         "config" : {
           "scopes" : [ "accounts" ],
@@ -63,7 +110,7 @@
                     "config" : {
                       "messageType" : "request",
                       "add" : {
-                        "Authorization" : [ "Basic ${encodeBase64('ig_agent_oauth2:ig_agent_oauth2')}" ]
+                        "Authorization" : [ "Basic ${attributes.igAgentOauth}" ]
                       }
                     }
                   } ],
@@ -74,7 +121,7 @@
           }
         }
       }, {
-        "name" : "AssignmentFilter-TranslatePathToIDM-1",
+        "name" : "AssignmentFilter-TranslatePathToIDM",
         "type" : "AssignmentFilter",
         "config" : {
           "onRequest" : [ {
@@ -85,11 +132,14 @@
             "value" : "${attributes.consentId != null ?  toString('/openidm/managed/ObAccountAccess/').concat(toString(attributes.consentId)) : '/openidm/endpoint/obAccountAccessIntent'}"
           }, {
             "target" : "${request.uri.query}",
-            "value" : "${attributes.consentId != null ? '' : '_action=create&tppId=5c613fa688610e0035bd299d'}"
+            "value" : "${attributes.consentId != null ? toString('consentId=').concat(attributes.consentId) : toString('_action=create&tppId=').concat(attributes.tppId)}"
+          }, {
+            "target" : "${attributes.xfapiinteractionid}",
+            "value" : "${request.headers['x-fapi-interaction-id'][0]}"
           } ]
         }
       }, {
-        "name" : "HeaderFilter-ChangeHostToIDM-1",
+        "name" : "HeaderFilter-ChangeHostToIDM",
         "type" : "HeaderFilter",
         "config" : {
           "messageType" : "REQUEST",
@@ -106,7 +156,17 @@
           "remove" : [ "X-OpenIDM-Username", "X-OpenIDM-Password" ],
           "add" : {
             "X-OpenIDM-Username" : [ "openidm-admin" ],
-            "X-OpenIDM-Password" : [ "openidm-admin" ]
+            "X-OpenIDM-Password" : [ "${decodeBase64(attributes.idmagentsecret)}" ]
+          }
+        }
+      }, {
+        "name" : "HeaderFilter-AddResponseHeaders",
+        "type" : "HeaderFilter",
+        "config" : {
+          "messageType" : "RESPONSE",
+          "remove" : [ "Location", "Set-Cookie", "Server", "Strict-Transport-Security" ],
+          "add" : {
+            "x-fapi-interaction-id" : [ "${attributes.xfapiinteractionid}" ]
           }
         }
       } ],

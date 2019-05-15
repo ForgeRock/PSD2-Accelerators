@@ -44,12 +44,14 @@ function createTpp(tppData){
 		ssaId = findTppSsaByValue(tppData.ssa);		
 
         	if (!tppID.equals("-1")){          
+			/*
 			if (!ssaId.equals("-1")){
 				console.log("[DEBUG]: Mapping TPP + SSA already exists in IDM.");
 				returnObject.reason = "[IDM ERROR] TPP + SSA already exists in IDM.";
 				returnObject.code = 400;
 			}
 			else {
+			*/
 				//Create the SSA managed object in IDM
 				newTppSsaObject.ssa = tppData.ssa;
                         	ssaId = openidm.create(CONFIG_managedObjects.obTppSsa, null, newTppSsaObject)._id;
@@ -71,7 +73,7 @@ function createTpp(tppData){
 				returnObject.status = "SUCCESS";
 				returnObject.reason = "[IDM] OB TPP Managed Object was successfully updated.";
 				returnObject.code = 201;
-			}
+			//}
         	}
         	else {
 			if (ssaId.equals("-1")){
