@@ -1,0 +1,29 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "Applications",
+    "entityId" : "oauth2Scopes",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "oauth2Scopes",
+    "displayName" : "Default OAuth2 Scopes Policy Set",
+    "description" : "The built-in Application used by the OAuth2 scope authorization process.",
+    "resourceComparator" : null,
+    "lastModifiedBy" : "id=dsameuser,ou=user,ou=am-config",
+    "resourceTypeUuids" : [ "d60b7a71-1dc6-44a5-8e48-e4b9d92dee8b" ],
+    "attributeNames" : [ ],
+    "subjects" : [ "NOT", "OR", "JwtClaim", "AuthenticatedUsers", "AND", "Identity", "NONE" ],
+    "saveIndex" : null,
+    "searchIndex" : null,
+    "entitlementCombiner" : "DenyOverride",
+    "createdBy" : "id=dsameuser,ou=user,ou=am-config",
+    "conditions" : [ "LEAuthLevel", "Script", "AuthenticateToService", "SimpleTime", "AMIdentityMembership", "OR", "IPv6", "IPv4", "SessionProperty", "AuthScheme", "AuthLevel", "NOT", "Transaction", "AuthenticateToRealm", "AND", "ResourceEnvIP", "LDAPFilter", "OAuth2Scope", "Session" ],
+    "creationDate" : 1554309086637,
+    "lastModifiedDate" : 1554886582023,
+    "applicationType" : "iPlanetAMWebAgentService",
+    "editable" : true,
+    "name" : "oauth2Scopes"
+  }
+}

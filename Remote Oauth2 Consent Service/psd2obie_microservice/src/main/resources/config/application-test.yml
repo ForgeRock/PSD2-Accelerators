@@ -134,5 +134,5 @@ application:
     am-password: Passw0rd
     idm-header-username: openidm-admin
     idm-header-password: openidm-admin
-    accounts-endpoint: http://18.211.177.234:8089/accounts/
+    accounts-endpoint: http://obie-rcs-mocks.psd2acceldemo.svc.cluster.local:8089/accounts/
     

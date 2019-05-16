@@ -1,0 +1,29 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "Applications",
+    "entityId" : "AISP Authorization Policy",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "AISP Authorization Policy",
+    "displayName" : "AISP Authorization Policy",
+    "description" : "OBIE AISP Authorization Policy",
+    "resourceComparator" : null,
+    "lastModifiedBy" : "id=amAdmin,ou=user,ou=am-config",
+    "resourceTypeUuids" : [ "76656a38-5f8e-401b-83aa-4ccb74ce88d2" ],
+    "attributeNames" : [ ],
+    "subjects" : [ "Policy", "NOT", "OR", "JwtClaim", "AuthenticatedUsers", "AND", "Identity", "NONE" ],
+    "saveIndex" : null,
+    "searchIndex" : null,
+    "entitlementCombiner" : "DenyOverride",
+    "createdBy" : "id=amAdmin,ou=user,ou=am-config",
+    "conditions" : [ "LEAuthLevel", "Policy", "Script", "AuthenticateToService", "SimpleTime", "AMIdentityMembership", "OR", "IPv6", "IPv4", "SessionProperty", "AuthScheme", "AuthLevel", "NOT", "Transaction", "AuthenticateToRealm", "AND", "ResourceEnvIP", "LDAPFilter", "OAuth2Scope", "Session" ],
+    "creationDate" : 1555398066912,
+    "lastModifiedDate" : 1555398082629,
+    "applicationType" : "iPlanetAMWebAgentService",
+    "editable" : true,
+    "name" : "AISP Authorization Policy"
+  }
+}

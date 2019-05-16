@@ -1,0 +1,18 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "HOTPGenerator",
+    "entityId" : "4660d1c8-367f-4243-b9c0-4ba5df7dabbf",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "4660d1c8-367f-4243-b9c0-4ba5df7dabbf",
+    "length" : 6,
+    "_type" : {
+      "_id" : "OneTimePasswordGeneratorNode",
+      "name" : "HOTP Generator",
+      "collection" : true
+    }
+  }
+}

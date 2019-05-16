@@ -1,0 +1,26 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "OTPEmailSender",
+    "entityId" : "dfb71d62-18f9-4e5d-8cc6-eef33b3f5083",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "dfb71d62-18f9-4e5d-8cc6-eef33b3f5083",
+    "hostName" : "smtp.gmail.com",
+    "password" : null,
+    "password-encrypted" : "AAAAA0FFUwIQczjkVxvUuF5wdsTTh3e+fV2HirYihGeYeveZt9D9blRw0q+yh6649cspbrVkFuXd",
+    "sslOption" : "SSL",
+    "hostPort" : 465,
+    "fromEmailAddress" : "forgerock_admin@gmail.com",
+    "emailAttribute" : "mail",
+    "smsGatewayImplementationClass" : "com.sun.identity.authentication.modules.hotp.DefaultSMSGatewayImpl",
+    "username" : "daniel.coman18@gmail.com",
+    "_type" : {
+      "_id" : "OneTimePasswordSmtpSenderNode",
+      "name" : "OTP Email Sender",
+      "collection" : true
+    }
+  }
+}

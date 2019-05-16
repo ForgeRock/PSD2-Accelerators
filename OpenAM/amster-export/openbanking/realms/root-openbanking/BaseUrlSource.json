@@ -1,0 +1,20 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "BaseUrlSource",
+    "entityId" : "BaseUrlSource",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "",
+    "fixedValue" : "https://login.psd2acceldemo.fridam.aeet-forgerock.com",
+    "source" : "FIXED_VALUE",
+    "extensionClassName" : "org.forgerock.openam.services.baseurl.BaseURLProvider",
+    "_type" : {
+      "_id" : "baseurl",
+      "name" : "Base URL Source",
+      "collection" : false
+    }
+  }
+}

@@ -93,6 +93,7 @@ public class OpenBankingConstants {
     public static class OpenIDM{
     	public static final String X_OPENIDM_USERNAME = "X-OpenIDM-Username";
     	public static final String X_OPENIDM_PASSWORD = "X-OpenIDM-Password";
+    	public static final String IDM_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     }
     public static class OpenAM{
     	public static final String X_OPENAM_USERNAME = "X-OpenAM-Username";
@@ -101,6 +102,7 @@ public class OpenBankingConstants {
     
     public static class AISP{
     	public static final String AISP_FLOW = "aisp";
+    	public static final String AISP_FLOW_AUTO_ACCEPT = "aisp_auto_accept";
     }
     public static class PISP{
     	public static final String PISP_FLOW = "pisp";

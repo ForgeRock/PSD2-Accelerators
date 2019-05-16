@@ -16,6 +16,9 @@
 package org.forgerock.openig.ob.filter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.forgerock.http.Filter;
 import org.forgerock.http.Handler;
@@ -42,18 +45,45 @@ public class PaymentSubmitParseFilter implements Filter {
 		String paymentSubmissionJson = "";
 		try {
 			String body = request.getEntity().getString();
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode paymentSubmission = mapper.createObjectNode();
-			paymentSubmission = mapper.readTree(body);
-			JsonNode initiation = paymentSubmission.get("Data").get("Initiation");
-			paymentSubmissionJson = initiation.toString();
+			if (body != null && !body.isEmpty()) {
+				ObjectMapper mapper = new ObjectMapper();
+				JsonNode paymentSubmission = mapper.createObjectNode();
+				paymentSubmission = mapper.readTree(body);
+				JsonNode initiation = paymentSubmission.get("Data").get("Initiation");
+				paymentSubmissionJson = initiation.toString();
+				logger.info("payment_submission_json " + paymentSubmissionJson.trim());
+				paymentSubmissionJson = paymentSubmissionJson.replaceAll("\\s+", "");
+				context.asContext(AttributesContext.class).getAttributes().put("paymentSubmissionJson",
+						hashPaymentSubmission(paymentSubmissionJson));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		logger.info("payment_submission_json " + paymentSubmissionJson.trim());
-		context.asContext(AttributesContext.class).getAttributes().put("paymentSubmissionJson",
-				paymentSubmissionJson.replaceAll("\\s+",""));
 		return next.handle(context, request);
+	}
+
+	private String hashPaymentSubmission(String paymentSubmission) {
+		logger.info("Input json on SHA-256: " + paymentSubmission);
+		MessageDigest digest = null;
+		try {
+			digest = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		byte[] hash = digest.digest(paymentSubmission.getBytes(StandardCharsets.UTF_8));
+		return bytesToHex(hash);
+	}
+
+	private String bytesToHex(byte[] hash) {
+		StringBuffer hexString = new StringBuffer();
+		for (int i = 0; i < hash.length; i++) {
+			String hex = Integer.toHexString(0xff & hash[i]);
+			if (hex.length() == 1)
+				hexString.append('0');
+			hexString.append(hex);
+		}
+		logger.info("Returning hashed value: " + hexString.toString());
+		return hexString.toString();
 	}
 
 	/**

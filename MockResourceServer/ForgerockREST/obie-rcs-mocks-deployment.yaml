@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obie-rcs-mocks
+  namespace: psd2acceldemo
+  labels:
+    app: obie-rcs-mocks
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obie-rcs-mocks
+  template:
+    metadata:
+      labels:
+        app: obie-rcs-mocks
+    spec:
+      containers:
+      - name: obie-rcs-mocks
+        image: gcr.io/partner-portal-223015/obie-rcs-mocks:1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8089
+        
+---        
+apiVersion: v1
+kind: Service
+metadata:
+  name: obie-rcs-mocks
+  namespace: psd2acceldemo
+  labels:
+    app: obie-rcs-mocks
+spec:
+  ports:
+  - port: 8089
+    protocol: TCP
+  selector:
+    app: obie-rcs-mocks

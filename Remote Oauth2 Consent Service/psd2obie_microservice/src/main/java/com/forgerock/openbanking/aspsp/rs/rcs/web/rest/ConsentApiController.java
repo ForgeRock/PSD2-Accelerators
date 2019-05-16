@@ -19,6 +19,7 @@ package com.forgerock.openbanking.aspsp.rs.rcs.web.rest;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -52,6 +54,7 @@ import com.forgerock.openbanking.aspsp.rs.rcs.model.claims.Claim;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.claims.Claims;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.ConsentRequest;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.ConsentResponse;
+import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.ErrorDetails;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.OBPaymentConsentResponse;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.ReqestHeaders;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.data.Account;
@@ -64,6 +67,8 @@ import com.forgerock.openbanking.aspsp.rs.rcs.service.consent.ConsentManagement;
 import com.forgerock.openbanking.aspsp.rs.rcs.service.jwt.JWTManagementService;
 import com.forgerock.openbanking.aspsp.rs.rcs.service.keygenerator.IGenerateKey;
 import com.forgerock.openbanking.aspsp.rs.rcs.service.parsing.ParseJWT;
+import com.forgerock.openbanking.aspsp.rs.rcs.web.rest.errors.ErrorMessage;
+import com.forgerock.openbanking.aspsp.rs.rcs.web.rest.util.ConversionUtils;
 import com.google.gson.GsonBuilder;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -170,10 +175,9 @@ public class ConsentApiController implements ConsentApi {
 
         			String consentID = null;
         			try {
-        				Claim instentId = claimsMap.getUserInfoClaims().get(OpenBankingConstants.IdTokenClaim.INTENT_ID);
+        				Claim instentId = claimsMap.getIdTokenClaims().get(OpenBankingConstants.IdTokenClaim.INTENT_ID);
 
-        				log.debug("claimsMap {} ", claimsMap.toString());
-        				log.debug("claim.toJson() {} ", instentId.toJson());
+        				log.debug("claimsMap.getAllClaims {} ", claimsMap.getAllClaims().toString());        				
         				log.debug("claim.getValues() {} ", instentId.getValue().toString());
 
         				consentID = instentId.getValue();
@@ -195,6 +199,18 @@ public class ConsentApiController implements ConsentApi {
         								.fromJson(obPaymentConsent.getBody(), PaymentOrderConsentResponsePayload.class);
         						if (obPaymentConsent.getStatusCode().value() == org.springframework.http.HttpStatus.OK
         								.value()) {
+        							
+        							if(!applicationProperties.getIdmConsentStatusAwaiting().equalsIgnoreCase( obPaymentConsentPISP.getData().getStatus())) {  
+        								ConsentResponse errorConsentResponse= new ConsentResponse();        								
+        							    									 
+    									errorConsentResponse.setErrorDetails(
+    											ErrorDetails.builder().
+    											errorId("ERR003").
+    											errorMessage(String.format( ErrorMessage.ERR003.getMessage(),applicationProperties.getIdmConsentStatusAwaiting()))
+    											.build());
+    									return new ResponseEntity<ConsentResponse>(errorConsentResponse, HttpStatus.OK);
+        									       								
+        							}
         							consentResponse.setObPaymentConsentPISP(obPaymentConsentPISP);       							
         							consentResponse.setFlow(OpenBankingConstants.PISP.PISP_FLOW);
         							
@@ -226,6 +242,38 @@ public class ConsentApiController implements ConsentApi {
         						if (obAccountConsent.getStatusCode().value() == org.springframework.http.HttpStatus.OK
         								.value()) {
         							
+        							if(applicationProperties.getIdmConsentStatusAuthorised().equalsIgnoreCase( obAccountConsentAISP.getData().getStatus())) {  
+        								ConsentResponse errorConsentResponse= new ConsentResponse();
+        								obAccountConsentAISP.getData().getCreationDateTime();
+        								boolean isAuthorisedNotExpired= ConversionUtils.isTimeExpired(obAccountConsentAISP.getData().getStatusUpdateDateTime(), applicationProperties.getScaTimeAutoAccept(), OpenBankingConstants.OpenIDM.IDM_DATE_FORMAT, Calendar.DATE);
+        								//applicationProperties.getScaTimeExpire()
+        								boolean isAuthorisedAndExpired = ConversionUtils.isTimeExpired(obAccountConsentAISP.getData().getCreationDateTime(), applicationProperties.getScaTimeExpire(), OpenBankingConstants.OpenIDM.IDM_DATE_FORMAT, Calendar.DATE); 
+        								log.debug("isAuthorisedNotExpired: {} after {} day ", isAuthorisedNotExpired,applicationProperties.getScaTimeAutoAccept());
+        								
+        								if(isAuthorisedNotExpired&&!isAuthorisedAndExpired) {
+        									consentResponse.setFlow(OpenBankingConstants.AISP.AISP_FLOW_AUTO_ACCEPT);
+        									 return new ResponseEntity<ConsentResponse>(consentResponse, HttpStatus.OK);
+        								}
+        								log.debug("isAuthorisedAndExpired: {} afer {} day", isAuthorisedNotExpired,applicationProperties.getScaTimeExpire());
+        								if(isAuthorisedAndExpired) {        									 
+        									errorConsentResponse.setErrorDetails(ErrorDetails.builder().errorId("ERR001").errorMessage(ErrorMessage.ERR001.getMessage()).build());
+        									return new ResponseEntity<ConsentResponse>(errorConsentResponse, HttpStatus.OK);
+        								}  
+        								errorConsentResponse.setErrorDetails(ErrorDetails.builder().errorId("ERR004").errorMessage(ErrorMessage.ERR004.getMessage()).build());
+    									return new ResponseEntity<ConsentResponse>(errorConsentResponse, HttpStatus.OK);
+        							}
+        							
+        							if(!applicationProperties.getIdmConsentStatusAwaiting().equalsIgnoreCase( obAccountConsentAISP.getData().getStatus())) {  
+        								ConsentResponse errorConsentResponse= new ConsentResponse();        								
+        							    									 
+    									errorConsentResponse.setErrorDetails(
+    											ErrorDetails.builder().
+    											errorId("ERR002").
+    											errorMessage(String.format( ErrorMessage.ERR002.getMessage(),applicationProperties.getIdmConsentStatusAwaiting()))
+    											.build());
+    									return new ResponseEntity<ConsentResponse>(errorConsentResponse, HttpStatus.OK);
+        									       								
+        							}
         							consentResponse.setObAccountsAccessConsentAIPS(obAccountConsentAISP);
         							
         							consentResponse.setFlow(OpenBankingConstants.AISP.AISP_FLOW);
@@ -234,7 +282,9 @@ public class ConsentApiController implements ConsentApi {
         							ObjectMapper mapper = new ObjectMapper();
         							JsonNode actualObj = mapper.readTree(obAccountConsent.getBody().toString());
         							String permissions = actualObj.get("Data").get("Permissions").toString();
-        							consentResponse.setInitiationClaims(permissions);        							
+        							consentResponse.setInitiationClaims(permissions);  
+        							
+        							
         						}
         					} catch (Exception e) {
         						log.error("Could not perform {} ", OpenBankingConstants.AISP.AISP_FLOW, e.getMessage());
@@ -284,10 +334,9 @@ public class ConsentApiController implements ConsentApi {
 				Claims claimsMap = Claims.parseClaims(getParsedClaim(parsedSet));
 				String consentID = null;
 				try {
-					Claim instentId = claimsMap.getUserInfoClaims().get(OpenBankingConstants.IdTokenClaim.INTENT_ID);
+					Claim instentId = claimsMap.getIdTokenClaims().get(OpenBankingConstants.IdTokenClaim.INTENT_ID);
 
-					log.debug("claimsMap {} ", claimsMap.toString());
-					log.debug("claim.toJson() {} ", instentId.toJson());
+					log.debug("claimsMap {} ", claimsMap.toString());					
 					log.debug("claim.getValues() {} ", instentId.getValue().toString());
 
 					consentID = instentId.getValue();
@@ -295,31 +344,31 @@ public class ConsentApiController implements ConsentApi {
 					if (!StringUtils.isEmpty(consentID)) {
 						StringBuilder idmURL = new StringBuilder();
 						String idmRequestBody = "";
+						HttpMethod methodForUpdate = HttpMethod.POST;
 						String sub = (String) parsedSet.getClaims().get(OIDCConstants.OIDCClaim.USERNAME);
 						if (OpenBankingConstants.PISP.PISP_FLOW.equals(consentRequest.getFlow())) {
 							idmURL = new StringBuilder().append(applicationProperties.getIdmUpdatePaymentConsentUrl())
 									.append(consentID).append("?_action=patch");
 							
 							idmRequestBody = consentManagement.buildPispBody(sub, consentRequest.getClaims(),consentRequest.getAccount(),decision);
+							callForUpdateObjectInIDM(idmURL, idmRequestBody, methodForUpdate);
 						} else if (OpenBankingConstants.AISP.AISP_FLOW.equals(consentRequest.getFlow())) {
 							idmURL = new StringBuilder().append(applicationProperties.getIdmUpdateAccountConsentUrl())
 									.append(consentID).append("?_action=patch");
 							idmRequestBody = consentManagement.buildAispBody(sub, consentRequest.getClaims(), consentRequest.getAccount(),decision);
+							callForUpdateObjectInIDM(idmURL, idmRequestBody, methodForUpdate);
 						}
-
-						log.debug("url {}", idmURL);
-						try {
-							if (!StringUtils.isEmpty(idmURL)) {
-								ResponseEntity<String> entity = consentManagement.updateOBPaymentConsent(
-										idmURL.toString(),
-										ReqestHeaders.builder().username(applicationProperties.getIdmHeaderUsername())
-												.password(applicationProperties.getIdmHeaderPassword()).build(),
-										idmRequestBody);
-							}
-						} catch (Exception e) {
-							log.error("Error on updateOBPaymentConsent: ", e.getMessage());
-							throw new OBErrorException("Unable to updateOBPaymentConsent!");
+						else if (OpenBankingConstants.AISP.AISP_FLOW_AUTO_ACCEPT.equals(consentRequest.getFlow())) {
+							decision=true;
+							log.info("AISP Auto Accept Flow, make decision auto true");
+							idmURL = new StringBuilder().append(applicationProperties.getIdmGetAccountIntentConsentUrl())
+									.append(consentID);
+							idmRequestBody = consentManagement.buildAispAutoAcceptBody();
+							methodForUpdate = HttpMethod.POST;
+							callForPatchObjectInIDM(idmURL, idmRequestBody, methodForUpdate);
 						}
+						
+						
 					}
 				} catch (Exception e) {
 					log.error("Could not obtain " + OpenBankingConstants.IdTokenClaim.INTENT_ID, e.getMessage());
@@ -375,5 +424,38 @@ public class ConsentApiController implements ConsentApi {
 
         return new ResponseEntity<RedirectionAction>(HttpStatus.NOT_IMPLEMENTED);
     }
+
+	private void callForUpdateObjectInIDM(StringBuilder idmURL, String idmRequestBody, HttpMethod methodForUpdate)
+			throws OBErrorException {
+		log.debug("url {}", idmURL);
+		try {
+			if (!StringUtils.isEmpty(idmURL.toString())) {
+				ResponseEntity<String> entity = consentManagement.updateOBPaymentConsent(
+						idmURL.toString(),
+						ReqestHeaders.builder().username(applicationProperties.getIdmHeaderUsername())
+								.password(applicationProperties.getIdmHeaderPassword()).build(),
+						idmRequestBody,methodForUpdate);
+			}
+		} catch (Exception e) {
+			log.error("Error on updateOBPaymentConsent: ", e.getMessage());
+			throw new OBErrorException("Unable to updateOBPaymentConsent!");
+		}
+	}
+	private void callForPatchObjectInIDM(StringBuilder idmURL, String idmRequestBody, HttpMethod methodForUpdate)
+			throws OBErrorException {
+		log.debug("url {}", idmURL);
+		try {
+			if (!StringUtils.isEmpty(idmURL.toString())) {
+				ResponseEntity<String> entity = consentManagement.updateOBPaymentConsentPatch(
+						idmURL.toString(),
+						ReqestHeaders.builder().username(applicationProperties.getIdmHeaderUsername())
+								.password(applicationProperties.getIdmHeaderPassword()).build(),
+						idmRequestBody,methodForUpdate);
+			}
+		} catch (Exception e) {
+			log.error("Error on updateOBPaymentConsent: ", e.getMessage());
+			throw new OBErrorException("Unable to updateOBPaymentConsent!");
+		}
+	}
 
 }

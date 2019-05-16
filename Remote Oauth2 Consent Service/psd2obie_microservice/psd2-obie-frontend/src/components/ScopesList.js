@@ -24,7 +24,7 @@ class ScopesList extends Component{
 							</ul>
 						</div>
           );
-        } else  if(flow==='pisp'||flow==='aisp'){
+        } else  if(flow==='pisp'||flow==='aisp'||flow==='aisp_auto_accept'){
           return(
           <div>
             {this.props.contentObj.scopeList&&this.props.contentObj.scopeList.map((scope,index)=>

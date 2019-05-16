@@ -37,10 +37,6 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
 								"url": {
 									"raw": "{{OPENIG_CLOUD}}/oauth2/realms/root/realms/openbanking/.well-known/openid-configuration",
 									"host": [
@@ -77,10 +73,6 @@
 												"value": "cookiename=werewrw;cook"
 											}
 										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
 										"url": {
 											"raw": "{{AS}}/oauth2/.well-known/openid-configuration",
 											"host": [
@@ -229,10 +221,6 @@
 										"type": "text"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
 								"url": {
 									"raw": "{{OPENIG_CLOUD}}/obRSDiscovery/",
 									"host": [
@@ -251,10 +239,6 @@
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
 										"url": {
 											"raw": "{{RS}}/discovery",
 											"host": [
@@ -450,7 +434,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"exp\": {{exp}},\n  \"scope\": \"openid accounts payments\",\n  \"response_types\": [\n    \"code id_token\"\n  ],\n  \"redirect_uris\": [\n    \"https://www.google.com\"\n  ],\n  \"application_type\": \"web\",\n  \"grant_types\": [\n    \"authorization_code\",\n    \"refresh_token\",\n    \"client_credentials\"\n  ],\n  \"jwks_uri\": \"{{OBRI_SSA_JWKS_URI}}\",\n  \"public_key_selector\": \"jwks_uri\",\n  \"software_statement\": \"{{SSA_JWT}}\",\n  \"token_endpoint_auth_method\": \"private_key_jwt\",\n  \"token_endpoint_auth_signing_alg\": \"RS256\",\n  \"id_token_signed_response_alg\": \"RS256\",\n  \"request_object_signing_alg\": \"RS256\",\n  \"request_object_encryption_alg\": \"RSA-OAEP-256\",\n  \"request_object_encryption_enc\": \"A128CBC-HS256\"\n}"
+									"raw": "{\n  \"exp\": {{exp}},\n  \"scope\": \"openid accounts payments\",\n  \"response_types\": [\n    \"code id_token\"\n  ],\n  \"redirect_uris\": [\n    \"https://www.google.com\"\n  ],\n  \"client_name\": \"TPP Demo\",\n  \"application_type\": \"web\",\n  \"grant_types\": [\n    \"authorization_code\",\n    \"refresh_token\",\n    \"client_credentials\"\n  ],\n  \"jwks_uri\": \"{{OBRI_SSA_JWKS_URI}}\",\n  \"public_key_selector\": \"jwks_uri\",\n  \"software_statement\": \"{{SSA_JWT}}\",\n  \"token_endpoint_auth_method\": \"private_key_jwt\",\n  \"token_endpoint_auth_signing_alg\": \"RS256\",\n  \"id_token_signed_response_alg\": \"RS256\",\n  \"request_object_signing_alg\": \"RS256\",\n  \"request_object_encryption_alg\": \"RSA-OAEP-256\",\n  \"request_object_encryption_enc\": \"A128CBC-HS256\"\n}"
 								},
 								"url": {
 									"raw": "{{JWKMS}}/api/crypto/signClaims",
@@ -1624,7 +1608,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n  \"aud\": \"{{AS_ISSUER_ID}}\",\n  \"scope\": \"openid payments\",\n  \"iss\": \"{{CLIENT_ID}}\",\n  \"claims\": {\n    \"id_token\": {\n      \"acr\": {\n        \"value\": \"urn:openbanking:psd2:ca\",\n        \"essential\": true\n      },\n      \"openbanking_intent_id\": {\n        \"value\": \"{{IntentId}}\",\n        \"essential\": true\n      }\n    },\n    \"userinfo\": {\n      \"openbanking_intent_id\": {\n        \"value\": \"{{IntentId}}\",\n        \"essential\": true\n      }\n    }\n  },\n  \"response_type\": \"code id_token\",\n  \"redirect_uri\": \"{{CLIENT_REDIRECT_URI}}\",\n  \"state\": \"10d260bf-a7d9-444a-92d9-7b7a5f088208\",\n  \"exp\": {{exp}},\n  \"nonce\": \"10d260bf-a7d9-444a-92d9-7b7a5f088208\",\n  \"client_id\": \"{{CLIENT_ID}}\"\n}"
+													"raw": "{\n  \"aud\": \"{{AS_ISSUER_ID}}\",\n  \"scope\": \"openid payments\",\n  \"iss\": \"{{CLIENT_ID}}\",\n  \"claims\": {\n    \"id_token\": {\n      \"acr\": {\n        \"value\": \"urn:openbanking:psd2:sca\",\n        \"essential\": true\n      },\n      \"openbanking_intent_id\": {\n        \"value\": \"{{IntentId}}\",\n        \"essential\": true\n      }\n    },\n    \"userinfo\": {\n      \"openbanking_intent_id\": {\n        \"value\": \"{{IntentId}}\",\n        \"essential\": true\n      }\n    }\n  },\n  \"response_type\": \"code id_token\",\n  \"redirect_uri\": \"{{CLIENT_REDIRECT_URI}}\",\n  \"state\": \"10d260bf-a7d9-444a-92d9-7b7a5f088208\",\n  \"exp\": {{exp}},\n  \"nonce\": \"10d260bf-a7d9-444a-92d9-7b7a5f088208\",\n  \"client_id\": \"{{CLIENT_ID}}\"\n}"
 												},
 												"url": {
 													"raw": "{{JWKMS}}/api/crypto/signClaims",
@@ -1804,10 +1788,6 @@
 														"value": "{{AS_JWK_URI}}"
 													}
 												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
-												},
 												"url": {
 													"raw": "{{AS_authorization_endpoint}}?client_id={{CLIENT_ID}}&response_type=code id_token&redirect_uri={{CLIENT_REDIRECT_URI}}&scope=payments openid&state=10d260bf-a7d9-444a-92d9-7b7a5f088208&nonce=10d260bf-a7d9-444a-92d9-7b7a5f088208&request={{request_parameter}}",
 													"host": [
@@ -1888,7 +1868,7 @@
 														},
 														{
 															"key": "code",
-															"value": "gwGI4mPPyDXl0OY1WqxTGAv1A54",
+															"value": "RHPcF0p-wN8pPbRQAu96HxBSvPw",
 															"type": "text"
 														},
 														{
@@ -2294,7 +2274,10 @@
 														"type": "text"
 													}
 												],
-												"body": {},
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": []
+												},
 												"url": {
 													"raw": "{{AS_userinfo_endpoint}}",
 													"host": [
@@ -4044,7 +4027,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"aud\": \"{{AS_ISSUER_ID}}\",\n  \"scope\": \"openid accounts\",\n  \"iss\": \"{{CLIENT_ID}}\",\n  \"claims\": {\n    \"id_token\": {\n      \"acr\": {\n        \"value\": \"urn:openbanking:psd2:ca\",\n        \"essential\": true\n      },\n      \"openbanking_intent_id\": {\n        \"value\": \"{{AccountIntentId}}\",\n        \"essential\": true\n      }\n    },\n    \"userinfo\": {\n      \"openbanking_intent_id\": {\n        \"value\": \"{{AccountIntentId}}\",\n        \"essential\": true\n      }\n    }\n  },\n  \"response_type\": \"code id_token\",\n  \"redirect_uri\": \"{{CLIENT_REDIRECT_URI}}\",\n  \"state\": \"10d260bf-a7d9-444a-92d9-7b7a5f088208\",\n  \"exp\": {{exp}},\n  \"nonce\": \"10d260bf-a7d9-444a-92d9-7b7a5f088208\",\n  \"client_id\": \"{{CLIENT_ID}}\"\n}"
+											"raw": "{\n  \"aud\": \"{{AS_ISSUER_ID}}\",\n  \"scope\": \"openid accounts\",\n  \"iss\": \"{{CLIENT_ID}}\",\n  \"claims\": {\n    \"id_token\": {\n      \"acr\": {\n        \"value\": \"urn:openbanking:psd2:sca\",\n        \"essential\": true\n      },\n      \"openbanking_intent_id\": {\n        \"value\": \"{{AccountIntentId}}\",\n        \"essential\": true\n      }\n    },\n    \"userinfo\": {\n      \"openbanking_intent_id\": {\n        \"value\": \"{{AccountIntentId}}\",\n        \"essential\": true\n      }\n    }\n  },\n  \"response_type\": \"code id_token\",\n  \"redirect_uri\": \"{{CLIENT_REDIRECT_URI}}\",\n  \"state\": \"10d260bf-a7d9-444a-92d9-7b7a5f088208\",\n  \"exp\": {{exp}},\n  \"nonce\": \"10d260bf-a7d9-444a-92d9-7b7a5f088208\",\n  \"client_id\": \"{{CLIENT_ID}}\"\n}"
 										},
 										"url": {
 											"raw": "{{JWKMS}}/api/crypto/signClaims",
@@ -4224,10 +4207,6 @@
 												"value": "{{AS_JWK_URI}}"
 											}
 										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
 										"url": {
 											"raw": "{{AS_authorization_endpoint}}?client_id={{CLIENT_ID}}&response_type=code id_token&redirect_uri={{CLIENT_REDIRECT_URI}}&scope=accounts openid&state=10d260bf-a7d9-444a-92d9-7b7a5f088208&nonce=10d260bf-a7d9-444a-92d9-7b7a5f088208&request={{request_parameter}}",
 											"host": [
@@ -4308,7 +4287,7 @@
 												},
 												{
 													"key": "code",
-													"value": "QRGTa2v-EgAiOXPyoRXecIYQpL4",
+													"value": "c4VqstSghuU6xUVM-ROIVpHBwQc",
 													"type": "text"
 												},
 												{
@@ -4714,7 +4693,10 @@
 												"type": "text"
 											}
 										],
-										"body": {},
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
 										"url": {
 											"raw": "{{AS_userinfo_endpoint}}",
 											"host": [
@@ -4919,10 +4901,6 @@
 												"value": "application/json"
 											}
 										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
 										"url": {
 											"raw": "{{RS_GetAccounts_v3.1}}",
 											"host": [
@@ -5140,10 +5118,6 @@
 												"value": "application/json"
 											}
 										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
 										"url": {
 											"raw": "{{RS_GetAccount_v3.1}}",
 											"host": [
@@ -5361,10 +5335,6 @@
 												"value": "application/json"
 											}
 										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
 										"url": {
 											"raw": "{{RS_GetAccountBalances_v3.1}}",
 											"host": [
@@ -5582,10 +5552,6 @@
 												"value": "application/json"
 											}
 										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
 										"url": {
 											"raw": "{{RS_GetAccountTransactions_v3.1}}",
 											"host": [

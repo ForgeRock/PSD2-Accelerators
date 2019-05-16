@@ -19,9 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.forgerock.openig.alias.ClassAliasResolver;
+import org.forgerock.openig.ob.filter.CertificateExtensionValidatorFilter;
+import org.forgerock.openig.ob.filter.FormatRegistrationJwtFilter;
 import org.forgerock.openig.ob.filter.PaymentSubmitParseFilter;
 import org.forgerock.openig.ob.filter.RegisterTppForwardFilter;
-import org.forgerock.openig.ob.filter.SSAVerificationFilter;
+import org.forgerock.openig.ob.filter.RegistrationJwtVerificationFilter;
+import org.forgerock.openig.ob.filter.RetrieveSecretsFilter;
 import org.forgerock.openig.ob.filter.StripSsaDynamicRegistrationFilter;
 import org.forgerock.openig.ob.filter.UserInfoVerificationFilter;
 
@@ -32,9 +35,12 @@ public class OpenBankingAliasResolver implements ClassAliasResolver {
 	static {
 		ALIASES.put("PaymentSubmitParseFilter", PaymentSubmitParseFilter.class);
 		ALIASES.put("RegisterTppForwardFilter", RegisterTppForwardFilter.class);
-		ALIASES.put("SSAVerificationFilter", SSAVerificationFilter.class);
-		ALIASES.put("StripSsaDynamicRegistrationFilter", StripSsaDynamicRegistrationFilter.class);
+		ALIASES.put("RegistrationJwtVerificationFilter", RegistrationJwtVerificationFilter.class);
+		ALIASES.put("FormatRegistrationJwtFilter", FormatRegistrationJwtFilter.class);
 		ALIASES.put("UserInfoVerificationFilter", UserInfoVerificationFilter.class);
+		ALIASES.put("StripSsaDynamicRegistrationFilter", StripSsaDynamicRegistrationFilter.class);
+		ALIASES.put("CertificateExtensionValidatorFilter", CertificateExtensionValidatorFilter.class);
+		ALIASES.put("RetrieveSecretsFilter", RetrieveSecretsFilter.class);
 	}
 
 	/**

@@ -95,4 +95,7 @@ application:
     idm-get-account-intent-consent-url: ${rsc-remote-host.idm}/openidm/managed/OBAccountAccessIntent/
     idm-update-account-consent-url: ${rsc-remote-host.idm}/openidm/endpoint/accountAccessIntent/
     am-auth-url: ${rsc-remote-host.am}/json/realms/root/authenticate 
+    idm-data-creaded-format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+    sca-time-auto-accept: 90
+    sca-time-expire: 180
         

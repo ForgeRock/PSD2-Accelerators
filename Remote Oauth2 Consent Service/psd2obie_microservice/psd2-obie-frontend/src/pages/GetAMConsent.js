@@ -39,6 +39,41 @@ class GetAMConsent extends Component {
 		return items;
 	}
 
+	sendConsentBack(colectedData){
+		const url = process.env.REACT_APP_API_URL+'/api/rcs/consent/sendconsent';
+		fetch(url, {
+		redirect: 'follow',
+		method: 'POST',
+		headers: {
+								'Accept': 'application/json',
+								'Content-Type': ' application/json'
+							},
+		body: JSON.stringify(colectedData)
+		}).then(response => response.json())
+		.then(response => {
+			console.info("success redirect url: " + response.redirectUri);
+			console.info("consentJwt url: " + response.consentJwt);
+			this.setState({	redirect: true, redirectUri:response.redirectUri, consentJwt:response.consentJwt});
+			//window.location.replace(response.redirectUri);
+		})
+		.catch(function(err) {
+				console.info(err + " url: " + url);
+		});
+	}
+
+	checkIfIsAutoAccept(responseResult){
+		if(responseResult.flow==='aisp_auto_accept'){
+			const data = { consent_request:responseResult.consentRequest,
+				 decision:true,
+				 //claims:responseResult.claims,
+				 claims:"",
+				 flow:responseResult.flow,
+				 scope:responseResult.scopeList
+				}
+				console.log("checkIfIsAutoAccept ",data);
+					this.sendConsentBack(data);
+		}
+	}
 
   handleSubmit(event){
 		console.log("this.state.selectedAccount: ",this.state.selectedAccount);
@@ -56,25 +91,7 @@ class GetAMConsent extends Component {
 				 scope:scopeItems,
 				 account:accountItems
 			  }
-      const url = process.env.REACT_APP_API_URL+'/api/rcs/consent/sendconsent';
-      fetch(url, {
- 			redirect: 'follow',
-      method: 'POST',
-      headers: {
-									'Accept': 'application/json',
-                  'Content-Type': ' application/json'
-                },
-		body: JSON.stringify(data)
-    }).then(response => response.json())
-		.then(response => {
-			console.info("success redirect url: " + response.redirectUri);
-			console.info("consentJwt url: " + response.consentJwt);
-			this.setState({	redirect: true, redirectUri:response.redirectUri, consentJwt:response.consentJwt});
-			//window.location.replace(response.redirectUri);
-    })
-    .catch(function(err) {
-        console.info(err + " url: " + url);
-    });
+      this.sendConsentBack(data);
 
 
   }
@@ -102,6 +119,7 @@ class GetAMConsent extends Component {
 		const body = await response.json();
 		console.log('body:',body);
 		this.setState({result:body, isLoading:false});
+		this.checkIfIsAutoAccept(body);
 	}
 
   render() {
@@ -111,7 +129,7 @@ class GetAMConsent extends Component {
       <p className="d-flex justify-content-center"> Loading...</p>
   );
 	}
-	if(!redirect){
+	if(!redirect&&!result.errorDetails){
     return (
       <div id="content" className="container">
 		<div className="row">
@@ -154,12 +172,36 @@ class GetAMConsent extends Component {
 		</div>
 	</div>
     );
-	} else {
+	} else if(redirect&&!result.errorDetails) {
 		  return (
 				<div id="content" className="container">
 					<SendJWTToken contentObj={this.state} />
 				</div>
 			);
+	}
+
+	if(result.errorDetails){
+		return (
+			<div id="content" className="container">
+		<div className="row">
+			<div className="col"></div>
+			<div className="col-6 mat-card">
+				<div className="text-center">
+					<img className="forgerock-customer-logo" src="/images/logo.svg"
+						width="230" height="0"></img>
+				</div>
+
+
+				<div className="divider"></div>
+				<h6 className="alert alert-danger alert-dismissible fade show"	> <strong>Error!</strong>   {result.errorDetails.errorMessage} </h6>
+				<div id="accounts-list">
+
+				</div>
+			</div>
+			<div className="col"></div>
+		</div>
+	</div>
+  );
 	}
 
   }

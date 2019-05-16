@@ -167,6 +167,10 @@ application:
     am-get-cookie-token: ${rsc-remote-host.am}/json/realms/root/realms/openbanking/authenticate
     idm-consent-status-authorised : Authorised
     idm-consent-status-rejected : Rejected
+    idm-consent-status-awaiting : AwaitingAuthorisation
+    #idm-data-creaded-fromat: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+    sca-time-auto-accept: 90
+    sca-time-expire: 180    
 
     key-alias: transport
     key-password: changeit

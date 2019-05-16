@@ -1,0 +1,27 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "OTPSMSSender",
+    "entityId" : "6f32565d-9c68-42c3-be96-4381f447287b",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "6f32565d-9c68-42c3-be96-4381f447287b",
+    "hostName" : "smtp.gmail.com",
+    "password" : null,
+    "password-encrypted" : "AAAAA0FFUwIQhIZ1iGsWI+RDDwVT+znW+pM3oYftsSwYTtHJWnGO/nIZgg9gLeuI9MLPVDwLfnRP",
+    "sslOption" : "SSL",
+    "mobileCarrierAttributeName" : "Forgerock",
+    "hostPort" : 465,
+    "fromEmailAddress" : "0767306813",
+    "smsGatewayImplementationClass" : "com.sun.identity.authentication.modules.hotp.DefaultSMSGatewayImpl",
+    "mobilePhoneAttributeName" : "telephoneNumber",
+    "username" : "daniel.coman18@gmail.com",
+    "_type" : {
+      "_id" : "OneTimePasswordSmsSenderNode",
+      "name" : "OTP SMS Sender",
+      "collection" : true
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "OTPCollectorDecision",
+    "entityId" : "eed7cf56-c37c-4867-ad66-4b37a3b0c6b5",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "eed7cf56-c37c-4867-ad66-4b37a3b0c6b5",
+    "passwordExpiryTime" : 5,
+    "_type" : {
+      "_id" : "OneTimePasswordCollectorDecisionNode",
+      "name" : "OTP Collector Decision",
+      "collection" : true
+    }
+  }
+}

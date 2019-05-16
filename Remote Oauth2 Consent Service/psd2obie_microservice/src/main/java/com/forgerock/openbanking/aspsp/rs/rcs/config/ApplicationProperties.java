@@ -60,5 +60,9 @@ public class ApplicationProperties {
 	private String amGetCookieToken;
 	private String idmConsentStatusAuthorised;
 	private String idmConsentStatusRejected;
+	private String idmDataCreadedFormat;
+	private Integer scaTimeAutoAccept;
+	private Integer scaTimeExpire;
+	private String idmConsentStatusAwaiting;
 
 }

@@ -129,8 +129,8 @@ rsc-remote-host:
     am: http://localhost:8080/openam
     #am: http://18.211.177.234:8080/openam
     #am: https://login.psd2accelerators.fridam.aeet-forgerock.com/openam
-    idm: http://localhost:8082
-    #idm: https://openidm.psd2acceldemo.fridam.aeet-forgerock.com
+    #idm: http://localhost:8082
+    idm: https://openidm.psd2acceldemo.fridam.aeet-forgerock.com
     #idm: https://openidm.psd2accelerators.fridam.aeet-forgerock.com
 
 application:

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +46,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.forgerock.openbanking.aspsp.rs.rcs.config.ApplicationProperties;
+import com.forgerock.openbanking.aspsp.rs.rcs.constants.OpenBankingConstants;
 import com.forgerock.openbanking.aspsp.rs.rcs.constants.OpenBankingConstants.OpenIDM;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.ReqestHeaders;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.SessionTokenAfterAuth;
@@ -52,6 +55,7 @@ import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.data.initiation.Debt
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.data.initiation.Initiation;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.domestic_payment.PaymentOrderConsentResponsePayload;
 import com.forgerock.openbanking.aspsp.rs.rcs.service.account.AccountService;
+import com.forgerock.openbanking.aspsp.rs.rcs.web.rest.util.ConversionUtils;
 import com.google.gson.GsonBuilder;
 
 
@@ -81,7 +85,7 @@ public class ConsentManagement {
 
 	}
 
-	public ResponseEntity<String> updateOBPaymentConsent(String url, ReqestHeaders idmHeader, String jsonBody) {
+	public ResponseEntity<String> updateOBPaymentConsent(String url, ReqestHeaders idmHeader, String jsonBody, HttpMethod method) {
 		log.debug("url: {}", url);
 		log.debug("idmHeader: {}", idmHeader);
 		log.debug("requestConsentToIDM: {}", jsonBody);
@@ -92,7 +96,27 @@ public class ConsentManagement {
 		openIdmHeader.add("Content-Type", "application/json");
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> obPaymentConsent = restTemplate.exchange(url, HttpMethod.POST,
+		ResponseEntity<String> obPaymentConsent = restTemplate.exchange(url, method,
+				new HttpEntity<Object>(jsonBody, openIdmHeader), String.class);
+		log.debug("obPaymentConsent StatusCode : {}", obPaymentConsent.getStatusCode());
+		log.debug("obPaymentConsent getBody : {}", obPaymentConsent.getBody());
+		return obPaymentConsent;
+
+	}
+	
+	public ResponseEntity<String> updateOBPaymentConsentPatch(String url, ReqestHeaders idmHeader, String jsonBody, HttpMethod method) {
+		log.debug("url: {}", url);
+		log.debug("idmHeader: {}", idmHeader);
+		log.debug("requestConsentToIDM: {}", jsonBody);
+
+		HttpHeaders openIdmHeader = new HttpHeaders();
+		openIdmHeader.add(OpenIDM.X_OPENIDM_USERNAME, idmHeader.getUsername());
+		openIdmHeader.add(OpenIDM.X_OPENIDM_PASSWORD, idmHeader.getPassword());
+		openIdmHeader.add("Content-Type", "application/json");
+		openIdmHeader.add("X-HTTP-Method-Override", "PATCH");
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> obPaymentConsent = restTemplate.exchange(url, method,
 				new HttpEntity<Object>(jsonBody, openIdmHeader), String.class);
 		log.debug("obPaymentConsent StatusCode : {}", obPaymentConsent.getStatusCode());
 		log.debug("obPaymentConsent getBody : {}", obPaymentConsent.getBody());
@@ -204,6 +228,19 @@ public class ConsentManagement {
 		}
 		((ObjectNode) claimsNode).set("accounts", accountsArrayNode);
 		((ObjectNode) rootNode).set("claims", claimsNode);
+		return rootNode.toString();
+	}
+	public String buildAispAutoAcceptBody() throws ParseException, IOException {
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode rootNode = mapper.createObjectNode();
+		JsonNode consentNode = mapper.createObjectNode();
+		((ObjectNode) consentNode).put("operation", "replace");
+		((ObjectNode) consentNode).put("field", "/Data/StatusUpdateDateTime");
+		((ObjectNode) consentNode).put("value", ConversionUtils.setDateFormating(new Date(),OpenBankingConstants.OpenIDM.IDM_DATE_FORMAT) );
+		((ObjectNode) rootNode).putArray("consent").add(consentNode);
+		rootNode = (JsonNode) new ObjectMapper().readTree(rootNode.findValue("consent").toString());
+		
 		return rootNode.toString();
 	}
 	

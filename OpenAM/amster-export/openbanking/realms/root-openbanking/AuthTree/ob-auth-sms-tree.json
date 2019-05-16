@@ -1,0 +1,60 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "AuthTree",
+    "entityId" : "ob-auth-sms-tree",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "ob-auth-sms-tree",
+    "nodes" : {
+      "7db2fec8-1c61-49fe-a3fd-2119b966bf23" : {
+        "displayName" : "Username Collector",
+        "nodeType" : "UsernameCollectorNode",
+        "connections" : {
+          "outcome" : "75207bdd-32b8-4b2d-a293-8c3a75262ec9"
+        }
+      },
+      "75207bdd-32b8-4b2d-a293-8c3a75262ec9" : {
+        "displayName" : "Password Collector",
+        "nodeType" : "PasswordCollectorNode",
+        "connections" : {
+          "outcome" : "f268831d-bc39-4ac7-be77-78e78b092a03"
+        }
+      },
+      "f268831d-bc39-4ac7-be77-78e78b092a03" : {
+        "displayName" : "Data Store Decision",
+        "nodeType" : "DataStoreDecisionNode",
+        "connections" : {
+          "false" : "e301438c-0bd0-429c-ab0c-66126501069a",
+          "true" : "e7bc9e71-605f-4f2a-ac10-97b16c9d01fd"
+        }
+      },
+      "e7bc9e71-605f-4f2a-ac10-97b16c9d01fd" : {
+        "displayName" : "HOTP Generator",
+        "nodeType" : "OneTimePasswordGeneratorNode",
+        "connections" : {
+          "outcome" : "6f32565d-9c68-42c3-be96-4381f447287b"
+        }
+      },
+      "6f32565d-9c68-42c3-be96-4381f447287b" : {
+        "displayName" : "OTP SMS Sender",
+        "nodeType" : "OneTimePasswordSmsSenderNode",
+        "connections" : {
+          "outcome" : "09d496ae-f796-494b-9734-2562b3d7eb95"
+        }
+      },
+      "09d496ae-f796-494b-9734-2562b3d7eb95" : {
+        "displayName" : "OTP Collector Decision",
+        "nodeType" : "OneTimePasswordCollectorDecisionNode",
+        "connections" : {
+          "true" : "70e691a5-1e33-4ac3-a356-e7b6d60d92e0",
+          "false" : "e301438c-0bd0-429c-ab0c-66126501069a"
+        }
+      }
+    },
+    "staticNodes" : { },
+    "entryNodeId" : "7db2fec8-1c61-49fe-a3fd-2119b966bf23"
+  }
+}

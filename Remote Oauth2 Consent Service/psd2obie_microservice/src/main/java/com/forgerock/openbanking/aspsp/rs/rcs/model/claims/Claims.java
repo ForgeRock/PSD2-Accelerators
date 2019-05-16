@@ -70,7 +70,7 @@ public class Claims {
     }
 
     public static Claims parseClaims(JSONObject claimsJson) {
-        return new Claims(parseClaimsFrom("user_info", claimsJson), parseClaimsFrom("id_token", claimsJson));
+        return new Claims(parseClaimsFrom("user_info", claimsJson).size()!=0?parseClaimsFrom("user_info", claimsJson):parseClaimsFrom("userinfo", claimsJson), parseClaimsFrom("id_token", claimsJson));
     }
 
     private static Map<String, Claim> parseClaimsFrom(String key, JSONObject json) {
