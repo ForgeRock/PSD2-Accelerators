@@ -47,9 +47,30 @@ public class StripSsaDynamicRegistrationFilter implements Filter {
 			Jwt registrationJwt = JwtUtil.reconstructJwt(jwt, Jwt.class);
 			String claims = registrationJwt.getClaimsSet().build();
 			ObjectMapper mapper = new ObjectMapper();
+
+			Jwt ssaJwt = null;
+			if (registrationJwt != null) {
+				ssaJwt = JwtUtil.reconstructJwt(
+						registrationJwt.getClaimsSet().getClaim("software_statement").toString(), Jwt.class);
+			}
+
 			try {
 				node = (ObjectNode) mapper.readTree(claims);
 				node.remove("software_statement");
+
+				if (ssaJwt != null) {
+					if (ssaJwt.getClaimsSet().getClaim("software_jwks_endpoint") != null) {
+						String jwksUri = ssaJwt.getClaimsSet().getClaim("software_jwks_endpoint").toString();
+						node.put("public_key_selector", "jwks_uri");
+						node.put("jwks_uri", jwksUri);
+					}
+
+					if (ssaJwt.getClaimsSet().getClaim("software_client_name") != null) {
+						String softwareClientName = ssaJwt.getClaimsSet().getClaim("software_client_name").toString();
+						node.put("client_name", softwareClientName);
+					}
+				}
+
 				logger.debug("Final JSON: " + node.toString());
 			} catch (IOException e) {
 				e.printStackTrace();

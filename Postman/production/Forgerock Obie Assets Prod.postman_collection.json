@@ -434,7 +434,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"exp\": {{exp}},\n  \"scope\": \"openid accounts payments\",\n  \"response_types\": [\n    \"code id_token\"\n  ],\n  \"redirect_uris\": [\n    \"https://www.google.com\"\n  ],\n  \"client_name\": \"TPP Demo\",\n  \"application_type\": \"web\",\n  \"grant_types\": [\n    \"authorization_code\",\n    \"refresh_token\",\n    \"client_credentials\"\n  ],\n  \"jwks_uri\": \"{{OBRI_SSA_JWKS_URI}}\",\n  \"public_key_selector\": \"jwks_uri\",\n  \"software_statement\": \"{{SSA_JWT}}\",\n  \"token_endpoint_auth_method\": \"private_key_jwt\",\n  \"token_endpoint_auth_signing_alg\": \"RS256\",\n  \"id_token_signed_response_alg\": \"RS256\",\n  \"request_object_signing_alg\": \"RS256\",\n  \"request_object_encryption_alg\": \"RSA-OAEP-256\",\n  \"request_object_encryption_enc\": \"A128CBC-HS256\"\n}"
+									"raw": "{\n  \"exp\": {{exp}},\n  \"scope\": \"openid accounts payments\",\n  \"response_types\": [\n    \"code id_token\"\n  ],\n  \"redirect_uris\": [\n    \"https://www.google.com\"\n  ],\n  \"application_type\": \"web\",\n  \"grant_types\": [\n    \"authorization_code\",\n    \"refresh_token\",\n    \"client_credentials\"\n  ],\n  \"software_statement\": \"{{SSA_JWT}}\",\n  \"token_endpoint_auth_method\": \"private_key_jwt\",\n  \"token_endpoint_auth_signing_alg\": \"RS256\",\n  \"id_token_signed_response_alg\": \"RS256\",\n  \"request_object_signing_alg\": \"RS256\",\n  \"request_object_encryption_alg\": \"RSA-OAEP-256\",\n  \"request_object_encryption_enc\": \"A128CBC-HS256\"\n}"
 								},
 								"url": {
 									"raw": "{{JWKMS}}/api/crypto/signClaims",
@@ -1844,7 +1844,8 @@
 															"var data = JSON.parse(responseBody);",
 															"",
 															"postman.setEnvironmentVariable(\"access_token_with_consent\", data.access_token);",
-															"postman.setEnvironmentVariable(\"id_token\", data.id_token);"
+															"postman.setEnvironmentVariable(\"id_token\", data.id_token);",
+															"postman.setEnvironmentVariable(\"refresh_token\", data.refresh_token);"
 														],
 														"type": "text/javascript"
 													}
@@ -1869,6 +1870,217 @@
 														{
 															"key": "code",
 															"value": "RHPcF0p-wN8pPbRQAu96HxBSvPw",
+															"type": "text"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "{{CLIENT_REDIRECT_URI}}",
+															"type": "text"
+														},
+														{
+															"key": "client_assertion_type",
+															"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+															"type": "text"
+														},
+														{
+															"key": "client_assertion",
+															"value": "{{client_credential_jwt}}",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{AS_token_endpoint}}",
+													"host": [
+														"{{AS_token_endpoint}}"
+													]
+												}
+											},
+											"response": [
+												{
+													"name": "Exchange code",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/x-www-form-urlencoded"
+															}
+														],
+														"body": {
+															"mode": "urlencoded",
+															"urlencoded": [
+																{
+																	"key": "grant_type",
+																	"value": "authorization_code",
+																	"type": "text"
+																},
+																{
+																	"key": "code",
+																	"value": "d32dafd8-071d-41bd-bdda-afe6d45d8307",
+																	"type": "text"
+																},
+																{
+																	"key": "redirect_uri",
+																	"value": "{{CLIENT_REDIRECT_URI}}",
+																	"type": "text"
+																},
+																{
+																	"key": "client_assertion_type",
+																	"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+																	"type": "text"
+																},
+																{
+																	"key": "client_assertion",
+																	"value": "{{client_credential_jwt}}",
+																	"type": "text"
+																}
+															]
+														},
+														"url": {
+															"raw": "{{AS_token_endpoint}}",
+															"host": [
+																"{{AS_token_endpoint}}"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Accept-Ranges",
+															"value": "bytes",
+															"name": "Accept-Ranges",
+															"description": "Content-Types that are acceptable"
+														},
+														{
+															"key": "Cache-Control",
+															"value": "no-store",
+															"name": "Cache-Control",
+															"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+														},
+														{
+															"key": "Content-Type",
+															"value": "application/json",
+															"name": "Content-Type",
+															"description": "The mime type of this content"
+														},
+														{
+															"key": "Date",
+															"value": "Fri, 31 Aug 2018 23:38:07 GMT",
+															"name": "Date",
+															"description": "The date and time that the message was sent"
+														},
+														{
+															"key": "Pragma",
+															"value": "no-cache",
+															"name": "Pragma",
+															"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+														},
+														{
+															"key": "Server",
+															"value": "Restlet-Framework/2.3.4",
+															"name": "Server",
+															"description": "A name for the server"
+														},
+														{
+															"key": "Strict-Transport-Security",
+															"value": "max-age=31536000; includeSubdomains; preload",
+															"name": "Strict-Transport-Security",
+															"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+														},
+														{
+															"key": "Vary",
+															"value": "Accept-Charset, Accept-Encoding, Accept-Language, Accept",
+															"name": "Vary",
+															"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+														},
+														{
+															"key": "X-Content-Type-Options",
+															"value": "nosniff",
+															"name": "X-Content-Type-Options",
+															"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+														},
+														{
+															"key": "X-Frame-Options",
+															"value": "DENY",
+															"name": "X-Frame-Options",
+															"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+														},
+														{
+															"key": "transfer-encoding",
+															"value": "chunked",
+															"name": "transfer-encoding",
+															"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+														},
+														{
+															"key": "x-fapi-interaction-id",
+															"value": "077cbcb9-51a5-4b51-b960-9c420cb10138",
+															"name": "x-fapi-interaction-id",
+															"description": "Custom header"
+														}
+													],
+													"cookie": [
+														{
+															"expires": "Invalid Date",
+															"httpOnly": false,
+															"domain": "ob.forgerock.financial",
+															"path": "/",
+															"secure": false,
+															"value": "01",
+															"key": "amlbcookie"
+														},
+														{
+															"expires": "Invalid Date",
+															"httpOnly": false,
+															"domain": "ob.forgerock.financial",
+															"path": "/",
+															"secure": false,
+															"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+															"key": "iPlanetDirectoryPro"
+														}
+													],
+													"body": "{\"access_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNDYxYzhhYTgtZjY1Ni00NGQyLThjOTEtYThiOTRjNzUwZGZlIiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwibmJmIjoxNTM1NzU4Njg3LCJncmFudF90eXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwic2NvcGUiOlsib3BlbmlkIiwicGF5bWVudHMiLCJhY2NvdW50cyJdLCJhdXRoX3RpbWUiOjE1MzU3NTg2NjMwMDAsImNsYWltcyI6IntcImlkX3Rva2VuXCI6e1wiYWNyXCI6e1widmFsdWVcIjpcInVybjpvcGVuYmFua2luZzpwc2QyOnNjYVwiLFwiZXNzZW50aWFsXCI6dHJ1ZX0sXCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19LFwidXNlcmluZm9cIjp7XCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19fSIsInJlYWxtIjoiL29wZW5iYW5raW5nIiwiZXhwIjoxNTM1ODQ1MDg3LCJpYXQiOjE1MzU3NTg2ODcsImV4cGlyZXNfaW4iOjg2NDAwLCJqdGkiOiIyNmQ1OWZmNS0wYmU3LTQxN2MtOGJhOC01MzcxOGU5ZjE1YTkifQ.Oi4HzCmb1dT-xE1ewNAxrcy1PO85_gIFs7BKhuD7Qbn9K0kS6tDXawHa4K3vZzZUk5-CA3LJ7zqQ7Ex2vocNGQ\",\"refresh_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNGY0YzhlOTgtZjMyYS00NzliLWEyYzUtZTRjYzE3NWZiZDU3IiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoTW9kdWxlcyI6IkRhdGFTdG9yZSIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsImF1ZCI6IjkxYzNjNTE3LTlkYjYtNDE3ZS04YjA1LThiMTE4OGY3YTJkNiIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsIm5iZiI6MTUzNTc1ODY4Nywib3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiZ3JhbnRfdHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsInNjb3BlIjpbIm9wZW5pZCIsInBheW1lbnRzIiwiYWNjb3VudHMiXSwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJjbGFpbXMiOiJ7XCJpZF90b2tlblwiOntcImFjclwiOntcInZhbHVlXCI6XCJ1cm46b3BlbmJhbmtpbmc6cHNkMjpzY2FcIixcImVzc2VudGlhbFwiOnRydWV9LFwib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fSxcInVzZXJpbmZvXCI6e1wib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fX0iLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTU0MzUzNDY4NywiaWF0IjoxNTM1NzU4Njg3LCJleHBpcmVzX2luIjo3Nzc2MDAwLCJqdGkiOiJiMTk1Y2QzZi0wMjI5LTQ3YzYtOGNkMy03ODZhMDI1OWFhODMifQ.sjRPbbgxR5AXl-gtuSPKuz_9oM9MjocSfEDYJmJBJLyqSAHWimnMon5Pnxk_eEnvF2TNS3mFovtHq1RCXE4E-w\",\"scope\":\"openid payments accounts\",\"id_token\":\"eyJ0eXAiOiJKV1QiLCJraWQiOiJiL082T3ZWdjEreStXZ3JINVVpOVdUaW9MdDA9IiwiYWxnIjoiUlMyNTYifQ.eyJhdF9oYXNoIjoicm1EYUlJMjFGcmNadElNWnpSeFNGQSIsInN1YiI6ImRlbW8iLCJhdWRpdFRyYWNraW5nSWQiOiIwOTAxZWNhZi1hMDA4LTQ1NzItOGQ4NC0zMGJkZmM0NTRjMTYtMzE5ODU3MCIsImlzcyI6Imh0dHBzOi8vbWF0bHMuYXMuYXNwc3Aub2IuZm9yZ2Vyb2NrLmZpbmFuY2lhbC9vYXV0aDIvb3BlbmJhbmtpbmciLCJ0b2tlbk5hbWUiOiJpZF90b2tlbiIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYWNyIjoidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiY19oYXNoIjoiYldBUTJUVk1UVUVMTTJkLTUyRHpPQSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDgiLCJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiYXpwIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTUzNTg0NTA4NywidG9rZW5UeXBlIjoiSldUVG9rZW4iLCJpYXQiOjE1MzU3NTg2ODd9.kxRZg6qTIrZGn99SJaOhYvVQOPe5SnIYNfOVa1LDM4NheJ-ClETNtfdpK43aDe1Xf79bH1wX5KO4j807kbDcLZ7g36PepIeUESzB6nKGyCaDZeuNlBRy97WEkFRrXeYoqmi7oMy_m7NEQDw7VR983GBjpjgQACJeyY4P26DU1S6OmrSonateFaViatwP7gqXKYuMfy-lsN8B1QVGg59xigu1lg90QUgDwnMVHqwKrunoBBTUtIYHcIeV3w2RRCWyH5JRnbYDzcnhZ1gQYdHbkZQcoxVvjYwX1FxwQa0vnY1wfLlWp6R-VhSGgsaLPh81yRmp_aaUp5G5P0_03QtOVw\",\"token_type\":\"Bearer\",\"expires_in\":86399,\"nonce\":\"10d260bf-a7d9-444a-92d9-7b7a5f088208\"}"
+												}
+											]
+										},
+										{
+											"name": "[AM] Refresh access token",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "6f1fd8b3-aefd-4d61-944d-4efb95a0f89c",
+														"exec": [
+															"var data = JSON.parse(responseBody);",
+															"",
+															"postman.setEnvironmentVariable(\"access_token_with_consent\", data.access_token);",
+															"postman.setEnvironmentVariable(\"id_token\", data.id_token);"
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "refresh_token",
+															"type": "text"
+														},
+														{
+															"key": "refresh_token",
+															"value": "{{refresh_token}}",
 															"type": "text"
 														},
 														{
@@ -4263,7 +4475,8 @@
 													"var data = JSON.parse(responseBody);",
 													"",
 													"postman.setEnvironmentVariable(\"access_token_with_consent\", data.access_token);",
-													"postman.setEnvironmentVariable(\"id_token\", data.id_token);"
+													"postman.setEnvironmentVariable(\"id_token\", data.id_token);",
+													"postman.setEnvironmentVariable(\"refresh_token\", data.refresh_token);"
 												],
 												"type": "text/javascript"
 											}
@@ -4287,7 +4500,218 @@
 												},
 												{
 													"key": "code",
-													"value": "c4VqstSghuU6xUVM-ROIVpHBwQc",
+													"value": "qUqWluXajWwUmhkh5sT_MYdGT-o",
+													"type": "text"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "{{CLIENT_REDIRECT_URI}}",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion_type",
+													"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+													"type": "text"
+												},
+												{
+													"key": "client_assertion",
+													"value": "{{client_credential_jwt}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{AS_token_endpoint}}",
+											"host": [
+												"{{AS_token_endpoint}}"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Exchange code",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/x-www-form-urlencoded"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "grant_type",
+															"value": "authorization_code",
+															"type": "text"
+														},
+														{
+															"key": "code",
+															"value": "d32dafd8-071d-41bd-bdda-afe6d45d8307",
+															"type": "text"
+														},
+														{
+															"key": "redirect_uri",
+															"value": "{{CLIENT_REDIRECT_URI}}",
+															"type": "text"
+														},
+														{
+															"key": "client_assertion_type",
+															"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+															"type": "text"
+														},
+														{
+															"key": "client_assertion",
+															"value": "{{client_credential_jwt}}",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{AS_token_endpoint}}",
+													"host": [
+														"{{AS_token_endpoint}}"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Accept-Ranges",
+													"value": "bytes",
+													"name": "Accept-Ranges",
+													"description": "Content-Types that are acceptable"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-store",
+													"name": "Cache-Control",
+													"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+												},
+												{
+													"key": "Content-Type",
+													"value": "application/json",
+													"name": "Content-Type",
+													"description": "The mime type of this content"
+												},
+												{
+													"key": "Date",
+													"value": "Fri, 31 Aug 2018 23:38:07 GMT",
+													"name": "Date",
+													"description": "The date and time that the message was sent"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache",
+													"name": "Pragma",
+													"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+												},
+												{
+													"key": "Server",
+													"value": "Restlet-Framework/2.3.4",
+													"name": "Server",
+													"description": "A name for the server"
+												},
+												{
+													"key": "Strict-Transport-Security",
+													"value": "max-age=31536000; includeSubdomains; preload",
+													"name": "Strict-Transport-Security",
+													"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Charset, Accept-Encoding, Accept-Language, Accept",
+													"name": "Vary",
+													"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+												},
+												{
+													"key": "X-Content-Type-Options",
+													"value": "nosniff",
+													"name": "X-Content-Type-Options",
+													"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+												},
+												{
+													"key": "X-Frame-Options",
+													"value": "DENY",
+													"name": "X-Frame-Options",
+													"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+												},
+												{
+													"key": "transfer-encoding",
+													"value": "chunked",
+													"name": "transfer-encoding",
+													"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+												},
+												{
+													"key": "x-fapi-interaction-id",
+													"value": "077cbcb9-51a5-4b51-b960-9c420cb10138",
+													"name": "x-fapi-interaction-id",
+													"description": "Custom header"
+												}
+											],
+											"cookie": [
+												{
+													"expires": "Invalid Date",
+													"httpOnly": false,
+													"domain": "ob.forgerock.financial",
+													"path": "/",
+													"secure": false,
+													"value": "01",
+													"key": "amlbcookie"
+												},
+												{
+													"expires": "Invalid Date",
+													"httpOnly": false,
+													"domain": "ob.forgerock.financial",
+													"path": "/",
+													"secure": false,
+													"value": "7g2EmmA674oQbwhFmxU0GT094no.*AAJTSQACMDEAAlNLABx2am5pb2N2RnhHelNRU084T3E5YW92cDhjdG89AAJTMQAA*",
+													"key": "iPlanetDirectoryPro"
+												}
+											],
+											"body": "{\"access_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNDYxYzhhYTgtZjY1Ni00NGQyLThjOTEtYThiOTRjNzUwZGZlIiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwibmJmIjoxNTM1NzU4Njg3LCJncmFudF90eXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwic2NvcGUiOlsib3BlbmlkIiwicGF5bWVudHMiLCJhY2NvdW50cyJdLCJhdXRoX3RpbWUiOjE1MzU3NTg2NjMwMDAsImNsYWltcyI6IntcImlkX3Rva2VuXCI6e1wiYWNyXCI6e1widmFsdWVcIjpcInVybjpvcGVuYmFua2luZzpwc2QyOnNjYVwiLFwiZXNzZW50aWFsXCI6dHJ1ZX0sXCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19LFwidXNlcmluZm9cIjp7XCJvcGVuYmFua2luZ19pbnRlbnRfaWRcIjp7XCJ2YWx1ZVwiOlwiUGZkYTM5ZWY2LWM4MWYtNDliNi05MTAwLTA2OGZiODhiYjhkOFwiLFwiZXNzZW50aWFsXCI6dHJ1ZX19fSIsInJlYWxtIjoiL29wZW5iYW5raW5nIiwiZXhwIjoxNTM1ODQ1MDg3LCJpYXQiOjE1MzU3NTg2ODcsImV4cGlyZXNfaW4iOjg2NDAwLCJqdGkiOiIyNmQ1OWZmNS0wYmU3LTQxN2MtOGJhOC01MzcxOGU5ZjE1YTkifQ.Oi4HzCmb1dT-xE1ewNAxrcy1PO85_gIFs7BKhuD7Qbn9K0kS6tDXawHa4K3vZzZUk5-CA3LJ7zqQ7Ex2vocNGQ\",\"refresh_token\":\"eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiRm9sN0lwZEtlTFptekt0Q0VnaTFMRGhTSXpNPSIsImFsZyI6IkVTMjU2In0.eyJzdWIiOiJkZW1vIiwiYXV0aF9sZXZlbCI6MCwiYXVkaXRUcmFja2luZ0lkIjoiNGY0YzhlOTgtZjMyYS00NzliLWEyYzUtZTRjYzE3NWZiZDU3IiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5vYi5mb3JnZXJvY2suZmluYW5jaWFsL29hdXRoMi9vcGVuYmFua2luZyIsInRva2VuTmFtZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoTW9kdWxlcyI6IkRhdGFTdG9yZSIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6ImEzMzQxYmEyLTQzOTgtNDQ4NC1hNjM0LWJkNWVkOTUzMmE1NSIsImF1ZCI6IjkxYzNjNTE3LTlkYjYtNDE3ZS04YjA1LThiMTE4OGY3YTJkNiIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsIm5iZiI6MTUzNTc1ODY4Nywib3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiZ3JhbnRfdHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsInNjb3BlIjpbIm9wZW5pZCIsInBheW1lbnRzIiwiYWNjb3VudHMiXSwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJjbGFpbXMiOiJ7XCJpZF90b2tlblwiOntcImFjclwiOntcInZhbHVlXCI6XCJ1cm46b3BlbmJhbmtpbmc6cHNkMjpzY2FcIixcImVzc2VudGlhbFwiOnRydWV9LFwib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fSxcInVzZXJpbmZvXCI6e1wib3BlbmJhbmtpbmdfaW50ZW50X2lkXCI6e1widmFsdWVcIjpcIlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDhcIixcImVzc2VudGlhbFwiOnRydWV9fX0iLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTU0MzUzNDY4NywiaWF0IjoxNTM1NzU4Njg3LCJleHBpcmVzX2luIjo3Nzc2MDAwLCJqdGkiOiJiMTk1Y2QzZi0wMjI5LTQ3YzYtOGNkMy03ODZhMDI1OWFhODMifQ.sjRPbbgxR5AXl-gtuSPKuz_9oM9MjocSfEDYJmJBJLyqSAHWimnMon5Pnxk_eEnvF2TNS3mFovtHq1RCXE4E-w\",\"scope\":\"openid payments accounts\",\"id_token\":\"eyJ0eXAiOiJKV1QiLCJraWQiOiJiL082T3ZWdjEreStXZ3JINVVpOVdUaW9MdDA9IiwiYWxnIjoiUlMyNTYifQ.eyJhdF9oYXNoIjoicm1EYUlJMjFGcmNadElNWnpSeFNGQSIsInN1YiI6ImRlbW8iLCJhdWRpdFRyYWNraW5nSWQiOiIwOTAxZWNhZi1hMDA4LTQ1NzItOGQ4NC0zMGJkZmM0NTRjMTYtMzE5ODU3MCIsImlzcyI6Imh0dHBzOi8vbWF0bHMuYXMuYXNwc3Aub2IuZm9yZ2Vyb2NrLmZpbmFuY2lhbC9vYXV0aDIvb3BlbmJhbmtpbmciLCJ0b2tlbk5hbWUiOiJpZF90b2tlbiIsIm5vbmNlIjoiMTBkMjYwYmYtYTdkOS00NDRhLTkyZDktN2I3YTVmMDg4MjA4IiwiYWNyIjoidXJuOm9wZW5iYW5raW5nOnBzZDI6c2NhIiwiYXVkIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiY19oYXNoIjoiYldBUTJUVk1UVUVMTTJkLTUyRHpPQSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IlBmZGEzOWVmNi1jODFmLTQ5YjYtOTEwMC0wNjhmYjg4YmI4ZDgiLCJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjoiMDFlYjI0ZTUtNmM5YS00MWRhLWIzZDItMzhjODcwODRlMDAzIiwiYXpwIjoiOTFjM2M1MTctOWRiNi00MTdlLThiMDUtOGIxMTg4ZjdhMmQ2IiwiYXV0aF90aW1lIjoxNTM1NzU4NjYzMDAwLCJyZWFsbSI6Ii9vcGVuYmFua2luZyIsImV4cCI6MTUzNTg0NTA4NywidG9rZW5UeXBlIjoiSldUVG9rZW4iLCJpYXQiOjE1MzU3NTg2ODd9.kxRZg6qTIrZGn99SJaOhYvVQOPe5SnIYNfOVa1LDM4NheJ-ClETNtfdpK43aDe1Xf79bH1wX5KO4j807kbDcLZ7g36PepIeUESzB6nKGyCaDZeuNlBRy97WEkFRrXeYoqmi7oMy_m7NEQDw7VR983GBjpjgQACJeyY4P26DU1S6OmrSonateFaViatwP7gqXKYuMfy-lsN8B1QVGg59xigu1lg90QUgDwnMVHqwKrunoBBTUtIYHcIeV3w2RRCWyH5JRnbYDzcnhZ1gQYdHbkZQcoxVvjYwX1FxwQa0vnY1wfLlWp6R-VhSGgsaLPh81yRmp_aaUp5G5P0_03QtOVw\",\"token_type\":\"Bearer\",\"expires_in\":86399,\"nonce\":\"10d260bf-a7d9-444a-92d9-7b7a5f088208\"}"
+										}
+									]
+								},
+								{
+									"name": "[AM] Refresh access token",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "6f1fd8b3-aefd-4d61-944d-4efb95a0f89c",
+												"exec": [
+													"var data = JSON.parse(responseBody);",
+													"",
+													"postman.setEnvironmentVariable(\"access_token_with_consent\", data.access_token);",
+													"postman.setEnvironmentVariable(\"id_token\", data.id_token);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "grant_type",
+													"value": "refresh_token",
+													"type": "text"
+												},
+												{
+													"key": "refresh_token",
+													"value": "{{refresh_token}}",
 													"type": "text"
 												},
 												{
