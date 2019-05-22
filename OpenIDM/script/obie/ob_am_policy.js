@@ -155,7 +155,7 @@ function constructAISPPolicyData(accountInformationIntentID, inputSub, inputAcco
 function constructIdmUri(idmServer){
 	var uri = "";
 	
-	uri = idmServer.protocol + "://" + idmServer.host + ":" + idmServer.port
+	uri = idmServer.protocol + "://" + idmServer.host
 	
 	return uri;
 }

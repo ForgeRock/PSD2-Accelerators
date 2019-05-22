@@ -175,7 +175,7 @@ function updatePaymentIntent(paymentIntentData){
 function constructIgUri(igServer){
         var uri = "";
 
-        uri = igServer.protocol + "://" + igServer.host + ":" + igServer.port
+        uri = igServer.protocol + "://" + igServer.host
 
         return uri;
 }

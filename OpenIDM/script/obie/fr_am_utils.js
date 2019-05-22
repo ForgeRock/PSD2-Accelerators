@@ -17,7 +17,7 @@
 function constructAmUri(amServer){
 	var uri = "";
 	
-	uri = amServer.protocol + "://" + amServer.host + ":" + amServer.port
+	uri = amServer.protocol + "://" + amServer.host
 	
 	return uri;
 }

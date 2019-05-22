@@ -17,7 +17,7 @@
 // AM server details
 var amServer = {
 	"protocol": "http",
-	"host": "10.8.11.4",
+	"host": "openam",
 	"port": "8080",
 	"path": "openam",
 	"realm": "root",
@@ -30,15 +30,15 @@ var amServer = {
 
 // IDM server details
 var idmServer = {
-        "protocol": "https",
-        "host": "openidm.psd2acceldemo.fridam.aeet-forgerock.com",
+        "protocol": "http",
+        "host": "openidm",
         "port": "443"
 };
 
 //IG server details
 var igServer = {
-	"protocol": "https",
-	"host": "openig.psd2acceldemo.fridam.aeet-forgerock.com",
+	"protocol": "http",
+	"host": "openig",
 	"port": "443",
 	"domesticPaymentEndpoint": "/openbanking/v3.1/domestic-payment-consents",
 	"accountAccessEndpoint": "/openbanking/v3.1/account-access-consents"
