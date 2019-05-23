@@ -38,6 +38,8 @@ public class StripSsaDynamicRegistrationFilter implements Filter {
 
 	private Logger logger = LoggerFactory.getLogger(StripSsaDynamicRegistrationFilter.class);
 
+	private Boolean stripSSA;
+
 	@Override
 	public Promise<Response, NeverThrowsException> filter(Context context, Request request, Handler next) {
 		logger.debug("Starting RegisterTppForwardFilter.");
@@ -56,7 +58,9 @@ public class StripSsaDynamicRegistrationFilter implements Filter {
 
 			try {
 				node = (ObjectNode) mapper.readTree(claims);
-				node.remove("software_statement");
+				if (stripSSA != null && stripSSA) {
+					node.remove("software_statement");
+				}
 
 				if (ssaJwt != null) {
 					if (ssaJwt.getClaimsSet().getClaim("software_jwks_endpoint") != null) {
@@ -100,6 +104,7 @@ public class StripSsaDynamicRegistrationFilter implements Filter {
 		@Override
 		public Object create() throws HeapException {
 			StripSsaDynamicRegistrationFilter filter = new StripSsaDynamicRegistrationFilter();
+			filter.stripSSA = config.get("stripSSA").as(evaluatedWithHeapProperties()).asBoolean();
 			return filter;
 		}
 	}
