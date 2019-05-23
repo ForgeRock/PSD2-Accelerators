@@ -84,7 +84,9 @@
       }, {
         "name" : "StripSsaDynamicRegistrationFilter",
         "type" : "StripSsaDynamicRegistrationFilter",
-        "config" : { },
+        "config": {
+          "stripSSA": true
+        },
         "capture" : [ "response", "request" ]
       } ],
       "handler" : "ReverseProxyHandler"
