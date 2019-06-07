@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class RegistrationJwtVerificationFilter implements Filter {// TEST
+public class RegistrationJwtVerificationFilter implements Filter {
 
 	public enum Algorithms {
 		RS256("SHA256withRSA"), RS384("SHA384WithRSA"), RS512("SHA512WithRSA"), PS256("SHA256WithRSAAndMGF1"),
@@ -73,13 +73,13 @@ public class RegistrationJwtVerificationFilter implements Filter {// TEST
 	}
 
 	private Logger logger = LoggerFactory.getLogger(RegistrationJwtVerificationFilter.class);
-
 	private static final Base64 base64 = new Base64(true);
+	private String clientCertificateHeaderName;
 
 	@Override
 	public Promise<Response, NeverThrowsException> filter(final Context context, final Request request,
 			final Handler next) {
-		logger.info("Starting RegistrationJwtVerificationFilter validations.");
+		logger.info("Starting RegistrationJwtVerificationFilter.");
 		String jwt = null;
 		try {
 			jwt = request.getEntity().getString();
@@ -94,17 +94,21 @@ public class RegistrationJwtVerificationFilter implements Filter {// TEST
 					Jwt.class);
 		}
 
-		X509Certificate certificate = getSigningCertificateFromJwksUri(registrationJwt, ssaJwt);
-		String clientCertificateHeader = request.getHeaders().getFirst("ssl-client-cert");
-		logger.info("SSL Client Cert: " + clientCertificateHeader);
-		clientCertificateHeader = CertificateUtils.formatTransportCertificate(clientCertificateHeader);
-		logger.info("Formatted SSL Client Cert: " + clientCertificateHeader);
-		X509Certificate clientCertificate = CertificateUtils.initializeCertificate(clientCertificateHeader);
-		if (certificate != null && clientCertificate != null) {
-			boolean signatureOk = verifyJwtSignature(certificate, jwt, registrationJwt);
-			boolean cnOk = verifyCN(clientCertificate, ssaJwt);
-			if (signatureOk && cnOk) {
-				return next.handle(context, request);
+		if (ssaJwt != null) {
+			X509Certificate certificate = getSigningCertificateFromJwksUri(registrationJwt, ssaJwt);
+			String clientCertificateHeader = request.getHeaders().getFirst(clientCertificateHeaderName);
+			logger.info("SSL Client Cert: " + clientCertificateHeader);
+			if (clientCertificateHeader != null) {
+				clientCertificateHeader = CertificateUtils.formatTransportCertificate(clientCertificateHeader);
+				logger.info("Formatted SSL Client Cert: " + clientCertificateHeader);
+				X509Certificate clientCertificate = CertificateUtils.initializeCertificate(clientCertificateHeader);
+				if (certificate != null && clientCertificate != null) {
+					boolean signatureOk = verifyJwtSignature(certificate, jwt, registrationJwt);
+					boolean cnOk = verifyCN(clientCertificate, ssaJwt);
+					if (signatureOk && cnOk) {
+						return next.handle(context, request);
+					}
+				}
 			}
 		}
 
@@ -116,13 +120,12 @@ public class RegistrationJwtVerificationFilter implements Filter {// TEST
 		if (registrationJwt != null) {
 			String registrationJwtKid = registrationJwt.getHeader().get("kid").asString();
 			String registrationJwtSigningAlgorithm = registrationJwt.getHeader().getAlgorithm().toString();
-
 			if (ssaJwt != null && registrationJwtKid != null && registrationJwtSigningAlgorithm != null) {
 				String jwksUri = ssaJwt.getClaimsSet().getClaim("software_jwks_endpoint").toString();
 				String X509Cert = null;
 				JsonNode jwksUriKeys = getJwksUriKeys(jwksUri);
 				String jwksKeyAlgorithm = null;
-				if (jwksUriKeys.isArray()) {
+				if (jwksUriKeys != null && jwksUriKeys.isArray()) {
 					for (JsonNode keyNode : jwksUriKeys) {
 						String keyUsage = keyNode.get("use").asText();
 						String keyId = keyNode.get("kid").asText();
@@ -132,8 +135,8 @@ public class RegistrationJwtVerificationFilter implements Filter {// TEST
 							if (certificates != null && certificates.size() > 0) {
 								X509Cert = certificates.get(0).asText();
 								jwksKeyAlgorithm = keyNode.get("alg").asText();
-								if (jwksKeyAlgorithm != null
-										&& jwksKeyAlgorithm.equals(registrationJwtSigningAlgorithm)) {
+								if (jwksKeyAlgorithm != null && jwksKeyAlgorithm.equals(registrationJwtSigningAlgorithm)
+										&& X509Cert != null) {
 									logger.debug("X509 signature certificate found: " + X509Cert);
 									return CertificateUtils.initializeCertificate(X509Cert);
 								}
@@ -308,6 +311,8 @@ public class RegistrationJwtVerificationFilter implements Filter {// TEST
 		@Override
 		public Object create() throws HeapException {
 			RegistrationJwtVerificationFilter filter = new RegistrationJwtVerificationFilter();
+			filter.clientCertificateHeaderName = config.get("clientCertificateHeaderName")
+					.as(evaluatedWithHeapProperties()).required().asString();
 			return filter;
 		}
 	}

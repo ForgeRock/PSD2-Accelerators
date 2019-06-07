@@ -59,7 +59,9 @@ public class StripSsaDynamicRegistrationFilter implements Filter {
 			try {
 				node = (ObjectNode) mapper.readTree(claims);
 				if (stripSSA != null && stripSSA) {
-					node.remove("software_statement");
+					if (node.get("software_statement") != null) {
+						node.remove("software_statement");
+					}
 				}
 
 				if (ssaJwt != null) {

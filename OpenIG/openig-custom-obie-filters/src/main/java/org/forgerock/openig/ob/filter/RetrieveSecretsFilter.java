@@ -65,22 +65,22 @@ public class RetrieveSecretsFilter implements Filter {
 		public Object create() throws HeapException {
 			RetrieveSecretsFilter filter = new RetrieveSecretsFilter();
 			try {
-				logger.info("Start heaplet.");
+				logger.debug("Start heaplet.");
 				final FileSystemSecretStoreHeaplet heaplet = new FileSystemSecretStoreHeaplet();
 				final JsonValue evaluated = config.as(evaluatedWithHeapProperties());
 				String secretIds = evaluated.get("passwordSecretIds").asString();
 				secretIds = secretIds.replaceAll("\\s", "");
-				logger.info("Secret id's to retrieve as list: " + secretIds);
+				logger.debug("Secret id's to retrieve as list: " + secretIds);
 				String[] splitArrayOfSecrets = secretIds.split(",");
 				final SecretStore<GenericSecret> store = (SecretStore<GenericSecret>) heaplet
 						.create(Name.of("RetrieveSecretsFilter"), config, heap);
-				logger.info("Store: " + store);
+				logger.debug("Store: " + store);
 				if (store != null && splitArrayOfSecrets != null && splitArrayOfSecrets.length > 0) {
 					Map<String, String> secrets = new HashMap<String, String>();
 					for (String secretId : splitArrayOfSecrets) {
 						String password = SecretsUtils.getPasswordSecretIdOrPassword(heaplet.getSecretService(),
 								JsonValue.json(secretId), JsonValue.json(secretId), logger);
-						logger.info("The decoded password found in the FileSystemSecretStore: " + password);
+						logger.debug("The decoded password found in the FileSystemSecretStore: " + password);
 						secrets.put(secretId, password);
 					}
 					filter.setSecrets(secrets);
@@ -88,7 +88,7 @@ public class RetrieveSecretsFilter implements Filter {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			logger.info("End heaplet.");
+			logger.debug("End heaplet.");
 			return filter;
 		}
 	}
