@@ -18,9 +18,9 @@ package com.forgerock.openbanking.aspsp.rs.rcs.model.consent;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.data.Data;
+import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.tpp.Tpp;
 import com.google.gson.annotations.SerializedName;
 
 import lombok.Getter;
@@ -40,5 +40,7 @@ public class OBPaymentConsentResponse implements Serializable {
 	private String Status;	
 	@JsonUnwrapped
 	private Data Data;
+	@JsonUnwrapped
+	private Tpp Tpp;
 	
 	}

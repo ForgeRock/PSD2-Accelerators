@@ -20,20 +20,35 @@ load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/ob_am
 load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/ob_tpp.js");
  
 function account_access_intent_main(){
+	
+	console.log("[DEBUG] AISP REQUEST.METHOD: " + request.method);
+	switch (request.method) {
 
-	if (request.method == "create") {
-		accountIntentResult = createAccountIntent(request.content);
-		return accountIntentResult;
-	}
-	else {
-		if (request.method == "patch" || request.method == "action") {
-			updateAccountIntentStatusResult = updateAccountIntent(request.content);
-			return updateAccountIntentStatusResult;
-		}
-		else {
-			throw { code : 500, message : "Invalid request - only POST implemented for accountIntent" };
-		}
-	};
+                case "create":
+                	accountIntentResult = createAccountIntent(request.content);
+ 	                return accountIntentResult;
+			break;
+
+                case "read":
+                        accountIntentResult = getAccountIntent(request.content);
+                        return accountIntentResult;
+                        break;
+
+                case "patch":
+		case "action":
+                        updateAccountIntentStatusResult = updateAccountIntent(request.content);
+                        return updateAccountIntentStatusResult;
+			break;
+
+		case "delete":
+                        deleteIntentResult = deleteAccountIntent(request.content);
+                        return deleteIntentResult;
+	
+                default:
+                        throw { code : 500, message : "Invalid request" };
+                	break;
+
+        }
 }
 
 function createAccountIntent(accountIntentData){
@@ -67,7 +82,7 @@ function createAccountIntent(accountIntentData){
                 returnObject.reason = "tppIdentifier must be specified as a string";
         }
 
-        console.log("DATA accountIntentData with status: "+ accountIntentData);
+        console.log("[DEBUG] DATA accountIntentData with status: "+ accountIntentData);
 
         //Create the IDM OB Payment Intent object
         accountAccessOutput = openidm.create(CONFIG_managedObjects.obAccountAccess, "", accountIntentData);
@@ -95,10 +110,12 @@ function createAccountIntent(accountIntentData){
         accountAccessOutput.Links = {};
         accountAccessOutput.Links.Self = constructIgUri(igServer) + igServer.accountAccessEndpoint + "/" + accountAccessOutput._id;
         accountAccessOutput.Meta = {};
+	accountAccessOutput.Meta.TotalPages = "1";
+
         delete accountAccessOutput._id;
         delete accountAccessOutput._rev;
 
-        console.log("\nRESULT accountAccessOutput final: "+ accountAccessOutput);
+        console.log("\n[DEBUG] RESULT accountAccessOutput final: "+ accountAccessOutput);
    
 	return accountAccessOutput;
 }
@@ -111,7 +128,7 @@ function updateAccountIntent(accountIntentData){
 	console.log("[DEBUG] accountIntentData: "+ accountIntentData);
 	
 	inputAccountIntentId = request.resourcePath;
-	console.log("Input Account Information Intent Id: "+ inputAccountIntentId);	
+	console.log("[DEBUG] Input Account Information Intent Id: "+ inputAccountIntentId);	
 
         var userid = accountIntentData.claims.sub;
         updateAccountAccessIntent = accountIntentData.consent;
@@ -153,22 +170,132 @@ function updateAccountIntent(accountIntentData){
 	//Update the IDM OB Account Access Intent object Status 
 	accountIntentID = openidm.patch(CONFIG_managedObjects.obAccountAccess + "/" + inputAccountIntentId, null, updateAccountAccessIntent);
 	
-	console.log("RESULT accountIntentID: "+ accountIntentID);
-	
+	console.log("[DEBUG] RESULT accountIntentID: "+ accountIntentID);
 
-        if (consentStatusUpdate != null && consentStatusUpdate.equals("Authorised")){
-		//Provision Authorization Policy in AM
-		amServer.ssoToken = AM_login_getSsoToken(amServer);
-		policyData = constructAISPPolicyData(inputAccountIntentId, userid, accountIntentData.claims.accounts);
-		AM_policy_create(amServer, policyData);
-		AM_logout(amServer);
+	var qry = {
+	      "_queryFilter": "_id eq \"" + inputAccountIntentId + "\"",
+              "_fields" : "*,Tpp/*"
+        };
+        tppAccountIntentOutput = openidm.query(CONFIG_managedObjects.obAccountAccess, qry);
+        if (tppAccountIntentOutput != null && tppAccountIntentOutput.result[0] != null && tppAccountIntentOutput.result[0].Tpp != null){
+        	var idmTppId = tppAccountIntentOutput.result[0].Tpp.identifier;
+		var idmCertTppId = tppAccountIntentOutput.result[0].Tpp.certId;
+                console.log("[DEBUG] TPP Linked to Intent for update: " + inputAccountIntentId + " is: " + idmTppId + " having certId: " + idmCertTppId);	
+
+	        if (consentStatusUpdate != null && consentStatusUpdate.equals("Authorised")){
+			//Provision Authorization Policy in AM
+			amServer.ssoToken = AM_login_getSsoToken(amServer);
+			policyData = constructAISPPolicyData(inputAccountIntentId, userid, accountIntentData.claims.accounts, idmTppId + idmCertTppId);
+			AM_policy_create(amServer, policyData);
+			AM_logout(amServer);
+		}
+		else {
+        	        console.log("[DEBUG] No AM Policy was created due to the Consent Status: " + consentStatusUpdate);
+			throw { code : 400, message : "Bad Request" };
+        	}
 	}
 	else {
-                console.log("[DEBUG] No AM Policy was created due to the Consent Status: " + consentStatusUpdate);
-        }
+		throw { code : 400, message : "Bad Request" };
+	}
   
     return accountIntentID;
 }
+
+//Get OB Account Information Intent Details
+function getAccountIntent(accountIntentData){
+	
+	var accountIntentOutput = {};
+	if (request.additionalParameters != null){
+                var tppId = request.additionalParameters.tppId;
+		var consentId = request.additionalParameters.consentId;
+        }
+
+	if (consentId != null && tppId != null){
+		console.log("[DEBUG] Entered in getAccountIntent() - input tppId: " + tppId + " ; consentId: " + consentId);
+
+		var qry = {
+			"_queryFilter": "_id eq \"" + consentId + "\"",
+  			"_fields" : "*,Tpp/*"
+		};
+		tppAccountIntentOutput = openidm.query(CONFIG_managedObjects.obAccountAccess, qry);
+		if (tppAccountIntentOutput != null && tppAccountIntentOutput.result[0] != null && tppAccountIntentOutput.result[0].Tpp != null){
+			var idmTppId = tppAccountIntentOutput.result[0].Tpp.identifier;
+                        var idmTppCertId = tppAccountIntentOutput.result[0].Tpp.certId;
+                        console.log("[DEBUG] TPP Linked to Intent: " + consentId + " is: " + idmTppId + " having certId: " + idmTppCertId);
+                        if (idmTppCertId.equals(tppId)){
+				accountIntentOutput = openidm.read(CONFIG_managedObjects.obAccountAccess + "/" + consentId);
+				console.log("[DEBUG] ACCOUNT INTENT OUTPUT: " + accountIntentOutput);
+
+				if (accountIntentOutput != null){
+				        accountIntentOutput.Links = {};
+        				accountIntentOutput.Links.Self = constructIgUri(igServer) + igServer.accountAccessEndpoint + "/" + accountIntentOutput._id;
+        				accountIntentOutput.Meta = {};
+	        			accountIntentOutput.Meta.TotalPages = "1";
+
+					delete accountIntentOutput._id;
+					delete accountIntentOutput._rev;	
+				}
+			}
+			else {
+				throw { code : 403, message : "Forbidden" };
+			}
+		}
+		else {
+	                throw { code : 404, message : "Not Found" };
+                }
+
+	}
+
+	return accountIntentOutput;
+}
+
+//Delete OB Account Information Intent
+function deleteAccountIntent(accountIntentData){
+
+        var accountIntentOutput = {};
+        if (request.additionalParameters != null){
+                var tppId = request.additionalParameters.tppId;
+                var consentId = request.additionalParameters.consentId;
+        }
+
+	if (consentId != null && tppId != null){
+                console.log("[DEBUG] Entered in deleteAccountIntent() - input tppId: " + tppId + " ; consentId: " + consentId);
+
+                var qry = {
+                        "_queryFilter": "_id eq \"" + consentId + "\"",
+                        "_fields" : "*,Tpp/*"
+                };
+                tppAccountIntentOutput = openidm.query(CONFIG_managedObjects.obAccountAccess, qry);
+                if (tppAccountIntentOutput != null && tppAccountIntentOutput.result[0] != null && tppAccountIntentOutput.result[0].Tpp != null){
+                        var idmTppId = tppAccountIntentOutput.result[0].Tpp.identifier;
+                        var idmTppCertId = tppAccountIntentOutput.result[0].Tpp.certId;
+			console.log("[DEBUG] TPP Linked to Intent: " + consentId + " is: " + idmTppId + " having certId: " + idmTppCertId);
+                        if (idmTppCertId.equals(tppId)){
+                                accountIntentOutput = openidm.delete(CONFIG_managedObjects.obAccountAccess + "/" + consentId, null);
+
+                		//Delete Authorization Policy in AM
+       	         		amServer.ssoToken = AM_login_getSsoToken(amServer);
+        	     		AM_policy_delete(amServer, "aisp-" + consentId);
+                		AM_logout(amServer);
+                		console.log("[DEBUG] Policy aisp-" + consentId + " was deleted from AM.");
+                       	}
+                        else {
+                                throw { code : 403, message : "Forbidden" };
+                        }
+                }
+                else {
+                        throw { code : 403, message : "Forbidden" };
+                }
+
+        }
+        else {
+                console.log("[DEBUG] No IDM Object and  AM Policy were deleted");
+		throw { "code": 400, "message": "", "detail": "" };
+        }
+
+	throw { "code": 204, "message": "", "detail": "" };
+}
+
 
 function constructIgUri(igServer){
         var uri = "";

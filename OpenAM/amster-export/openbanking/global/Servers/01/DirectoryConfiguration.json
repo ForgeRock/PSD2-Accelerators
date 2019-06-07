@@ -11,11 +11,11 @@
   "data" : {
     "_id" : "01/properties/directoryConfiguration",
     "directoryConfiguration" : {
-      "minConnectionPool" : 1,
-      "maxConnectionPool" : 10,
+      "minConnectionPool" : 24,
+      "maxConnectionPool" : 48,
       "bindDn" : "cn=Directory Manager",
       "bindPassword" : null,
-      "bindPassword-encrypted" : "AAAAA0FFUwIQp/A5Wj2IT06z7kzaEeW890N063NrYkjWr/gM7knE4agfetKGMsTiaA=="
+      "bindPassword-encrypted" : "AAAAA0FFUwIQ/aUpzZ21o6uKrPwSvNcsM9RGgzpphSHNtvtK5KU9FSRLBv6DoULm5w=="
     },
     "directoryServers" : [ {
       "hostName" : "configstore-0.configstore",

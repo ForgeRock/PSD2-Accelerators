@@ -19,7 +19,8 @@ public enum ErrorMessage {
   ERR001("The existing AISP consent is expired and a new one is required."),
   ERR002("The AISP consent you are trying to authorize is not in the %s status."),
   ERR003("The PISP consent you are trying to authorize is not in the %s status."),
-  ERR004("There is already an active AISP consent for this transaction.");
+  ERR004("There is already an active AISP consent for this transaction."),
+  ERR005("The intent was initiated by another TPP.");
 	private String message;
 
 	ErrorMessage(String message) {

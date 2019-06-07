@@ -48,6 +48,7 @@ import com.forgerock.openbanking.aspsp.rs.rcs.config.ApplicationProperties;
 import com.forgerock.openbanking.aspsp.rs.rcs.constants.OIDCConstants;
 import com.forgerock.openbanking.aspsp.rs.rcs.constants.OIDCConstants.OIDCClaim;
 import com.forgerock.openbanking.aspsp.rs.rcs.constants.OpenBankingConstants;
+import com.forgerock.openbanking.aspsp.rs.rcs.constants.OpenBankingConstants.AMRegistrationResponseClaims;
 import com.forgerock.openbanking.aspsp.rs.rcs.constants.OpenBankingConstants.InternRCS;
 import com.forgerock.openbanking.aspsp.rs.rcs.exceptions.OBErrorException;
 import com.forgerock.openbanking.aspsp.rs.rcs.model.claims.Claim;
@@ -152,7 +153,8 @@ public class ConsentApiController implements ConsentApi {
         			consentResponse.setClientName((String) parsedSet.getClaims().get(InternRCS.CLIENT_NAME));
         			consentResponse.setState((String) parsedSet.getClaims().get(OIDCClaim.STATE));
         			consentResponse.setUsername((String)parsedSet.getClaims().get(InternRCS.USERNAME));
-
+        			String clientID =(String)parsedSet.getClaims().get(InternRCS.CLIENT_ID);
+        			log.debug("Client ID {}",clientID);
 
         			final Map<String, String> scopesMap = new ObjectMapper()
         					.readValue(parsedSet.getClaims().get("scopes").toString(), Map.class);
@@ -187,7 +189,7 @@ public class ConsentApiController implements ConsentApi {
         										.password(applicationProperties.getIdmHeaderPassword()).build());
         					StringBuilder idmURL = new StringBuilder()
         							.append(applicationProperties.getIdmGetPaymentIntentConsentUrl()).append(consentID)
-        							.append("?_prettyPrint=true");
+        							.append("?_fields=*,Tpp/*");
 
         					// ===== PISP =====
         					try {
@@ -200,8 +202,14 @@ public class ConsentApiController implements ConsentApi {
         						if (obPaymentConsent.getStatusCode().value() == org.springframework.http.HttpStatus.OK
         								.value()) {
         							
+        							ConsentResponse errorConsentResponse= new ConsentResponse();
+        							if(!isTPPMatching(clientID,obPaymentConsentPISP)) {
+        								errorConsentResponse.setErrorDetails(ErrorDetails.builder().errorId("ERR005").errorMessage(ErrorMessage.ERR005.getMessage()).build());
+    									return new ResponseEntity<ConsentResponse>(errorConsentResponse, HttpStatus.OK);
+        							}
+        							
         							if(!applicationProperties.getIdmConsentStatusAwaiting().equalsIgnoreCase( obPaymentConsentPISP.getData().getStatus())) {  
-        								ConsentResponse errorConsentResponse= new ConsentResponse();        								
+        								        								
         							    									 
     									errorConsentResponse.setErrorDetails(
     											ErrorDetails.builder().
@@ -223,12 +231,11 @@ public class ConsentApiController implements ConsentApi {
         							
         						}
         					} catch (Exception e) {
-        						log.error("Could not perform {} ", OpenBankingConstants.PISP.PISP_FLOW, e.getMessage());
-        						e.printStackTrace();
+        						log.error("Could not perform {} ", OpenBankingConstants.PISP.PISP_FLOW, e.getMessage());        						
         					}
 
         					idmURL = new StringBuilder().append(applicationProperties.getIdmGetAccountIntentConsentUrl())
-        							.append(consentID).append("?_prettyPrint=true");
+        							.append(consentID).append("?_fields=*,Tpp/*");
 
         					// ===== AISP =====
         					try {
@@ -241,9 +248,15 @@ public class ConsentApiController implements ConsentApi {
         								.fromJson(obAccountConsent.getBody(), OBPaymentConsentResponse.class);
         						if (obAccountConsent.getStatusCode().value() == org.springframework.http.HttpStatus.OK
         								.value()) {
+        							ConsentResponse errorConsentResponse= new ConsentResponse();
+        							
+        							if(!isTPPMatching(clientID,obAccountConsentAISP)) {
+        								errorConsentResponse.setErrorDetails(ErrorDetails.builder().errorId("ERR005").errorMessage(ErrorMessage.ERR005.getMessage()).build());
+    									return new ResponseEntity<ConsentResponse>(errorConsentResponse, HttpStatus.OK);
+        							}
         							
         							if(applicationProperties.getIdmConsentStatusAuthorised().equalsIgnoreCase( obAccountConsentAISP.getData().getStatus())) {  
-        								ConsentResponse errorConsentResponse= new ConsentResponse();
+        								
         								obAccountConsentAISP.getData().getCreationDateTime();
         								boolean isAuthorisedNotExpired= ConversionUtils.isTimeExpired(obAccountConsentAISP.getData().getStatusUpdateDateTime(), applicationProperties.getScaTimeAutoAccept(), OpenBankingConstants.OpenIDM.IDM_DATE_FORMAT, Calendar.DATE);
         								//applicationProperties.getScaTimeExpire()
@@ -264,8 +277,7 @@ public class ConsentApiController implements ConsentApi {
         							}
         							
         							if(!applicationProperties.getIdmConsentStatusAwaiting().equalsIgnoreCase( obAccountConsentAISP.getData().getStatus())) {  
-        								ConsentResponse errorConsentResponse= new ConsentResponse();        								
-        							    									 
+        							     		        							    									 
     									errorConsentResponse.setErrorDetails(
     											ErrorDetails.builder().
     											errorId("ERR002").
@@ -309,6 +321,25 @@ public class ConsentApiController implements ConsentApi {
 
         return new ResponseEntity<ConsentResponse>(HttpStatus.NOT_IMPLEMENTED);
     }
+	private boolean isTPPMatching(String clientID, Object idmResponse) {
+		try{
+			if(idmResponse instanceof PaymentOrderConsentResponsePayload) {
+				if(clientID.equalsIgnoreCase(((PaymentOrderConsentResponsePayload) idmResponse).getTpp().getIdentifier())) {
+					return true;
+				}
+			}
+			if(idmResponse instanceof OBPaymentConsentResponse) {
+				if(clientID.equalsIgnoreCase(((OBPaymentConsentResponse) idmResponse).getTpp().getIdentifier())) {
+					return true;
+				}
+			}
+		}
+		catch (Exception e) {
+			log.error("Couldn't get Identifier from TPP or Client Id is Null :",e);			
+		}
+		return false;
+	}
+
 	private JSONObject getParsedClaim(JWTClaimsSet parsedSet)
 			throws IOException, JsonParseException, JsonMappingException, ParseException {
 		return parsedSet.getJSONObjectClaim(OpenBankingConstants.IdTokenClaim.CLAIMS);

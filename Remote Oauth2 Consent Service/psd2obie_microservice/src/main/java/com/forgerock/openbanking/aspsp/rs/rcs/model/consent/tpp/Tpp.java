@@ -13,14 +13,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ***************************************************************************/
-package com.forgerock.openbanking.aspsp.rs.rcs.model.consent.domestic_payment;
+package com.forgerock.openbanking.aspsp.rs.rcs.model.consent.tpp;
 
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.data.Data;
-import com.forgerock.openbanking.aspsp.rs.rcs.model.consent.tpp.Tpp;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,14 +28,14 @@ import lombok.ToString;
 @Setter
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PaymentOrderConsentResponsePayload implements Serializable {/**
+public class Tpp implements Serializable {/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8985139767192583454L;
+	private static final long serialVersionUID = -4675165274830868965L;
+	@SerializedName("identifier")
+	private String identifier;
 	
-	@JsonUnwrapped
-	private Data Data;
-	@JsonUnwrapped
-	private Tpp Tpp;
+	@SerializedName("name")
+	private String name;
 
 }

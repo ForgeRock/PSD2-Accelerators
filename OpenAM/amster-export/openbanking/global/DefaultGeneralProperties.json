@@ -15,7 +15,7 @@
       "com.iplanet.am.util.xml.validating" : "off"
     },
     "amconfig.header.debug" : {
-      "com.iplanet.services.debug.level" : "error",
+      "com.iplanet.services.debug.level" : "off",
       "com.sun.services.debug.mergeall" : "off",
       "com.iplanet.services.debug.directory" : "%BASE_DIR%/%SERVER_URI%/debug"
     },

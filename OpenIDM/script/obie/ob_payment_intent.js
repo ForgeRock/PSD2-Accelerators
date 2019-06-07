@@ -20,21 +20,31 @@ load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/ob_am
 load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/ob_tpp.js");
 
 function payment_intent_main(){
-	
-	if (request.method == "create") {
-		console.log("DATA obPaymentIntentData request: "+ request);
-		paymentIntentResult = createPaymentIntent(request.content);
-		return paymentIntentResult;
-	}
-	else {
-		if (request.method == "patch" || request.method == "action") {
-			updatePaymentIntentStatusResult = updatePaymentIntent(request.content);
-			return updatePaymentIntentStatusResult;
-		}
-		else {
-			throw { code : 500, message : "Invalid request - only POST implemented for paymentIntent" };
-		}
-	};
+
+        console.log("[DEBUG] PISP REQUEST.METHOD: " + request.method);
+        switch (request.method) {
+
+                case "create":
+                        paymentIntentResult = createPaymentIntent(request.content);
+			return paymentIntentResult;
+                        break;
+
+                case "read":
+                        paymentIntentResult = getPaymentIntent(request.content);
+                        return paymentIntentResult;
+                        break;
+
+                case "patch":
+                case "action":
+                        updatePaymentIntentStatusResult = updatePaymentIntent(request.content);
+                        return updatePaymentIntentStatusResult;
+			break;
+
+                default:
+                        throw { code : 500, message : "Invalid request" };
+                        break;
+
+        }
 }
 
 //Create initial OB Payment Intent object with status Pending
@@ -70,7 +80,7 @@ function createPaymentIntent(paymentIntentData){
    		returnObject.reason = "tppIdentifier must be specified as a string";
     	}
 		
-	console.log("DATA paymentIntentData with status: "+ paymentIntentData);
+	console.log("[DEBUG] DATA paymentIntentData with status: "+ paymentIntentData);
 	
 	//Create the IDM OB Payment Intent object
 	paymentIntentOutput = openidm.create(CONFIG_managedObjects.obDomesticPayment, "", paymentIntentData);
@@ -97,10 +107,11 @@ function createPaymentIntent(paymentIntentData){
 	paymentIntentOutput.Links = {};
 	paymentIntentOutput.Links.Self = constructIgUri(igServer) + igServer.domesticPaymentEndpoint + "/" + paymentIntentOutput._id;
 	paymentIntentOutput.Meta = {};
+	paymentIntentOutput.Meta.TotalPages = "1";
 	delete paymentIntentOutput._id;
 	delete paymentIntentOutput._rev;
 
-	console.log("\nRESULT paymentIntentOutput final: "+ paymentIntentOutput);
+	console.log("\n[DEBUG] RESULT paymentIntentOutput final: "+ paymentIntentOutput);
   
  	return paymentIntentOutput;
 }
@@ -113,7 +124,7 @@ function updatePaymentIntent(paymentIntentData){
 	console.log("[DEBUG] paymentIntentData: "+ paymentIntentData);
 	
 	inputPaymentIntentId = request.resourcePath;
-	console.log("Input Payment Intent Id: "+ inputPaymentIntentId);	
+	console.log("[DEBUG] Input Payment Intent Id: "+ inputPaymentIntentId);	
 
 	var userid = paymentIntentData.claims.sub;
 	updatePaymentIntent = paymentIntentData.consent;
@@ -156,22 +167,86 @@ function updatePaymentIntent(paymentIntentData){
 	//Update the IDM OB Payment Intent object Status 
 	paymentIntentID = openidm.patch(CONFIG_managedObjects.obDomesticPayment + "/" + inputPaymentIntentId, null, updatePaymentIntent);
 	
-	console.log("RESULT paymentIntentID: "+ paymentIntentID);
-	
-	if (consentStatusUpdate != null && consentStatusUpdate.equals("Authorised")){
-		//Provision Authorization Policy in AM
-		amServer.ssoToken = AM_login_getSsoToken(amServer);
-		policyData = constructPISPPolicyData(inputPaymentIntentId, userid, paymentIntentData.claims.Initiation);
-		AM_policy_create(amServer, policyData);
-		AM_logout(amServer);
+	console.log("[DEBUG] RESULT paymentIntentID: "+ paymentIntentID);
+
+        var qry = {
+              "_queryFilter": "_id eq \"" + inputPaymentIntentId + "\"",
+              "_fields" : "*,Tpp/*"
+        };
+        tppPaymentIntentOutput = openidm.query(CONFIG_managedObjects.obDomesticPayment, qry);
+        if (tppPaymentIntentOutput != null && tppPaymentIntentOutput.result[0] != null && tppPaymentIntentOutput.result[0].Tpp != null){
+                var idmTppId = tppPaymentIntentOutput.result[0].Tpp.identifier;
+		var idmCertTppId = tppPaymentIntentOutput.result[0].Tpp.certId;
+                console.log("[DEBUG] TPP Linked to Payment Intent for update: " + inputPaymentIntentId + " is: " + idmTppId + " having certId: " + idmCertTppId);
+
+                if (consentStatusUpdate != null && consentStatusUpdate.equals("Authorised")){
+	                //Provision Authorization Policy in AM
+        	        amServer.ssoToken = AM_login_getSsoToken(amServer);
+                	policyData = constructPISPPolicyData(inputPaymentIntentId, userid, paymentIntentData.claims.Initiation, idmTppId + idmCertTppId);
+         		AM_policy_create(amServer, policyData);
+                	AM_logout(amServer);
+        	}
+        	else {
+                	console.log("[DEBUG] No AM Policy was created due to the Consent Status: " + consentStatusUpdate);
+			throw { code : 400, message : "Bad Request" };
+		}
 	}
-	else {
-		console.log("[DEBUG] No AM Policy was created due to the Consent Status: " + consentStatusUpdate);
-	}
-  
+        else {
+                throw { code : 400, message : "Bad Request" };
+        }
+
 	return paymentIntentID;
 }
 
+//Get OB Payment Intent Details
+function getPaymentIntent(paymentIntentData){
+
+        var paymentIntentOutput = {};
+        if (request.additionalParameters != null){
+                var tppId = request.additionalParameters.tppId;
+                var consentId = request.additionalParameters.consentId;
+        }
+
+	if (consentId != null && tppId != null){
+                console.log("[DEBUG] Entered in getPaymentIntent() - input tppId: " + tppId + " ; consentId: " + consentId);
+
+                var qry = {
+                        "_queryFilter": "_id eq \"" + consentId + "\"",
+                        "_fields" : "*,Tpp/*"
+                };
+                tppPaymentIntentOutput = openidm.query(CONFIG_managedObjects.obDomesticPayment, qry);
+                if (tppPaymentIntentOutput != null && tppPaymentIntentOutput.result[0] != null && tppPaymentIntentOutput.result[0].Tpp != null){
+                        var idmTppId = tppPaymentIntentOutput.result[0].Tpp.identifier;
+			var idmCertTppId = tppPaymentIntentOutput.result[0].Tpp.certId;
+                        console.log("[DEBUG] TPP Linked to Payment Intent: " + consentId + " is: " + idmTppId + " having certId: " + idmCertTppId);
+                        if (idmCertTppId.equals(tppId)){
+                                paymentIntentOutput = openidm.read(CONFIG_managedObjects.obDomesticPayment + "/" + consentId);
+                                console.log("[DEBUG] PAYMENT INTENT OUTPUT: " + paymentIntentOutput);
+
+                                if (paymentIntentOutput != null){
+                                        paymentIntentOutput.Links = {};
+                                        paymentIntentOutput.Links.Self = constructIgUri(igServer) + igServer.domesticPaymentEndpoint + "/" + paymentIntentOutput._id;
+                                        paymentIntentOutput.Meta = {};
+                                        paymentIntentOutput.Meta.TotalPages = "1";
+
+                                        delete paymentIntentOutput._id;
+                                        delete paymentIntentOutput._rev;
+                                }
+                        }
+                        else {
+                                throw { code : 403, message : "Forbidden" };
+                        }
+                }
+                else {
+                        throw { code : 404, message : "Not Found" };
+                }
+
+        }
+
+        return paymentIntentOutput;
+}
+
+//Construct IG URI from configuration file
 function constructIgUri(igServer){
         var uri = "";
 

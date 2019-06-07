@@ -111,5 +111,6 @@ public class OpenBankingConstants {
     	public static final String SCOPES_LIST = "scopeList";
     	public static final String CLIENT_NAME = "client_name";
     	public static final String USERNAME = "username";
+    	public static final String CLIENT_ID = "clientId";
     }
 }

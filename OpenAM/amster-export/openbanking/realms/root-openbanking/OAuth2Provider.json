@@ -20,7 +20,7 @@
     "coreOIDCConfig" : {
       "supportedIDTokenEncryptionMethods" : [ "A256GCM", "A192GCM", "A128GCM", "A128CBC-HS256", "A192CBC-HS384", "A256CBC-HS512" ],
       "jwtTokenLifetime" : 3600,
-      "supportedClaims" : [ "acr|Authentication context class reference", "phone_number|Phone number", "family_name|Family name", "given_name|Given name", "locale|Locale", "email|Email address", "profile|Your personal information", "zoneinfo|Time zone", "address|Postal address", "name|Full name", "openbanking_intent_id|OpenBanking Intent ID" ],
+      "supportedClaims" : [ "acr|Authentication context class reference", "openbanking_intent_id|OpenBanking Intent ID" ],
       "supportedIDTokenEncryptionAlgorithms" : [ "RSA-OAEP", "RSA-OAEP-256", "A128KW", "A256KW", "RSA1_5", "dir", "A192KW" ],
       "supportedIDTokenSigningAlgorithms" : [ "PS384", "RS384", "ES384", "HS256", "HS512", "ES256", "RS256", "HS384", "ES512", "PS256", "PS512", "RS512" ],
       "oidcClaimsScript" : "a081a4b2-f255-4dea-8bfe-7c7c5384279c"
@@ -31,7 +31,7 @@
       "tokenSigningAlgorithm" : "HS256",
       "authenticationAttributes" : [ "uid" ],
       "defaultScopes" : [ "openid" ],
-      "scopeImplementationClass" : "org.forgerock.openam.oauth2.OpenAMScopeValidator",
+      "scopeImplementationClass" : "org.forgerock.openam.scope.ObieCustomScopeValidator",
       "responseTypeClasses" : [ "code|org.forgerock.oauth2.core.AuthorizationCodeResponseTypeHandler", "id_token|org.forgerock.openidconnect.IdTokenResponseTypeHandler", "device_code|org.forgerock.oauth2.core.TokenResponseTypeHandler", "token|org.forgerock.oauth2.core.TokenResponseTypeHandler" ],
       "tlsCertificateBoundAccessTokensEnabled" : true,
       "moduleMessageEnabledInPasswordGrant" : false,
@@ -62,9 +62,9 @@
       }
     },
     "clientDynamicRegistrationConfig" : {
-      "dynamicClientRegistrationSoftwareStatementRequired" : false,
+      "dynamicClientRegistrationSoftwareStatementRequired" : true,
       "dynamicClientRegistrationScope" : "dynamic_client_registration",
-      "requiredSoftwareStatementAttestedAttributes" : [ "redirect_uris" ],
+      "requiredSoftwareStatementAttestedAttributes" : [ ],
       "generateRegistrationAccessTokens" : true,
       "allowDynamicRegistration" : true
     },

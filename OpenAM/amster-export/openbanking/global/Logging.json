@@ -16,12 +16,12 @@
       "certificateStore" : "%BASE_DIR%/%SERVER_URI%/Logger.jks",
       "bufferSize" : 25,
       "fields" : [ "IPAddr", "LoggedBy", "LoginID", "NameID", "ModuleName", "ContextID", "Domain", "LogLevel", "HostName", "MessageID" ],
-      "status" : "INACTIVE",
+      "status" : "ACTIVE",
       "type" : "File",
       "signingAlgorithm" : "SHA1withRSA",
       "verifyPeriod" : 3600,
       "buffering" : "ON",
-      "jdkLoggingLevel" : "INFO",
+      "jdkLoggingLevel" : "FINEST",
       "bufferTime" : 60
     },
     "file" : {

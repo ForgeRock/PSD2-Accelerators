@@ -16,7 +16,7 @@
 load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/ob_utils.js");
 load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/config.js");
  
-function constructPISPPolicyData(paymentIntentID, inputSub, inputPaymentInitiation){
+function constructPISPPolicyData(paymentIntentID, inputSub, inputPaymentInitiation, tpp){
 	
 	var policyData = {};
 	var permission = "";
@@ -52,6 +52,11 @@ function constructPISPPolicyData(paymentIntentID, inputSub, inputPaymentInitiati
                                           	"claimValue": inputSub
                                         },
 					{
+                                                "type": "JwtClaim",
+                                                "claimName": "tpp",
+                                                "claimValue": tpp
+                                        },
+					{
 				                "type": "OR",
                 				"subjects": [
                    					 {
@@ -78,7 +83,7 @@ function constructPISPPolicyData(paymentIntentID, inputSub, inputPaymentInitiati
 }
 
 
-function constructAISPPolicyData(accountInformationIntentID, inputSub, inputAccountInitiation){
+function constructAISPPolicyData(accountInformationIntentID, inputSub, inputAccountInitiation, tpp){
 	
 	var policyData = {};
 	var permission = "";
@@ -130,6 +135,10 @@ function constructAISPPolicyData(accountInformationIntentID, inputSub, inputAcco
 					  "claimName": "sub",
 					  "claimValue": inputSub
 					},
+					{ "type": "JwtClaim",
+                                          "claimName": "tpp",
+                                          "claimValue": tpp
+                                        },
 					{
 				          "type": "OR",
 				          "subjects": subjectList

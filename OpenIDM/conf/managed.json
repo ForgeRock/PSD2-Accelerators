@@ -1389,7 +1389,7 @@
                         "isVirtual" : false
                     },
                     "identifier" : {
-                        "title" : "TPP Identifier",
+                        "title" : "AM Client ID",
                         "type" : "string",
                         "viewable" : true,
                         "searchable" : true,
@@ -1402,7 +1402,17 @@
                                 "policyId" : "unique",
                                 "params" : { }
                             }
-                        ]
+                        ],
+                        "encryption" : {
+                            "purpose" : null
+                        }
+                    },
+                    "certId" : {
+                        "title" : "Certificate Identifier",
+                        "type" : "string",
+                        "viewable" : true,
+                        "searchable" : true,
+                        "userEditable" : true
                     },
                     "created" : {
                         "title" : "Timestamp",
@@ -1465,7 +1475,7 @@
                         "description" : "TPP Software Statement Assertions"
                     },
                     "domesticPayments" : {
-                        "description" : "",
+                        "description" : null,
                         "title" : "DomesticPayments",
                         "viewable" : true,
                         "searchable" : false,
@@ -1473,7 +1483,7 @@
                         "policies" : [ ],
                         "returnByDefault" : false,
                         "minLength" : null,
-                        "pattern" : "",
+                        "pattern" : null,
                         "type" : "array",
                         "items" : {
                             "type" : "relationship",
@@ -1509,7 +1519,7 @@
                         }
                     },
                     "AccountAccessIntents" : {
-                        "description" : "",
+                        "description" : null,
                         "title" : "AccountAccessIntents",
                         "viewable" : true,
                         "searchable" : false,
@@ -1517,7 +1527,7 @@
                         "policies" : [ ],
                         "returnByDefault" : false,
                         "minLength" : null,
-                        "pattern" : "",
+                        "pattern" : null,
                         "type" : "array",
                         "items" : {
                             "type" : "relationship",
@@ -1556,6 +1566,7 @@
                 "order" : [
                     "name",
                     "identifier",
+                    "certId",
                     "created",
                     "_id",
                     "ssas",

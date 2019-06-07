@@ -1,0 +1,24 @@
+{
+  "_copyright" : "Copyright 2019 ForgeRock AS Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the\nLicense at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTI\nES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions andlimitations under the License.",
+  "name" : "OBIE OpenAM Generic Route",
+  "baseURI" : "https://login.psd2acceldemo.fridam.aeet-forgerock.com",
+  "condition" : "${matches(request.uri.path, '^(/UI|/XUI|/json|/oauth2/realms/root/realms/openbanking/connect/jwk_uri)')}",
+  "handler" : {
+    "type" : "Chain",
+    "config" : {
+      "filters" : [ {
+        "name" : "HeaderFilter-Rewrite-Host",
+        "type" : "HeaderFilter",
+        "config" : {
+          "messageType" : "REQUEST",
+          "remove" : [ "host", "x-forwarded-host" ],
+          "add" : {
+            "host" : [ "login.psd2acceldemo.fridam.aeet-forgerock.com" ],
+            "x-forwarded-host" : [ "login.psd2acceldemo.fridam.aeet-forgerock.com" ]
+          }
+        }
+      } ],
+      "handler" : "ReverseProxyHandler"
+    }
+  }
+}

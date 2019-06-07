@@ -28,9 +28,9 @@ function AM_logout(amServer){
 	
 	restCall = {};
 	restCall.url = constructAmUri(amServer) + "/json/sessions/?_action=logout";
-	restCall.headers = {"contentType" 		: "application/json", 
-					"Accept-API-Version"	: "resource=2.0, protocol=1.0",
-					"iPlanetDirectoryPro"	: ssoToken};
+	restCall.headers = { "contentType" 	   : "application/json", 
+			     "Accept-API-Version"  : "resource=2.0, protocol=1.0",
+			     "iPlanetDirectoryPro" : ssoToken};
 	restCall.body = "{}";
 	restCall.method = "POST";
 	
@@ -55,10 +55,10 @@ function AM_login_getSsoToken(amServer){
 	restCall = {};
 	restCall.url = constructAmUri(amServer) + "/json/realms/" + amServer.realm + "/authenticate";
 
-	restCall.headers = {"Content-Type" 		: "application/json", 
-					"Accept-API-Version"	: "resource=2.0, protocol=1.0",
-					"X-OpenAM-Username"		: amServer.username,
-					"X-OpenAM-Password"		: amServer.password};
+	restCall.headers = { "Content-Type" 	  : "application/json", 
+			     "Accept-API-Version" : "resource=2.0, protocol=1.0",
+			     "X-OpenAM-Username"  : amServer.username,
+			     "X-OpenAM-Password"  : amServer.password};
 	restCall.body = "{}";
 	restCall.method = "POST";
 	
@@ -78,10 +78,9 @@ function AM_policy_create(amServer, policyData){
 	restCall = {};
 	restCall.url = constructAmUri(amServer) + "/json/realms/" + amServer.policyRealm + "/policies?_action=create";
 
-	restCall.headers = {"contentType" 		: "application/json", 
-					"Accept-API-Version"	: "protocol=1.0",
-					"amlbcookie"			: "01",
-					"iPlanetDirectoryPro"	: ssoToken};
+	restCall.headers = { "contentType" 	    : "application/json", 
+			     "Accept-API-Version"   : "protocol=1.0",
+			     "iPlanetDirectoryPro"  : ssoToken};
 	restCall.body = JSON.stringify(policyData);
 	restCall.method = "POST";
 
@@ -102,9 +101,9 @@ function AM_policy_delete(amServer, inputAccountIntentId){
 
 	console.log("[DEBUG]: url to delete - " + restCall.url);
 
-        restCall.headers = {"contentType"               : "application/json",
-                                        "Accept-API-Version"    : "protocol=1.0",
-                                        "iPlanetDirectoryPro"   : ssoToken};
+        restCall.headers = { "contentType" : "application/json",
+                             "Accept-API-Version"    : "protocol=1.0",
+                             "iPlanetDirectoryPro"   : ssoToken};
         restCall.method = "DELETE";
 
         executeRest(restCall);

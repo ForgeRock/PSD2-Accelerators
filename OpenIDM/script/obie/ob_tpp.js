@@ -44,36 +44,27 @@ function createTpp(tppData){
 		ssaId = findTppSsaByValue(tppData.ssa);		
 
         	if (!tppID.equals("-1")){          
-			/*
-			if (!ssaId.equals("-1")){
-				console.log("[DEBUG]: Mapping TPP + SSA already exists in IDM.");
-				returnObject.reason = "[IDM ERROR] TPP + SSA already exists in IDM.";
-				returnObject.code = 400;
-			}
-			else {
-			*/
-				//Create the SSA managed object in IDM
-				newTppSsaObject.ssa = tppData.ssa;
-                        	ssaId = openidm.create(CONFIG_managedObjects.obTppSsa, null, newTppSsaObject)._id;
-            			console.log("[DEBUG]: SSA ID created: " + ssaId);
+			//Create the SSA managed object in IDM
+			newTppSsaObject.ssa = tppData.ssa;
+                        ssaId = openidm.create(CONFIG_managedObjects.obTppSsa, null, newTppSsaObject)._id;
+            		console.log("[DEBUG]: SSA ID created: " + ssaId);
 
-				//Update existing TPP managed object in IDM with the new SSA
-				var newTppObjectArray = [];
-				newTppObject.operation = "add";
-            			newTppObject.field = "/ssas/-";
-				var ssaTpp = {};
-				ssaTpp._ref = CONFIG_managedObjects.obTppSsa + "/" + ssaId;
-	   			newTppObject.value = ssaTpp;    
-            			newTppObjectArray.push(newTppObject);
+			//Update existing TPP managed object in IDM with the new SSA
+			var newTppObjectArray = [];
+			newTppObject.operation = "add";
+       			newTppObject.field = "/ssas/-";
+			var ssaTpp = {};
+			ssaTpp._ref = CONFIG_managedObjects.obTppSsa + "/" + ssaId;
+   			newTppObject.value = ssaTpp;    
+       			newTppObjectArray.push(newTppObject);
 		
-            			returnObject.id = openidm.patch(CONFIG_managedObjects.obTpp + "/" + tppID, null, newTppObjectArray)._id;
-				console.log("[DEBUG]: TPP ID that was updated with the new SSA: " + returnObject.id);            	
+       			returnObject.id = openidm.patch(CONFIG_managedObjects.obTpp + "/" + tppID, null, newTppObjectArray)._id;
+			console.log("[DEBUG]: TPP ID that was updated with the new SSA: " + returnObject.id);            	
 		
-				console.log("[DEBUG]: " + JSON.stringify(newTppObject, null,4));
-				returnObject.status = "SUCCESS";
-				returnObject.reason = "[IDM] OB TPP Managed Object was successfully updated.";
-				returnObject.code = 201;
-			//}
+			console.log("[DEBUG]: " + JSON.stringify(newTppObject, null,4));
+			returnObject.status = "SUCCESS";
+			returnObject.reason = "[IDM] OB TPP Managed Object was successfully updated.";
+			returnObject.code = 201;
         	}
         	else {
 			if (ssaId.equals("-1")){
@@ -85,6 +76,7 @@ function createTpp(tppData){
 
 			//Create new TPP managed object in IDM with the associated SSA
                         newTppObject.identifier = tppData.identifier;
+			newTppObject.certId = tppData.certId;
                         newTppObject.name = tppData.name;
                         newTppObject.created = generateTimestamp();
                         newTppObject.ssas = [{ "_ref" : CONFIG_managedObjects.obTppSsa + "/" + ssaId}];

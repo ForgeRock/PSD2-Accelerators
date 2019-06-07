@@ -13,35 +13,33 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ***************************************************************************/
- 
-load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/ob_payment_intent.js");
-load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/ob_account_access_intent.js");
-load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/ob_tpp.js");
 load("/git/config/6.5/default/idm/sync-with-ldap-bidirectional/script/obie/ob_utils.js");
 
-(function(){
+function(){
 	d = new Date();
-	s = d.getTime();
-	console.log("[DEBUG] Main OB Handler - " + s);
-    
-	returnObject = {};
-	
-	switch (thisUriComponent("APPLICATION")) {
+        s = d.getTime();
+        console.log("Main API Simulator - " + s);
 
-                case "obPaymentIntent":
-                        returnObject = payment_intent_main();
+        returnObject = {};
+
+        switch (thisUriComponent("APPLICATION")) {
+
+               case "obRSDiscovery":
+                        returnObject = obRSMetadata();
                         break;
-			
-		case "obAccountAccessIntent":
-			returnObject = account_access_intent_main();
-			break;
+        }
 
-                case "obTpp":
-                        returnObject = create_tpp_main();
-                        break;
-
-	}
-	
-	return returnObject;
+	return {
+        	result: returnObject
+    	};
 
 })();
+
+function obRSMetadata(){
+
+    console.log("[DEBUG] OB RS METADATA: "+ request);
+    rsMetadata = "{'OBIE RS METADATA'}";
+	return rsMetadata;
+//    jsonRSMetadata = JSON.parse(rsMetadata);
+//    return jsonRSMetadata;
+}

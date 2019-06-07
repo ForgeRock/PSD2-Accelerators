@@ -1,19 +1,19 @@
 {
   "_copyright" : "Copyright 2019 ForgeRock AS Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions andlimitations under the License.",
-  "name" : "OBIE TPP Registration",
+  "name" : "OBIE Assets OpenAM Token Route",
   "baseURI" : "https://login.psd2acceldemo.fridam.aeet-forgerock.com",
-  "condition" : "${matches(request.uri.path, '^/oauth2/realms/root/realms/openbanking/register')}",
+  "condition" : "${matches(request.uri.path, '^/oauth2/realms/root/realms/openbanking/access_token')}",
   "capture" : [ "response", "request" ],
   "auditService" : {
-    "name" : "obie-audit-service",
+    "name" : "openbanking-audit-service",
     "type" : "AuditService",
     "config" : {
       "enabled" : true,
       "event-handlers" : [ {
         "class" : "org.forgerock.audit.handlers.json.JsonAuditEventHandler",
         "config" : {
-          "name" : "obie-tpp-registration",
-          "logDirectory" : "${openig.baseDirectory.path}/audit/obie",
+          "name" : "openbanking-event",
+          "logDirectory" : "${openig.baseDirectory.path}/audit/openbanking",
           "elasticsearchCompatible" : true,
           "topics" : [ "access" ],
           "buffering" : {
@@ -23,8 +23,15 @@
             "maxBatchedEvents" : 500
           },
           "fileRotation" : {
-            "rotationEnabled" : false
-          }
+            "rotationEnabled" : true,
+            "rotationInterval" : "24 h",
+            "rotationFileSuffix" : "_yyyy-MM-dd",
+            "rotationTimes" : [ "1 m" ]
+          },
+          "fileRetention" : {
+            "maxNumberOfHistoryFiles" : 365
+          },
+          "rotationRetentionCheckInterval" : "1 m"
         }
       } ]
     }
@@ -49,15 +56,6 @@
     },
     "capture" : [ "response", "request" ]
   } ],
-  "secrets" : {
-    "stores" : [ {
-      "type" : "FileSystemSecretStore",
-      "config" : {
-        "format" : "PLAIN",
-        "directory" : "${openig.baseDirectory.path}/secrets/obie"
-      }
-    } ]
-  },
   "handler" : {
     "type" : "Chain",
     "config" : {
@@ -76,14 +74,25 @@
         "type" : "SwitchFilter",
         "config" : {
           "onResponse" : [ {
-            "condition" : "${response.status.code == 400}",
+            "condition" : "${(response.status.code == 400) && (toString(response.entity).contains('invalid_grant'))}",
             "handler" : {
-              "name" : "FilterFailureHandler-400",
+              "name" : "FilterFailureHandler-400-InvalidGrant",
               "type" : "StaticResponseHandler",
               "config" : {
                 "status" : 400,
-                "reason" : "Bad Request",
-                "entity" : "${attributes.error400}"
+                "reason" : "invalid_grant",
+                "entity" : "${attributes.error400invalidGrant}"
+              }
+            }
+          }, {
+            "condition" : "${(response.status.code == 400) && (!toString(response.entity).contains('invalid_grant'))}",
+            "handler" : {
+              "name" : "FilterFailureHandler-401-InvalidClient",
+              "type" : "StaticResponseHandler",
+              "config" : {
+                "status" : 401,
+                "reason" : "invalid_client",
+                "entity" : "${attributes.error401invalidClient}"
               }
             }
           }, {
@@ -94,7 +103,7 @@
               "config" : {
                 "status" : 401,
                 "reason" : "Unauthorized",
-                "entity" : "${attributes.error401}"
+                "entity" : "${attributes.error401invalidClient}"
               }
             }
           }, {
@@ -137,8 +146,11 @@
         "type" : "AssignmentFilter",
         "config" : {
           "onResponse" : [ {
-            "target" : "${attributes.error400}",
-            "value" : "${toString('{\"Code\":\"400 BadRequest\",\"Id\":\"').concat(request.headers['x-request-id'][0]).concat('\",\"Message\":\"Invalid request parameters.\",\"Errors\":[{\"ErrorCode\":\"UK.OBIE.Bad.Request\",\"Message\":\"Invalid request parameters.\",\"Path\":\"\",\"Url\":\"').concat(request.uri.path).concat('\"}]}')}"
+            "target" : "${attributes.error400invalidGrant}",
+            "value" : "${toString('{\"status\":\"400\",\"error\":\"invalid_grant\",\"message\":\"invalid_grant\",\"path\":\"').concat(request.uri.path).concat('\"}')}"
+          }, {
+            "target" : "${attributes.error401invalidClient}",
+            "value" : "${toString('{\"status\":\"401\",\"error\":\"invalid_client\",\"message\":\"invalid_client\",\"path\":\"').concat(request.uri.path).concat('\"}')}"
           }, {
             "target" : "${attributes.error401}",
             "value" : "${toString('{\"status\":\"401\",\"error\":\"Unauthorized\",\"message\":\"Unauthorized\",\"path\":\"').concat(request.uri.path).concat('\"}')}"
@@ -154,34 +166,30 @@
           } ]
         }
       }, {
-        "name" : "RetrieveSecretsFilter",
-        "type" : "RetrieveSecretsFilter",
+        "name" : "CertificateExtensionValidatorFilter",
+        "type" : "CertificateExtensionValidatorFilter",
         "config" : {
-          "directory" : "${openig.baseDirectory.path}/secrets/obie",
-          "passwordSecretIds" : "registrationidmagentsecret"
-        }
-      }, {
-        "name" : "RegistrationJwtVerificationFilter",
-        "type" : "RegistrationJwtVerificationFilter",
-        "config" : {
+          "routeRole" : "Account Information,Payment Initiation",
           "clientCertificateHeaderName" : "ssl-client-cert"
         }
       }, {
-        "name" : "RegisterTppForwardFilter",
-        "type" : "RegisterTppForwardFilter",
+        "name" : "HeaderFilter-Rewrite-Host",
+        "type" : "HeaderFilter",
         "config" : {
-          "idmURL" : "https://openidm.psd2acceldemo.fridam.aeet-forgerock.com/openidm/endpoint/obTpp?_action=create",
-          "openIdmPassword" : "registrationidmagentsecret",
-          "openIdmUsername" : "openidm-admin"
-        },
-        "capture" : [ "response", "request" ]
+          "messageType" : "REQUEST",
+          "remove" : [ "host", "x-forwarded-host" ],
+          "add" : {
+            "host" : [ "login.psd2acceldemo.fridam.aeet-forgerock.com" ],
+            "x-forwarded-host" : [ "login.psd2acceldemo.fridam.aeet-forgerock.com" ]
+          }
+        }
       }, {
-        "name" : "StripSsaDynamicRegistrationFilter",
-        "type" : "StripSsaDynamicRegistrationFilter",
+        "name" : "HeaderFilter-Remove-Header",
+        "type" : "HeaderFilter",
         "config" : {
-          "stripSSA" : false
-        },
-        "capture" : [ "response", "request" ]
+          "messageType" : "REQUEST",
+          "remove" : [ "ssl-client-cert" ]
+        }
       } ],
       "handler" : "ReverseProxyHandler"
     }
