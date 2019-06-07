@@ -20,6 +20,8 @@ import java.util.Map;
 
 import org.forgerock.openig.alias.ClassAliasResolver;
 import org.forgerock.openig.ob.filter.CertificateExtensionValidatorFilter;
+import org.forgerock.openig.ob.filter.CheckAuthorizeRequestJwtFilter;
+import org.forgerock.openig.ob.filter.FormatJsonFilter;
 import org.forgerock.openig.ob.filter.FormatRegistrationJwtFilter;
 import org.forgerock.openig.ob.filter.PaymentSubmitParseFilter;
 import org.forgerock.openig.ob.filter.RegisterTppForwardFilter;
@@ -41,6 +43,8 @@ public class OpenBankingAliasResolver implements ClassAliasResolver {
 		ALIASES.put("StripSsaDynamicRegistrationFilter", StripSsaDynamicRegistrationFilter.class);
 		ALIASES.put("CertificateExtensionValidatorFilter", CertificateExtensionValidatorFilter.class);
 		ALIASES.put("RetrieveSecretsFilter", RetrieveSecretsFilter.class);
+		ALIASES.put("FormatJsonFilter", FormatJsonFilter.class);
+		ALIASES.put("CheckAuthorizeRequestJwtFilter", CheckAuthorizeRequestJwtFilter.class);
 	}
 
 	/**
