@@ -440,12 +440,7 @@
                 ]
             },
             "iconClass" : "fa fa-database",
-            "type" : "Managed Object",
-            "onDelete" : {
-                "type" : "text/javascript",
-                "globals" : { },
-                "file" : "script/obie/ob_account_access_delete_intent.js"
-            }
+            "type" : "Managed Object"
         },
         {
             "name" : "ObDomesticPayment",
