@@ -1,1 +1,0 @@
-#Obie Postman collection & environment
