@@ -17,7 +17,6 @@ This resource server contains the following endpoints:
 * ```GET /accounts/{id}/balances``` - endpoint for returning account by id with balances
 * ```GET /transactions/``` - endpoint for returning all transactions
 * ```GET /accounts/{id}/transactions``` - endpoint for returning transactions by account id
-* ```GET /NextGenPSD2RSDiscovery/``` - endpoint for display all OpenIG endpoint for NextGenPSD2 Berlin Group specification 
 
 For configuration you can find file in project:
 
@@ -181,9 +180,6 @@ curl -X POST \
 ```
 
 ## License
-
-This project is licensed under the Common Development and Distribution License (CDDL). The following text applies to 
-both this file, and should also be included in all files in the project:
 
 >  Copyright 2019 ForgeRock AS
 >

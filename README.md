@@ -209,7 +209,7 @@ The custom endpoints included in the IDM package:
 * endpoint-obPaymentIntent (custom endpoint that manages all the PISP consent scenarios)
 * endpoint-obTpp (custom endpoint for the TPP registration flow)
 
-The custom endpoints included in the IDM package:
+The custom scripts included in the IDM package:
 * config.js (contains the configurable parameters used inside the all other scripts: AM server details, IDM server details, IG server details, Resource Server details, OBIE IDM Managed Objects, OBIE AM Policy Configs)
 * fr_am_utils.js (contains definition of the AM specific methods for the policy creation)
 * mainOBHandler.js (main script that is called from the custom endpoints and which then forwards the logic to the right script according to the current scenario)
@@ -232,7 +232,7 @@ Copy the content of the /conf and /script folders to your IDM /conf and /script 
 ## Remote Consent Service Sample
 Project 'psd2obie_microservice' is a sample implementation of a Remote Consent Service. Configuring Remote Consent is documented in the official Forgerock documentation, see [https://backstage.forgerock.com/docs/am/6.5/oauth2-guide/#oauth2-implement-remote-consent](https://backstage.forgerock.com/docs/am/6.5/oauth2-guide/#oauth2-implement-remote-consent)
 
-> This sample comes with it's own README, please see [Remote Oauth2 Consent Service/psd2obie_microservice/README.md](Remote Oauth2 Consent Service/psd2obie_microservice/README.md)
+> This sample comes with it's own README, please see: [Remote Oauth2 Consent Service/psd2obie_microservice/README.md](Remote Oauth2 Consent Service/psd2obie_microservice/README.md)
 
 
 ## Resource Server Mock
@@ -288,9 +288,6 @@ This has been originally created against version 6.5.1-RC2 that includes mTLS su
 
 
 ## License
-
-This project is licensed under the Common Development and Distribution License (CDDL). The following text applies to 
-both this file, and should also be included in all files in the project:
 
 >  Copyright 2019 ForgeRock AS
 >

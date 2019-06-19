@@ -161,9 +161,6 @@ sudo kubectl apply -f obie-rcs-frontend-deployment.yaml
 
 ## License
 
-This project is licensed under the Common Development and Distribution License (CDDL). The following text applies to 
-both this file, and should also be included in all files in the project:
-
 >  Copyright 2019 ForgeRock AS
 >
 > Licensed under the Apache License, Version 2.0 (the "License");
