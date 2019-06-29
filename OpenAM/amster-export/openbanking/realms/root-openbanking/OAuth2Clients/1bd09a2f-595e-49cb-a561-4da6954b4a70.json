@@ -1,0 +1,59 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "OAuth2Clients",
+    "entityId" : "1bd09a2f-595e-49cb-a561-4da6954b4a70",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "1bd09a2f-595e-49cb-a561-4da6954b4a70",
+    "signEncOAuth2ClientConfig" : {
+      "idTokenEncryptionMethod" : "A128CBC-HS256",
+      "idTokenEncryptionAlgorithm" : "RSA-OAEP-256",
+      "userinfoResponseFormat" : "JSON",
+      "userinfoSignedResponseAlg" : null,
+      "requestParameterEncryptedAlg" : "RSA-OAEP-256",
+      "tokenEndpointAuthSigningAlgorithm" : "PS256",
+      "requestParameterEncryptedEncryptionAlgorithm" : "A128CBC-HS256",
+      "idTokenSignedResponseAlg" : "PS256",
+      "idTokenEncryptionEnabled" : false,
+      "userinfoEncryptedResponseEncryptionAlgorithm" : null,
+      "publicKeyLocation" : "jwks_uri",
+      "userinfoEncryptedResponseAlg" : null,
+      "jwksUri" : "https://service.directory.ob.forgerock.financial:443/api/software-statement/5ce7b187dc9578001764dfc6/application/jwk_uri",
+      "requestParameterSignedAlg" : "PS256",
+      "mTLSCertificateBoundAccessTokens" : false
+    },
+    "advancedOAuth2ClientConfig" : {
+      "grantTypes" : [ "refresh_token", "client_credentials", "authorization_code" ],
+      "updateAccessToken" : "I9eoKacsoDMwYtpIIoWwMYLY3T0",
+      "responseTypes" : [ "code id_token" ],
+      "subjectType" : "public",
+      "tokenEndpointAuthMethod" : "private_key_jwt"
+    },
+    "coreOAuth2ClientConfig" : {
+      "clientType" : "Confidential",
+      "userpassword" : null,
+      "userpassword-encrypted" : "AAAAA0FFUwIQNrOaDvp6C5Wg1TbXass0UxPX1TY4RixAEYi9Fx61+OBI9BayxXRUC05ocS23RH7Ls/akVFPcdQIvAIXDdMTkUDs07GFf3T1W5u+ky+9NXfUIq+A7QbEI6Il/sKNe3kescvvD9lni0c1OK5cfxQwyvg==",
+      "scopes" : [ "openid", "payments", "accounts" ],
+      "authorizationCodeLifetime" : 0,
+      "accessTokenLifetime" : 0,
+      "refreshTokenLifetime" : 0,
+      "defaultScopes" : [ ],
+      "redirectionUris" : [ "https://www.google.com" ],
+      "status" : "Active"
+    },
+    "coreOpenIDClientConfig" : {
+      "jwtTokenLifetime" : 0,
+      "defaultAcrValues" : [ ],
+      "defaultMaxAgeEnabled" : false,
+      "defaultMaxAge" : 1
+    },
+    "_type" : {
+      "_id" : "OAuth2Client",
+      "name" : "OAuth2 Clients",
+      "collection" : true
+    }
+  }
+}

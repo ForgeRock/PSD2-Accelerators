@@ -19,7 +19,7 @@
     "agentgroup" : null,
     "remoteConsentRequestEncryptionAlgorithm" : "RSA-OAEP-256",
     "userpassword" : null,
-    "userpassword-encrypted" : "AAAAA0FFUwIQisE2nbBP3PQFqNo4L2zW8wyKE1FHpMbkUBxLCv5JEYhSTIW6fWX3UA==",
+    "userpassword-encrypted" : "AAAAA0FFUwIQntUHYyZI/SPpfHtm+RjavRlsmcZ/H9H5ozIVzzuiqwi5DLTWVYpcLg==",
     "jwksCacheTimeout" : 0,
     "remoteConsentRedirectUrl" : "https://obie-rcs-frontend.psd2acceldemo.fridam.aeet-forgerock.com/",
     "publicKeyLocation" : "jwks_uri",

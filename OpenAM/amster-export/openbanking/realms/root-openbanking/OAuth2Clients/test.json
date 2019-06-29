@@ -3,11 +3,11 @@
     "realm" : "/openbanking",
     "amsterVersion" : "6.5.1",
     "entityType" : "OAuth2Clients",
-    "entityId" : "iss-client",
+    "entityId" : "test",
     "pathParams" : { }
   },
   "data" : {
-    "_id" : "iss-client",
+    "_id" : "test",
     "signEncOAuth2ClientConfig" : {
       "idTokenEncryptionMethod" : "A128CBC-HS256",
       "jwkSet" : null,
@@ -33,20 +33,20 @@
       "clientJwtPublicKey" : null
     },
     "advancedOAuth2ClientConfig" : {
-      "grantTypes" : [ "authorization_code" ],
+      "grantTypes" : [ "authorization_code", "password" ],
       "updateAccessToken" : null,
-      "requestUris" : [ ],
-      "clientUri" : [ ],
+      "requestUris" : [ "https://www.google.com" ],
+      "clientUri" : [ "https://www.myclient.com" ],
       "mixUpMitigation" : false,
       "logoUri" : [ ],
-      "tokenEndpointAuthMethod" : "client_secret_basic",
-      "sectorIdentifierUri" : null,
+      "tokenEndpointAuthMethod" : "client_secret_post",
       "isConsentImplied" : false,
+      "sectorIdentifierUri" : "https://acceldemo.com",
       "contacts" : [ ],
       "responseTypes" : [ "code", "token", "id_token", "code token", "token id_token", "code id_token", "code token id_token", "device_code", "device_code id_token" ],
       "policyUri" : [ ],
       "descriptions" : [ ],
-      "subjectType" : "Public",
+      "subjectType" : "Pairwise",
       "name" : [ ]
     },
     "coreOpenIDClientConfig" : {
@@ -60,14 +60,13 @@
     },
     "coreOAuth2ClientConfig" : {
       "userpassword" : null,
-      "userpassword-encrypted" : "AAAAA0FFUwIQQvUdLLwDi4i8MOf/TXh6IAftmHsG5j1pX0mntkm2c0FYB0Ht+npojw==",
+      "userpassword-encrypted" : "AAAAA0FFUwIQ2OydAM+kGXQsc5WInVJwdVuFoDqIdXLg4ONQjCZToi5qeZejcykfGQ==",
       "authorizationCodeLifetime" : 0,
       "accessTokenLifetime" : 0,
       "defaultScopes" : [ "openid" ],
-      "clientName" : [ "ISS Client Display Name" ],
-      "clientType" : "Confidential",
-      "scopes" : [ "openid", "payments", "accounts" ],
-      "agentgroup" : null,
+      "clientName" : [ ],
+      "clientType" : "Public",
+      "scopes" : [ "openid" ],
       "refreshTokenLifetime" : 0,
       "redirectionUris" : [ "https://www.google.com" ],
       "status" : "Active"

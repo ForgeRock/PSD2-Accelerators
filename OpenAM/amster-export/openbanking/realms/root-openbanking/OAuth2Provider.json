@@ -34,6 +34,7 @@
       "scopeImplementationClass" : "org.forgerock.openam.scope.ObieCustomScopeValidator",
       "responseTypeClasses" : [ "code|org.forgerock.oauth2.core.AuthorizationCodeResponseTypeHandler", "id_token|org.forgerock.openidconnect.IdTokenResponseTypeHandler", "device_code|org.forgerock.oauth2.core.TokenResponseTypeHandler", "token|org.forgerock.oauth2.core.TokenResponseTypeHandler" ],
       "tlsCertificateBoundAccessTokensEnabled" : true,
+      "hashSalt" : "mysaltiness",
       "moduleMessageEnabledInPasswordGrant" : false,
       "tokenEncryptionEnabled" : false,
       "tokenCompressionEnabled" : false,

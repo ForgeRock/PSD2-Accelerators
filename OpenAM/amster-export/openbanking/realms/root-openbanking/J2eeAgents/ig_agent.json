@@ -60,7 +60,7 @@
       "webSocketConnectionIntervalInMinutes" : 30,
       "agentConfigChangeNotificationsEnabled" : true,
       "userpassword" : null,
-      "userpassword-encrypted" : "AAAAA0FFUwIQA0hH34jfW7q5tmCD/vnA3O95mV9nE1C1gdRPkDoPtRS7VbHeuMi+ojm6rtkIl0uFkQf40U1Gc/UingsPj+1zCuyQpxyxqtiFENvpWdjnZuqLS8uG8WMN85F6ONO2GbzSLcJMWoRIFlMMUeEsQqqCjkFUKHWbrBZBo3BWaQGy5d8XyxumX03uftV3MUtw3mpNHDJJ40WCW70=",
+      "userpassword-encrypted" : "AAAAA0FFUwIQIyAS/PLSHmyMdAn0SCkUXutXPdJgII7HApnQXBYAhFHfefW45NO3CzSHDr6LC2nuMZZ+mGQ42f+kjfYFy9DPwZrn8LALGKqK0s4H01VKPww/ql8Ya5vkJge82xDIaWD+VewZieQBKgeoQvubzgeiOWpR/E1X3ibtcP1KpIOutZh/CXrYsfmd4UeOCxVYbi/vrI3rMD1sQEQ=",
       "httpSessionBinding" : true,
       "userPrincipalFlag" : false,
       "configurationReloadInterval" : 0,

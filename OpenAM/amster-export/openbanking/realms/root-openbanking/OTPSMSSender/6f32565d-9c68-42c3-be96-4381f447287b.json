@@ -10,7 +10,7 @@
     "_id" : "6f32565d-9c68-42c3-be96-4381f447287b",
     "hostName" : "smtp.gmail.com",
     "password" : null,
-    "password-encrypted" : "AAAAA0FFUwIQhXg1zgbQV1KYvDrVNwS6zrj07UNXpB1K23Ybmn0mABrkRUoqrNNYOwQ/BHiz0rzF",
+    "password-encrypted" : "AAAAA0FFUwIQari3DpBptg1fA5jJdhWH1lG7x38JBjAHQkWM7qoANM5PHU6l056at+VsRCjAbNDt",
     "sslOption" : "SSL",
     "mobileCarrierAttributeName" : "Forgerock",
     "hostPort" : 465,

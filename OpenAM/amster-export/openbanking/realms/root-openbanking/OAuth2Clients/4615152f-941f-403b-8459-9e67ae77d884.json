@@ -1,0 +1,70 @@
+{
+  "metadata" : {
+    "realm" : "/openbanking",
+    "amsterVersion" : "6.5.1",
+    "entityType" : "OAuth2Clients",
+    "entityId" : "4615152f-941f-403b-8459-9e67ae77d884",
+    "pathParams" : { }
+  },
+  "data" : {
+    "_id" : "4615152f-941f-403b-8459-9e67ae77d884",
+    "signEncOAuth2ClientConfig" : {
+      "idTokenEncryptionMethod" : "A128CBC-HS256",
+      "idTokenEncryptionAlgorithm" : "RSA-OAEP-256",
+      "userinfoResponseFormat" : "JSON",
+      "userinfoSignedResponseAlg" : null,
+      "requestParameterEncryptedAlg" : "RSA-OAEP-256",
+      "tokenEndpointAuthSigningAlgorithm" : "PS256",
+      "requestParameterEncryptedEncryptionAlgorithm" : "A128CBC-HS256",
+      "idTokenEncryptionEnabled" : false,
+      "idTokenSignedResponseAlg" : "PS256",
+      "userinfoEncryptedResponseEncryptionAlgorithm" : null,
+      "publicKeyLocation" : "jwks_uri",
+      "userinfoEncryptedResponseAlg" : null,
+      "jwksUri" : "https://service.directory.ob.forgerock.financial:443/api/software-statement/5ce566ca51304b001858a7b7/application/jwk_uri",
+      "mTLSCertificateBoundAccessTokens" : false,
+      "requestParameterSignedAlg" : "PS256"
+    },
+    "advancedOAuth2ClientConfig" : {
+      "grantTypes" : [ "refresh_token", "client_credentials", "authorization_code" ],
+      "updateAccessToken" : "vfWk_DdAHRhtJD2yLa9nJwXmctQ",
+      "sectorIdentifierUri" : "login.psd2acceldemo.fridam.aeet-forgerock.com",
+      "isConsentImplied" : false,
+      "contacts" : [ ],
+      "requestUris" : [ ],
+      "responseTypes" : [ "code id_token" ],
+      "policyUri" : [ ],
+      "descriptions" : [ ],
+      "clientUri" : [ ],
+      "mixUpMitigation" : false,
+      "subjectType" : "Pairwise",
+      "logoUri" : [ ],
+      "name" : [ ],
+      "tokenEndpointAuthMethod" : "private_key_jwt"
+    },
+    "coreOAuth2ClientConfig" : {
+      "clientType" : "Confidential",
+      "userpassword" : null,
+      "userpassword-encrypted" : "AAAAA0FFUwIQ4IHg6jIcoiJOuu56+AJN1djs22q9mOess/W8ZF8fbe3bIcDoIiEBJ25KFsW64uADsQkVfRsDRQA/w6c59zf9zQKYzpKQlFeuGdnN0j62nWxAD5oq7SNoHyOWF7Cg2mxxpNY7YuIwd2MTjATOfPt2Nw==",
+      "scopes" : [ "openid", "payments", "accounts" ],
+      "authorizationCodeLifetime" : 0,
+      "accessTokenLifetime" : 0,
+      "refreshTokenLifetime" : 0,
+      "defaultScopes" : [ ],
+      "redirectionUris" : [ "https://www.google.com" ],
+      "clientName" : [ "TPP ISS Demo Dani" ],
+      "status" : "Active"
+    },
+    "coreOpenIDClientConfig" : {
+      "jwtTokenLifetime" : 0,
+      "defaultAcrValues" : [ ],
+      "defaultMaxAgeEnabled" : false,
+      "defaultMaxAge" : 1
+    },
+    "_type" : {
+      "_id" : "OAuth2Client",
+      "name" : "OAuth2 Clients",
+      "collection" : true
+    }
+  }
+}

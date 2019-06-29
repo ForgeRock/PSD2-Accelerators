@@ -10,7 +10,7 @@
     "_id" : "dfb71d62-18f9-4e5d-8cc6-eef33b3f5083",
     "hostName" : "smtp.gmail.com",
     "password" : null,
-    "password-encrypted" : "AAAAA0FFUwIQlMoQ3R/+f7kbjWmWghPV/ocEU39q1q99vt9WAuxXEuuCY3xTRSC18tlpkXJ8XTR8",
+    "password-encrypted" : "AAAAA0FFUwIQVwSrXWGsM4ISDBaKCtJJgncke7+I7hDDLUHRM9Lvvey89st1oYxS9DXFIGAbfTdM",
     "sslOption" : "SSL",
     "hostPort" : 465,
     "fromEmailAddress" : "forgerock_admin@gmail.com",
