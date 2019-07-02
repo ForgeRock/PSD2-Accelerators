@@ -119,12 +119,10 @@ public class RegistrationJwtVerificationFilter implements Filter {
 	private X509Certificate getSigningCertificateFromJwksUri(Jwt registrationJwt, Jwt ssaJwt) {
 		if (registrationJwt != null) {
 			String registrationJwtKid = registrationJwt.getHeader().get("kid").asString();
-			String registrationJwtSigningAlgorithm = registrationJwt.getHeader().getAlgorithm().toString();
-			if (ssaJwt != null && registrationJwtKid != null && registrationJwtSigningAlgorithm != null) {
+			if (ssaJwt != null && registrationJwtKid != null) {
 				String jwksUri = ssaJwt.getClaimsSet().getClaim("software_jwks_endpoint").toString();
 				String X509Cert = null;
 				JsonNode jwksUriKeys = getJwksUriKeys(jwksUri);
-				String jwksKeyAlgorithm = null;
 				if (jwksUriKeys != null && jwksUriKeys.isArray()) {
 					for (JsonNode keyNode : jwksUriKeys) {
 						String keyUsage = keyNode.get("use").asText();
@@ -134,9 +132,7 @@ public class RegistrationJwtVerificationFilter implements Filter {
 							JsonNode certificates = keyNode.get("x5c");
 							if (certificates != null && certificates.size() > 0) {
 								X509Cert = certificates.get(0).asText();
-								jwksKeyAlgorithm = keyNode.get("alg").asText();
-								if (jwksKeyAlgorithm != null && jwksKeyAlgorithm.equals(registrationJwtSigningAlgorithm)
-										&& X509Cert != null) {
+								if (X509Cert != null) {
 									logger.debug("X509 signature certificate found: " + X509Cert);
 									return CertificateUtils.initializeCertificate(X509Cert);
 								}
