@@ -27,6 +27,7 @@ public class CertificateExtensionValidatorFilter implements Filter {
 
 	private String routeRole;
 	private String clientCertificateHeaderName;
+	private Boolean checkCertificateExtensions;
 
 	@Override
 	public Promise<Response, NeverThrowsException> filter(Context context, Request request, Handler next) {
@@ -37,23 +38,25 @@ public class CertificateExtensionValidatorFilter implements Filter {
 			transportCertificate = CertificateUtils.formatTransportCertificate(transportCertificate);
 			X509Certificate certificate = CertificateUtils.initializeCertificate(transportCertificate);
 			if (certificate != null) {
-				String certificateExtensionsAsString = CertificateUtils.getCertificateExtensions(certificate);
-				logger.info("Certificate extensions: " + certificateExtensionsAsString);
-				boolean roleAccepted = false;
-				if (certificateExtensionsAsString != null) {
-					certificateExtensionsAsString = certificateExtensionsAsString.toLowerCase();
-					for (String role : arrayRoles) {
-						if (role != null && certificateExtensionsAsString.contains(role.toLowerCase())) {
-							roleAccepted = true;
+				if (checkCertificateExtensions != null && checkCertificateExtensions) {
+					String certificateExtensionsAsString = CertificateUtils.getCertificateExtensions(certificate);
+					logger.info("Certificate extensions: " + certificateExtensionsAsString);
+					boolean roleAccepted = false;
+					if (certificateExtensionsAsString != null) {
+						certificateExtensionsAsString = certificateExtensionsAsString.toLowerCase();
+						for (String role : arrayRoles) {
+							if (role != null && certificateExtensionsAsString.contains(role.toLowerCase())) {
+								roleAccepted = true;
+							}
 						}
 					}
-				}
 
-				if (!roleAccepted) {
-					logger.warn("The roles configured in the route were not found in the {} certificate.",
-							clientCertificateHeaderName);
-					Response response = new Response(Status.UNAUTHORIZED);
-					return Promises.newResultPromise(response);
+					if (!roleAccepted) {
+						logger.warn("The roles configured in the route were not found in the {} certificate.",
+								clientCertificateHeaderName);
+						Response response = new Response(Status.UNAUTHORIZED);
+						return Promises.newResultPromise(response);
+					}
 				}
 
 				String tppId = CertificateUtils.getCertificateSubjectDnProperty(certificate, BCStyle.OU);
@@ -89,6 +92,8 @@ public class CertificateExtensionValidatorFilter implements Filter {
 			filter.routeRole = config.get("routeRole").as(evaluatedWithHeapProperties()).required().asString();
 			filter.clientCertificateHeaderName = config.get("clientCertificateHeaderName")
 					.as(evaluatedWithHeapProperties()).required().asString();
+			filter.checkCertificateExtensions = config.get("checkCertificateExtensions")
+					.as(evaluatedWithHeapProperties()).asBoolean();
 			return filter;
 		}
 	}
