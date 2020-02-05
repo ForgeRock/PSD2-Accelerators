@@ -1,11 +1,11 @@
 #Branches include 
 
 - Open Banking Demoable Assets (demoable-obie)
-- Open Banking Production assets (prod-obie)
-- Developer branch for Open Banking Production Assets (develop-obie)
+- Open Banking Accelerator assets (prod-obie)
+- Developer branch for Open Banking Accelerator Assets (develop-obie)
 - NextGen PSD2 Demoable Assets (demoable-nextgenpsd2)
-- NextGen PSD2 Production Assets (prod-nextgenpsd2)
-- and Yes.com Production Assets.  
+- NextGen PSD2 Accelerator Assets (prod-nextgenpsd2)
+- and Yes.com Assets.  
 
 
 
